@@ -12,8 +12,11 @@ import {
   Leaf,
   ShieldCheck,
   Clock,
+  Database,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FadeIn, StaggerGrid, StaggerItem } from "./_components/home-sections";
 
 const calculators = [
   {
@@ -56,6 +59,13 @@ const calculators = [
     icon: DollarSign,
     color: "bg-violet-500/10 text-violet-600",
   },
+] as const;
+
+const stats = [
+  { icon: Calculator, value: "5", label: "Free calculators" },
+  { icon: Database, value: "50+", label: "Data sources" },
+  { icon: RefreshCw, value: "2026", label: "Rates & incentives" },
+  { icon: DollarSign, value: "$0", label: "Always free" },
 ] as const;
 
 const steps = [
@@ -106,7 +116,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="mx-auto max-w-6xl px-4 pb-20 pt-20 sm:px-6 sm:pb-28 sm:pt-28 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
+          <FadeIn className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
               <Leaf className="size-3.5" />
               Free clean energy calculators
@@ -136,16 +146,40 @@ export default function Home() {
                 <Link href="#calculators">See All Calculators</Link>
               </Button>
             </div>
-          </div>
+          </FadeIn>
         </div>
-        {/* Subtle decorative gradient orbs */}
         <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 size-[40rem] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
+      </section>
+
+      {/* Quick Stats Banner */}
+      <section className="border-b border-border/60 bg-card">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <StaggerGrid className="grid grid-cols-2 divide-x divide-border/60 sm:grid-cols-4">
+            {stats.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <StaggerItem
+                  key={stat.label}
+                  className="flex flex-col items-center gap-1.5 py-8"
+                >
+                  <Icon className="mb-1 size-5 text-primary" />
+                  <span className="text-2xl font-bold tracking-tight text-foreground">
+                    {stat.value}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    {stat.label}
+                  </span>
+                </StaggerItem>
+              );
+            })}
+          </StaggerGrid>
+        </div>
       </section>
 
       {/* Calculator Showcase */}
       <section id="calculators" className="py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
+          <FadeIn className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Calculators for every green upgrade
             </h2>
@@ -153,68 +187,71 @@ export default function Home() {
               Whether you&rsquo;re considering solar panels, an electric
               vehicle, or a new heating system, we have a calculator for you.
             </p>
-          </div>
+          </FadeIn>
 
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerGrid className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {calculators.map((calc) => {
               const Icon = calc.icon;
               return (
-                <Link
-                  key={calc.href}
-                  href={calc.href}
-                  className="group relative rounded-2xl border border-border/60 bg-card p-6 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
-                >
-                  <div
-                    className={`mb-4 inline-flex size-11 items-center justify-center rounded-xl ${calc.color}`}
+                <StaggerItem key={calc.href}>
+                  <Link
+                    href={calc.href}
+                    className="group relative flex h-full flex-col rounded-2xl border border-border/60 bg-card p-6 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
                   >
-                    <Icon className="size-5" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {calc.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {calc.description}
-                  </p>
-                  <div className="mt-4 inline-flex items-center text-sm font-medium text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                    Try it now
-                    <ArrowRight className="ml-1 size-3.5" />
-                  </div>
-                </Link>
+                    <div
+                      className={`mb-4 inline-flex size-11 items-center justify-center rounded-xl ${calc.color}`}
+                    >
+                      <Icon className="size-5" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {calc.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {calc.description}
+                    </p>
+                    <div className="mt-4 inline-flex items-center text-sm font-medium text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      Try it now
+                      <ArrowRight className="ml-1 size-3.5" />
+                    </div>
+                  </Link>
+                </StaggerItem>
               );
             })}
 
             {/* "More coming" card */}
-            <div className="flex items-center justify-center rounded-2xl border border-dashed border-border/60 p-6">
-              <div className="text-center">
-                <div className="mx-auto mb-3 inline-flex size-11 items-center justify-center rounded-xl bg-muted">
-                  <Calculator className="size-5 text-muted-foreground" />
+            <StaggerItem>
+              <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-border/60 p-6">
+                <div className="text-center">
+                  <div className="mx-auto mb-3 inline-flex size-11 items-center justify-center rounded-xl bg-muted">
+                    <Calculator className="size-5 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    More calculators coming soon
+                  </p>
                 </div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  More calculators coming soon
-                </p>
               </div>
-            </div>
-          </div>
+            </StaggerItem>
+          </StaggerGrid>
         </div>
       </section>
 
       {/* How It Works */}
       <section className="border-y border-border/60 bg-muted/30 py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
+          <FadeIn className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               How it works
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
               Get personalized cost comparisons in under a minute.
             </p>
-          </div>
+          </FadeIn>
 
-          <div className="mt-14 grid gap-8 sm:grid-cols-3">
+          <StaggerGrid className="mt-14 grid gap-8 sm:grid-cols-3">
             {steps.map((step, i) => {
               const Icon = step.icon;
               return (
-                <div key={step.title} className="relative text-center">
+                <StaggerItem key={step.title} className="relative text-center">
                   <div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10">
                     <Icon className="size-6 text-primary" />
                   </div>
@@ -227,17 +264,17 @@ export default function Home() {
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {step.description}
                   </p>
-                </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </StaggerGrid>
         </div>
       </section>
 
       {/* Trust / Why Us */}
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
+          <FadeIn className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Built for trust, not clicks
             </h2>
@@ -245,52 +282,28 @@ export default function Home() {
               No affiliate links, no hidden agendas. Just honest numbers to help
               you make the right call.
             </p>
-          </div>
+          </FadeIn>
 
-          <div className="mt-14 grid gap-8 sm:grid-cols-3">
+          <StaggerGrid className="mt-14 grid gap-8 sm:grid-cols-3">
             {trustPoints.map((point) => {
               const Icon = point.icon;
               return (
-                <div
-                  key={point.title}
-                  className="rounded-2xl border border-border/60 bg-card p-6 text-center"
-                >
-                  <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10">
-                    <Icon className="size-5 text-primary" />
+                <StaggerItem key={point.title}>
+                  <div className="rounded-2xl border border-border/60 bg-card p-6 text-center">
+                    <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10">
+                      <Icon className="size-5 text-primary" />
+                    </div>
+                    <h3 className="text-base font-semibold text-foreground">
+                      {point.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {point.description}
+                    </p>
                   </div>
-                  <h3 className="text-base font-semibold text-foreground">
-                    {point.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {point.description}
-                  </p>
-                </div>
+                </StaggerItem>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="border-t border-border/60 bg-gradient-to-b from-primary/5 to-background py-20 sm:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Ready to see what going green saves you?
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Pick a calculator and get your personalized results in under 60
-              seconds. No sign-up required.
-            </p>
-            <div className="mt-10">
-              <Button asChild size="lg">
-                <Link href="/calculators/ev-vs-gas-cost">
-                  Get Started
-                  <ArrowRight className="ml-2 size-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
+          </StaggerGrid>
         </div>
       </section>
     </>
