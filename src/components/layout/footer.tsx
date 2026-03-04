@@ -7,11 +7,10 @@ const calculatorLinks = [
   { label: "EV Charging Cost", href: "/calculators/ev-charging-cost" },
   { label: "Heat Pump vs Furnace", href: "/calculators/heat-pump-vs-furnace" },
   { label: "EV Tax Credit", href: "/calculators/ev-tax-credit" },
+  { label: "Battery Storage", href: "/calculators/battery-storage" },
 ] as const;
 
 const resourceLinks = [
-  { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
   { label: "Methodology", href: "/methodology" },
 ] as const;
 

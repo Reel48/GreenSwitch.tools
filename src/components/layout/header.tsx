@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Leaf, Menu, X, ChevronDown, Calculator, Sun, Zap, Flame, DollarSign } from "lucide-react";
+import { Leaf, Menu, X, ChevronDown, Calculator, Sun, Zap, Flame, DollarSign, Battery } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -37,12 +37,14 @@ const calculators = [
     icon: DollarSign,
     description: "Check your EV tax credit eligibility",
   },
+  {
+    label: "Battery Storage",
+    href: "/calculators/battery-storage",
+    icon: Battery,
+    description: "Evaluate home battery ROI",
+  },
 ] as const;
 
-const navLinks = [
-  { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
-] as const;
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -126,17 +128,6 @@ export function Header() {
             </div>
           </div>
 
-          {/* Other Nav Links */}
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
-
           {/* CTA */}
           <div className="ml-2">
             <Button asChild size="sm">
@@ -188,23 +179,6 @@ export function Header() {
                 </Link>
               );
             })}
-          </div>
-
-          {/* Mobile Divider */}
-          <div className="border-t border-border/60" />
-
-          {/* Mobile Other Links */}
-          <div className="pt-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-              >
-                {link.label}
-              </Link>
-            ))}
           </div>
 
           {/* Mobile CTA */}
