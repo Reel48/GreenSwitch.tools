@@ -14,6 +14,7 @@ import {
   Clock,
   Database,
   RefreshCw,
+  Battery,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, StaggerGrid, StaggerItem } from "./_components/home-sections";
@@ -59,10 +60,18 @@ const calculators = [
     icon: DollarSign,
     color: "bg-violet-500/10 text-violet-600",
   },
+  {
+    title: "Battery Storage",
+    description:
+      "Evaluate home battery ROI with TOU rate arbitrage, solar pairing, incentives, and degradation over time.",
+    href: "/calculators/battery-storage",
+    icon: Battery,
+    color: "bg-cyan-500/10 text-cyan-600",
+  },
 ] as const;
 
 const stats = [
-  { icon: Calculator, value: "5", label: "Free calculators" },
+  { icon: Calculator, value: "6", label: "Free calculators" },
   { icon: Database, value: "50+", label: "Data sources" },
   { icon: RefreshCw, value: "2026", label: "Rates & incentives" },
   { icon: DollarSign, value: "$0", label: "Always free" },
