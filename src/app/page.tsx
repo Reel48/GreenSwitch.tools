@@ -1,65 +1,298 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  Zap,
+  Sun,
+  Calculator,
+  Flame,
+  DollarSign,
+  ArrowRight,
+  BarChart3,
+  Sliders,
+  TrendingDown,
+  Leaf,
+  ShieldCheck,
+  Clock,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const calculators = [
+  {
+    title: "EV vs Gas Cost",
+    description:
+      "Compare the total cost of ownership between electric and gas vehicles over time, including fuel, maintenance, and depreciation.",
+    href: "/calculators/ev-vs-gas-cost",
+    icon: Zap,
+    color: "bg-blue-500/10 text-blue-600",
+  },
+  {
+    title: "Solar Payback",
+    description:
+      "Estimate your solar panel ROI, payback period, and 25-year savings based on your location and energy usage.",
+    href: "/calculators/solar-payback",
+    icon: Sun,
+    color: "bg-amber-500/10 text-amber-600",
+  },
+  {
+    title: "EV Charging Cost",
+    description:
+      "Calculate your monthly and annual EV charging costs at home and at public stations vs. gasoline.",
+    href: "/calculators/ev-charging-cost",
+    icon: Calculator,
+    color: "bg-emerald-500/10 text-emerald-600",
+  },
+  {
+    title: "Heat Pump vs Furnace",
+    description:
+      "Compare heating system costs including installation, energy bills, maintenance, and long-term savings.",
+    href: "/calculators/heat-pump-vs-furnace",
+    icon: Flame,
+    color: "bg-orange-500/10 text-orange-600",
+  },
+  {
+    title: "EV Tax Credit",
+    description:
+      "Check your eligibility for federal and state EV tax credits based on income, vehicle, and filing status.",
+    href: "/calculators/ev-tax-credit",
+    icon: DollarSign,
+    color: "bg-violet-500/10 text-violet-600",
+  },
+] as const;
+
+const steps = [
+  {
+    icon: Sliders,
+    title: "Enter your details",
+    description:
+      "Input your location, energy usage, and preferences. We pre-fill sensible defaults so you can get results fast.",
+  },
+  {
+    icon: BarChart3,
+    title: "Get instant results",
+    description:
+      "See a detailed cost comparison with yearly breakdowns, savings projections, and environmental impact.",
+  },
+  {
+    icon: TrendingDown,
+    title: "Make a smarter switch",
+    description:
+      "Use real numbers to decide when to go solar, switch to an EV, or upgrade your heating system.",
+  },
+] as const;
+
+const trustPoints = [
+  {
+    icon: ShieldCheck,
+    title: "Transparent methodology",
+    description:
+      "Every calculator shows its formulas and data sources. No black boxes.",
+  },
+  {
+    icon: Clock,
+    title: "Up-to-date data",
+    description:
+      "We use current electricity rates, fuel prices, and incentive programs.",
+  },
+  {
+    icon: Leaf,
+    title: "100% free, no sign-up",
+    description:
+      "All calculators are free to use with no account required. Ever.",
+  },
+] as const;
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-b from-primary/5 via-background to-background">
+        <div className="mx-auto max-w-6xl px-4 pb-20 pt-20 sm:px-6 sm:pb-28 sm:pt-28 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
+              <Leaf className="size-3.5" />
+              Free clean energy calculators
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              Make smarter green energy decisions with{" "}
+              <span className="text-primary">real data</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+              Stop guessing. Our free calculators use current rates, local
+              incentives, and transparent methodology to show you exactly how
+              much you can save by going green.
+            </p>
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button asChild size="lg" className="w-full sm:w-auto">
+                <Link href="/calculators/ev-vs-gas-cost">
+                  Try a Calculator
+                  <ArrowRight className="ml-2 size-4" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto"
+              >
+                <Link href="#calculators">See All Calculators</Link>
+              </Button>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        {/* Subtle decorative gradient orbs */}
+        <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 size-[40rem] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
+      </section>
+
+      {/* Calculator Showcase */}
+      <section id="calculators" className="py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Calculators for every green upgrade
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Whether you&rsquo;re considering solar panels, an electric
+              vehicle, or a new heating system, we have a calculator for you.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {calculators.map((calc) => {
+              const Icon = calc.icon;
+              return (
+                <Link
+                  key={calc.href}
+                  href={calc.href}
+                  className="group relative rounded-2xl border border-border/60 bg-card p-6 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+                >
+                  <div
+                    className={`mb-4 inline-flex size-11 items-center justify-center rounded-xl ${calc.color}`}
+                  >
+                    <Icon className="size-5" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {calc.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {calc.description}
+                  </p>
+                  <div className="mt-4 inline-flex items-center text-sm font-medium text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                    Try it now
+                    <ArrowRight className="ml-1 size-3.5" />
+                  </div>
+                </Link>
+              );
+            })}
+
+            {/* "More coming" card */}
+            <div className="flex items-center justify-center rounded-2xl border border-dashed border-border/60 p-6">
+              <div className="text-center">
+                <div className="mx-auto mb-3 inline-flex size-11 items-center justify-center rounded-xl bg-muted">
+                  <Calculator className="size-5 text-muted-foreground" />
+                </div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  More calculators coming soon
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="border-y border-border/60 bg-muted/30 py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              How it works
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Get personalized cost comparisons in under a minute.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-8 sm:grid-cols-3">
+            {steps.map((step, i) => {
+              const Icon = step.icon;
+              return (
+                <div key={step.title} className="relative text-center">
+                  <div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10">
+                    <Icon className="size-6 text-primary" />
+                  </div>
+                  <div className="mb-2 text-sm font-semibold text-primary">
+                    Step {i + 1}
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {step.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust / Why Us */}
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Built for trust, not clicks
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              No affiliate links, no hidden agendas. Just honest numbers to help
+              you make the right call.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-8 sm:grid-cols-3">
+            {trustPoints.map((point) => {
+              const Icon = point.icon;
+              return (
+                <div
+                  key={point.title}
+                  className="rounded-2xl border border-border/60 bg-card p-6 text-center"
+                >
+                  <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10">
+                    <Icon className="size-5 text-primary" />
+                  </div>
+                  <h3 className="text-base font-semibold text-foreground">
+                    {point.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {point.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="border-t border-border/60 bg-gradient-to-b from-primary/5 to-background py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Ready to see what going green saves you?
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Pick a calculator and get your personalized results in under 60
+              seconds. No sign-up required.
+            </p>
+            <div className="mt-10">
+              <Button asChild size="lg">
+                <Link href="/calculators/ev-vs-gas-cost">
+                  Get Started
+                  <ArrowRight className="ml-2 size-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
