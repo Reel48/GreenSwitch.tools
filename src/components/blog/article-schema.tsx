@@ -3,12 +3,17 @@ export function ArticleSchema({
   description,
   datePublished,
   url,
+  keywords,
+  wordCount,
 }: {
   title: string;
   description: string;
   datePublished: string;
   url: string;
+  keywords?: string[];
+  wordCount?: number;
 }) {
+  const fullUrl = `https://gogreencalc.com${url}`;
   const schema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -16,6 +21,8 @@ export function ArticleSchema({
     description,
     datePublished,
     dateModified: datePublished,
+    ...(keywords && keywords.length > 0 && { keywords: keywords.join(", ") }),
+    ...(wordCount && { wordCount }),
     author: {
       "@type": "Organization",
       name: "GoGreenCalc",
@@ -28,7 +35,23 @@ export function ArticleSchema({
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://gogreencalc.com${url}`,
+      "@id": fullUrl,
+    },
+    isAccessibleForFree: true,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [
+        "article h1",
+        "article header p",
+        "article .prose h2",
+        "article .prose p:first-of-type",
+      ],
+    },
+    about: {
+      "@type": "Thing",
+      name: "Clean energy cost savings",
+      description:
+        "Helping consumers calculate and compare costs for EVs, solar panels, heat pumps, and other clean energy technologies.",
     },
   };
 

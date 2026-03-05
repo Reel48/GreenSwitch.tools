@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
+import { SpeakableSchema } from "@/components/seo/speakable-schema";
 import {
   getStateBySlug,
   getStateData,
@@ -47,6 +48,10 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
           { name: info.name, href: `/calculators/${calculator}` },
           { name: state.name, href: `/calculators/${calculator}/${state.slug}` },
         ]}
+      />
+      <SpeakableSchema
+        url={`/calculators/${calculator}/${state.slug}`}
+        cssSelectors={["h1", "h1 + p", "h2", "table"]}
       />
 
       <div className="mx-auto max-w-4xl px-4 py-12">

@@ -3,8 +3,53 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
+# GPTBot
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+
+# ChatGPT-User
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+
+# Claude-Web
+User-agent: Claude-Web
+Allow: /
+Disallow: /api/
+
+# ClaudeBot
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+
+# PerplexityBot
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+
+# Amazonbot
+User-agent: Amazonbot
+Allow: /
+Disallow: /api/
+
+# Google-Extended
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+
+# Bytespider
+User-agent: Bytespider
+Allow: /
+Disallow: /api/
+
+# cohere-ai
+User-agent: cohere-ai
+Allow: /
+Disallow: /api/
+
 # Host
-Host: https://gogreencalc.com
+Host: http://localhost:3000
 
 # Sitemaps
-Sitemap: https://gogreencalc.com/sitemap.xml
+Sitemap: http://localhost:3000/sitemap.xml

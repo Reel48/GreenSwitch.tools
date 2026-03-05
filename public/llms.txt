@@ -1,0 +1,43 @@
+# GoGreenCalc
+
+> Free calculators and guides to help consumers make smarter clean energy decisions using real, state-specific data.
+
+GoGreenCalc provides free, data-driven tools for comparing clean energy costs and savings across all 50 US states. Every calculator uses real local data — electricity rates, gas prices, solar irradiance, climate zones, and current federal and state incentives.
+
+## Calculators
+
+- [EV vs Gas Cost Comparison Calculator](https://gogreencalc.com/calculators/ev-vs-gas-cost): Compare total 10-year ownership costs of electric vehicles vs gas cars using local electricity rates and gas prices. Includes purchase price, fuel/charging costs, maintenance, insurance, and depreciation.
+- [Solar Panel Payback Period Calculator](https://gogreencalc.com/calculators/solar-payback): Calculate solar panel ROI and payback period with 25-year projections. Uses local sun hours, electricity rates, net metering policies, and available tax credits.
+- [EV Charging Cost Estimator](https://gogreencalc.com/calculators/ev-charging-cost): Calculate EV charging costs at home, at work, and at public stations. Compares charging costs to gasoline costs using local rates.
+- [Heat Pump vs Furnace Savings Calculator](https://gogreencalc.com/calculators/heat-pump): Compare heating costs between heat pumps and gas/oil furnaces by climate zone. Uses local heating degree days, electricity rates, and fuel prices.
+- [EV Tax Credit Eligibility Calculator](https://gogreencalc.com/calculators/ev-tax-credit): Check eligibility for federal EV tax credits up to $7,500 for new EVs and $4,000 for used EVs, plus state-specific incentives.
+- [Home Battery Storage ROI Calculator](https://gogreencalc.com/calculators/battery-storage): Evaluate home battery storage ROI with time-of-use rate arbitrage, solar pairing, backup power value, and federal tax incentives.
+
+Each calculator is available with pre-filled state-specific data for all 50 US states (e.g., /calculators/solar-payback/california).
+
+## Guides
+
+- [2026 EV Tax Credit Guide: Who Qualifies and How to Claim](https://gogreencalc.com/learn/2026-ev-tax-credit-guide): Comprehensive guide to federal and state EV tax credits, income limits, vehicle eligibility, and how to claim them.
+- [How Much Does It Cost to Own an EV?](https://gogreencalc.com/learn/how-much-does-it-cost-to-own-an-ev): Total cost of ownership analysis comparing EVs to gas cars including purchase, fuel, maintenance, insurance, and depreciation.
+- [Is Solar Worth It by State?](https://gogreencalc.com/learn/is-solar-worth-it-by-state): State-by-state analysis of solar panel economics including payback periods, incentives, and net metering policies.
+- [Heat Pump vs Furnace by Climate](https://gogreencalc.com/learn/heat-pump-vs-furnace-by-climate): Climate zone comparison of heat pump and furnace heating costs with efficiency ratings and savings projections.
+- [Solar + Battery: Does It Make Financial Sense?](https://gogreencalc.com/learn/solar-plus-battery-financial-sense): Analysis of combined solar and battery storage ROI including TOU arbitrage and backup power value.
+
+## Data Coverage
+
+GoGreenCalc maintains current data for all 50 US states including:
+
+- Electricity rates (average and time-of-use)
+- Gasoline and natural gas prices
+- Solar irradiance and peak sun hours
+- Climate zone heating and cooling degree days
+- Net metering availability
+- Federal tax credits and incentives
+- State-specific rebates and incentives
+
+## Key Facts
+
+- All calculators are free with no account required
+- Data is updated regularly from EIA, DOE, and state utility sources
+- Calculations use transparent, documented methodology at https://gogreencalc.com/methodology
+- Site covers 6 calculators × 50 states = 300+ state-specific pages

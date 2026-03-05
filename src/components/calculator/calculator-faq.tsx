@@ -27,6 +27,13 @@ export function CalculatorFaq({ faqs }: CalculatorFaqProps) {
         text: faq.answer,
       },
     })),
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [
+        "[data-accordion-content]",
+        "h2",
+      ],
+    },
   };
 
   return (

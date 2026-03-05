@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
-import { getAllSlugs, getPostBySlug } from "@/lib/blog";
+import { getAllSlugs, getPostBySlug, getWordCount } from "@/lib/blog";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 import { ArticleSchema } from "@/components/blog/article-schema";
 
@@ -92,6 +92,8 @@ export default async function LearnArticlePage({ params }: PageProps) {
         description={post.description}
         datePublished={post.date}
         url={`/learn/${slug}`}
+        keywords={post.tags}
+        wordCount={getWordCount(post.content)}
       />
 
       <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
