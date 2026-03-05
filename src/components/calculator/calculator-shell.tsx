@@ -45,13 +45,13 @@ export function CalculatorShell({
   relatedCalculators,
 }: CalculatorShellProps) {
   return (
-    <div className="mx-auto max-w-4xl space-y-8 px-4 py-8 md:py-12">
+    <div className="mx-auto max-w-4xl space-y-6 px-4 py-6 sm:space-y-8 md:py-12">
       {/* Hero Section */}
       <section className="space-y-4 text-center">
         <Badge variant="secondary" className="text-xs">
           Updated {lastUpdated}
         </Badge>
-        <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl">
           {title}
         </h1>
         <p className="mx-auto max-w-2xl text-lg text-muted-foreground">

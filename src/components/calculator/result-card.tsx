@@ -45,8 +45,8 @@ export function ResultCard({
             className={cn(
               "font-semibold tracking-tight",
               variant === "savings"
-                ? "text-2xl text-green-700 dark:text-green-400"
-                : "text-xl"
+                ? "text-xl text-green-700 sm:text-2xl dark:text-green-400"
+                : "text-lg sm:text-xl"
             )}
           >
             {value}

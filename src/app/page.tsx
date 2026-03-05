@@ -124,17 +124,17 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-b from-primary/5 via-background to-background">
-        <div className="mx-auto max-w-6xl px-4 pb-20 pt-20 sm:px-6 sm:pb-28 sm:pt-28 lg:px-8">
+        <div className="mx-auto max-w-6xl px-4 pb-14 pt-14 sm:px-6 sm:pb-28 sm:pt-28 lg:px-8">
           <FadeIn className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
               <Leaf className="size-3.5" />
               Free clean energy calculators
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Make smarter green energy decisions with{" "}
               <span className="text-primary">real data</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-xl">
               Stop guessing. Our free calculators use current rates, local
               incentives, and transparent methodology to show you exactly how
               much you can save by going green.
@@ -163,13 +163,13 @@ export default function Home() {
       {/* Quick Stats Banner */}
       <section className="border-b border-border/60 bg-card">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <StaggerGrid className="grid grid-cols-2 divide-x divide-border/60 sm:grid-cols-4">
+          <StaggerGrid className="grid grid-cols-2 divide-y divide-border/60 sm:divide-y-0 sm:divide-x sm:grid-cols-4">
             {stats.map((stat) => {
               const Icon = stat.icon;
               return (
                 <StaggerItem
                   key={stat.label}
-                  className="flex flex-col items-center gap-1.5 py-8"
+                  className="flex flex-col items-center gap-1.5 py-5 sm:py-8"
                 >
                   <Icon className="mb-1 size-5 text-primary" />
                   <span className="text-2xl font-bold tracking-tight text-foreground">
@@ -186,7 +186,7 @@ export default function Home() {
       </section>
 
       {/* Calculator Showcase */}
-      <section id="calculators" className="py-20 sm:py-28">
+      <section id="calculators" className="py-14 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -198,14 +198,14 @@ export default function Home() {
             </p>
           </FadeIn>
 
-          <StaggerGrid className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerGrid className="mt-10 grid gap-4 sm:mt-14 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {calculators.map((calc) => {
               const Icon = calc.icon;
               return (
                 <StaggerItem key={calc.href}>
                   <Link
                     href={calc.href}
-                    className="group relative flex h-full flex-col rounded-2xl border border-border/60 bg-card p-6 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+                    className="group relative flex h-full flex-col rounded-2xl border border-border/60 bg-card p-4 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 sm:p-6"
                   >
                     <div
                       className={`mb-4 inline-flex size-11 items-center justify-center rounded-xl ${calc.color}`}
@@ -231,7 +231,7 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="border-y border-border/60 bg-muted/30 py-20 sm:py-28">
+      <section className="border-y border-border/60 bg-muted/30 py-14 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -246,8 +246,8 @@ export default function Home() {
             {steps.map((step, i) => {
               const Icon = step.icon;
               return (
-                <StaggerItem key={step.title} className="relative text-center">
-                  <div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10">
+                <StaggerItem key={step.title} className="relative text-left sm:text-center">
+                  <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 sm:mx-auto">
                     <Icon className="size-6 text-primary" />
                   </div>
                   <div className="mb-2 text-sm font-semibold text-primary">
@@ -267,7 +267,7 @@ export default function Home() {
       </section>
 
       {/* Trust / Why Us */}
-      <section className="py-20 sm:py-28">
+      <section className="py-14 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">

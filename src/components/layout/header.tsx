@@ -159,14 +159,23 @@ export function Header() {
         </Button>
       </div>
 
+      {/* Mobile Backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/20 md:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Mobile Menu */}
       <div
         className={cn(
-          "overflow-hidden border-t border-border/60 bg-white transition-all duration-300 ease-in-out md:hidden",
-          mobileOpen ? "max-h-[32rem] opacity-100" : "max-h-0 border-t-0 opacity-0"
+          "relative z-50 overflow-hidden border-t border-border/60 bg-white transition-all duration-300 ease-in-out md:hidden",
+          mobileOpen ? "max-h-dvh opacity-100" : "max-h-0 border-t-0 opacity-0"
         )}
       >
-        <div className="space-y-1 px-4 pb-4 pt-3">
+        <div className="max-h-[calc(100dvh-4rem)] space-y-1 overflow-y-auto px-4 pb-4 pt-3">
           {/* Mobile Calculators Section */}
           <div className="pb-2">
             <div className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">

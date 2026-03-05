@@ -25,7 +25,7 @@ export function Footer() {
     <footer className="border-t border-border/60 bg-muted/40">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-2 gap-8 py-12 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 py-8 sm:gap-8 sm:py-12 md:grid-cols-4">
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-1">
             <Link
@@ -104,7 +104,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-border/60 py-6">
+        <div className="border-t border-border/60 py-4 sm:py-6">
           <p className="text-center text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} GoGreenCalc. Built for a cleaner
             future.

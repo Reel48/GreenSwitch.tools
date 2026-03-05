@@ -26,9 +26,9 @@ export function ComparisonBar({ items, formatValue }: ComparisonBarProps) {
 
         return (
           <div key={item.label} className="space-y-1">
-            <div className="flex items-center justify-between text-sm">
-              <span className="font-medium">{item.label}</span>
-              <span className="text-muted-foreground">
+            <div className="flex items-center justify-between text-xs sm:text-sm">
+              <span className="min-w-0 truncate font-medium">{item.label}</span>
+              <span className="shrink-0 pl-2 text-muted-foreground">
                 {format(item.value)}
               </span>
             </div>

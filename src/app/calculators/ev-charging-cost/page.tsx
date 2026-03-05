@@ -457,7 +457,7 @@ export default function EvChargingCostPage() {
         </InputGroup>
 
         {/* Actions */}
-        <div className="flex gap-3 pt-2">
+        <div className="flex flex-col gap-3 pt-2 sm:flex-row">
           <Button onClick={onCalculate} size="lg">
             <Zap className="mr-2 size-4" />
             Calculate

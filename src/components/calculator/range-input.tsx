@@ -47,7 +47,7 @@ export function RangeInput({
 
   return (
     <InputGroup label={displayLabel} tooltip={tooltip} className={className}>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
         <Slider
           min={min}
           max={max}
@@ -56,7 +56,7 @@ export function RangeInput({
           onValueChange={handleSliderChange}
           className="flex-1"
         />
-        <div className="relative w-24 shrink-0">
+        <div className="relative w-full shrink-0 sm:w-24">
           <Input
             type="number"
             min={min}
