@@ -40,6 +40,15 @@ export default function EvVsGasCostPage() {
       title="EV vs Gas Cost Calculator"
       description="Compare the total cost of ownership between an electric vehicle and a gas car over time, including purchase price, fuel, maintenance, insurance, and incentives."
       lastUpdated="March 2025"
+      url="/calculators/ev-vs-gas-cost"
+      howToSteps={[
+        { name: "Enter vehicle prices", text: "Enter the purchase price for the EV and gas vehicle you want to compare." },
+        { name: "Set driving details", text: "Enter your annual miles driven and how long you plan to own the vehicles." },
+        { name: "Input energy costs", text: "Set your local electricity rate ($/kWh) and gas price ($/gallon)." },
+        { name: "Add vehicle efficiency", text: "Enter the EV efficiency (kWh/100 mi) and gas car fuel economy (MPG)." },
+        { name: "Include ownership costs", text: "Add annual maintenance, insurance, and any available tax credits or incentives." },
+        { name: "Calculate and compare", text: "Click Calculate to see a side-by-side total cost comparison, break-even year, and lifetime savings." },
+      ]}
       methodology={`This calculator compares EV and gas vehicle total cost of ownership (TCO) over your chosen ownership period. It accounts for purchase price (net of incentives for EVs), loan financing with standard amortization, fuel/electricity costs with annual price escalation, maintenance, insurance, and depreciation. Break-even year is when the EV's cumulative cost drops below the gas car's. CO₂ estimates use EPA averages: 0.855 lbs/kWh for electricity and 19.6 lbs/gallon for gasoline.`}
       faqs={[
         {

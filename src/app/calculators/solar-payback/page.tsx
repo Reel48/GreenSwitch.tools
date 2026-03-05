@@ -51,6 +51,15 @@ export default function SolarPaybackPage() {
       title="Solar Payback Calculator"
       description="Estimate your solar panel payback period, lifetime savings, and return on investment based on your system size, electricity costs, and available incentives."
       lastUpdated="March 2025"
+      url="/calculators/solar-payback"
+      howToSteps={[
+        { name: "Enter system details", text: "Set your solar system size (kW), cost per watt, and roof direction." },
+        { name: "Input electricity costs", text: "Enter your monthly electric bill and current electricity rate ($/kWh)." },
+        { name: "Set production estimates", text: "Enter your area's peak sun hours and annual production per kW." },
+        { name: "Configure incentives", text: "Apply the 30% federal ITC, any state credits, and SREC income if available." },
+        { name: "Choose financing", text: "Select cash purchase or loan financing with your interest rate and term." },
+        { name: "Calculate payback", text: "Click Calculate to see your payback period, lifetime savings, and ROI percentage." },
+      ]}
       methodology={`This calculator estimates solar savings over the system's lifetime. Year-one production is based on system size × annual production per kW, adjusted for roof direction. Each subsequent year accounts for panel degradation (typically 0.5%/year) and rising electricity rates. The payback period is when cumulative savings exceed the net system cost (after tax credits). For loan financing, monthly payments are calculated using standard amortization. CO₂ offset uses the EPA average of 1.22 lbs CO₂ per kWh avoided. The 30% federal Investment Tax Credit (ITC) under the Inflation Reduction Act is applied by default.`}
       faqs={[
         {

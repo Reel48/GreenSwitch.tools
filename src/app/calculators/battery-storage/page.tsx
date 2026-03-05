@@ -55,6 +55,15 @@ export default function BatteryStoragePage() {
       title="Battery Storage Calculator"
       description="Evaluate home battery ROI with TOU rate arbitrage, solar pairing, federal and state incentives, and degradation modeling over 15 years."
       lastUpdated="March 2026"
+      url="/calculators/battery-storage"
+      howToSteps={[
+        { name: "Enter system details", text: "Set battery capacity (kWh), usable percentage, round-trip efficiency, and system cost." },
+        { name: "Input energy usage", text: "Enter your monthly electric bill and whether you have solar panels installed." },
+        { name: "Set rate structure", text: "Choose time-of-use (TOU) or flat rate, and enter your on-peak and off-peak electricity prices." },
+        { name: "Choose financing", text: "Select cash or loan financing with your interest rate and loan term." },
+        { name: "Apply incentives", text: "Enable the 30% federal ITC and any available state battery incentives." },
+        { name: "Calculate ROI", text: "Click Calculate to see your payback period, annual savings, and 15-year return on investment." },
+      ]}
       methodology={`This calculator models home battery storage savings over 15 years. For time-of-use (TOU) rate structures, savings come from charging the battery at off-peak rates and discharging during on-peak hours (rate arbitrage). For flat-rate plans with solar, the battery captures excess solar generation for later self-consumption instead of exporting at a lower net metering rate. Battery capacity degrades annually (default 3%/year), while utility rates escalate at 3%/year. The federal Investment Tax Credit (ITC) of 30% applies to standalone battery storage under the Inflation Reduction Act. State incentives (e.g., California's SGIP) are applied when available. Net system cost equals the gross cost minus all applicable incentives. The payback period is the year when cumulative net savings first exceed zero.`}
       faqs={[
         {

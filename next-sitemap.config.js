@@ -1,6 +1,11 @@
 /** @type {import('next-sitemap').IConfig} */
+// Always use production URL for sitemap/robots generation.
+// NEXT_PUBLIC_SITE_URL may be localhost during local dev, but
+// robots.txt and sitemap must always reference the production domain.
+const siteUrl = "https://gogreencalc.com";
+
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://gogreencalc.com",
+  siteUrl,
   generateRobotsTxt: true,
   exclude: ["/api/*"],
   robotsTxtOptions: {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 import { SpeakableSchema } from "@/components/seo/speakable-schema";
+import { AdUnit } from "@/components/ads/ad-unit";
 import {
   getStateBySlug,
   getStateData,
@@ -156,6 +157,9 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
           </section>
         )}
 
+        {/* Ad: after incentives */}
+        <AdUnit slot="STATE_MID_SLOT" className="mt-8" />
+
         {/* CTA */}
         <section className="mt-12 rounded-lg border bg-muted/30 p-6 text-center">
           <h2 className="text-xl font-semibold">
@@ -172,6 +176,9 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
             Open Calculator
           </Link>
         </section>
+
+        {/* Ad: before state links */}
+        <AdUnit slot="STATE_BOTTOM_SLOT" className="mt-8" />
 
         {/* Other states */}
         <section className="mt-12">

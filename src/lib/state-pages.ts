@@ -87,7 +87,7 @@ export function generateStatePageMetadata(
 
   const info = calculatorInfo[calculator];
   const title = `${info.name} in ${state.name}`;
-  const description = info.description(state.name);
+  const description = `${info.description(state.name)} Free calculator — no sign-up required.`;
 
   return {
     title,

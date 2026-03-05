@@ -50,6 +50,14 @@ export default function EvTaxCreditPage() {
       title="EV Tax Credit Calculator"
       description="Check your eligibility for the federal EV tax credit (up to $7,500 for new or $4,000 for used EVs) and estimate your total savings including state incentives."
       lastUpdated="March 2025"
+      url="/calculators/ev-tax-credit"
+      howToSteps={[
+        { name: "Enter filing status and income", text: "Select your tax filing status and enter your adjusted gross income (AGI)." },
+        { name: "Choose purchase type", text: "Select whether you are buying a new or used EV, and confirm it is a dealer purchase." },
+        { name: "Enter vehicle details", text: "Input the vehicle make, model, MSRP or sale price, and model year." },
+        { name: "Select your state", text: "Choose your state to include any available state-level EV incentives." },
+        { name: "Check eligibility", text: "Click Check Eligibility to see your federal credit amount, income and MSRP qualification, and total savings." },
+      ]}
       methodology={`This calculator evaluates eligibility for the federal clean vehicle tax credit under IRC 30D (new vehicles, up to $7,500) and IRC 25E (used vehicles, lesser of $4,000 or 30% of sale price). Income limits vary by filing status. MSRP caps are $55,000 for sedans and $80,000 for SUVs/trucks/vans (new vehicles) or $25,000 (used vehicles). Vehicle classification uses keyword matching on the model name. State credits are simplified estimates based on publicly available incentive programs. Always verify eligibility with the IRS clean vehicle list and your state's incentive program.`}
       faqs={[
         {

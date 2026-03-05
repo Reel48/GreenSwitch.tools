@@ -49,7 +49,7 @@ Allow: /
 Disallow: /api/
 
 # Host
-Host: http://localhost:3000
+Host: https://gogreencalc.com
 
 # Sitemaps
-Sitemap: http://localhost:3000/sitemap.xml
+Sitemap: https://gogreencalc.com/sitemap.xml

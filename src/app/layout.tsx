@@ -52,12 +52,12 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <OrganizationSchema />
-        <AdSense />
       </head>
       <body
         className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <GoogleAnalytics />
+        <AdSense />
         <TRPCProvider>
           <TooltipProvider>
             <div className="flex min-h-screen flex-col">

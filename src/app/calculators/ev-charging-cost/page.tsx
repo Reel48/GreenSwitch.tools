@@ -53,6 +53,15 @@ export default function EvChargingCostPage() {
       title="EV Charging Cost Calculator"
       description="Calculate your electric vehicle charging costs at home and on-the-go, compare with gas costs, and estimate your savings with different charging setups."
       lastUpdated="March 2025"
+      url="/calculators/ev-charging-cost"
+      howToSteps={[
+        { name: "Enter driving habits", text: "Input your annual miles driven and EV efficiency (kWh per 100 miles)." },
+        { name: "Set electricity rates", text: "Enter your flat electricity rate, or enable time-of-use pricing with off-peak and on-peak rates." },
+        { name: "Choose charger setup", text: "Select Level 1 or Level 2 home charging and enter any installation costs." },
+        { name: "Add public charging", text: "Set the percentage of charging done at public stations and the public charging rate." },
+        { name: "Enter gas comparison", text: "Input gas price and a comparable gas car's MPG to see fuel cost savings." },
+        { name: "Calculate costs", text: "Click Calculate to see your annual charging cost, gas savings, and cost per mile." },
+      ]}
       methodology={`This calculator estimates annual EV charging costs based on your driving habits and electricity rates. Energy consumption is calculated as (annual miles / 100) × EV efficiency (kWh/100mi). Costs are split between home and public charging based on your specified percentages. For time-of-use (TOU) rates, the effective rate is the weighted average of off-peak and on-peak rates. Gas comparison uses standard MPG calculations. Charging times are estimated at 1.4 kW for Level 1 and 7.6 kW for Level 2. CO₂ savings use EPA averages: 0.855 lbs CO₂/kWh for the grid and 19.6 lbs CO₂/gallon of gasoline.`}
       faqs={[
         {

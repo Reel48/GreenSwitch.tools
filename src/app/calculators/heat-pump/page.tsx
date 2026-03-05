@@ -52,6 +52,15 @@ export default function HeatPumpPage() {
       title="Heat Pump Savings Calculator"
       description="Compare the cost of heating with a heat pump versus a traditional furnace. Includes installation costs, operating expenses, incentives, and environmental impact."
       lastUpdated="March 2025"
+      url="/calculators/heat-pump"
+      howToSteps={[
+        { name: "Select climate and home size", text: "Choose your IECC climate zone and enter your home's square footage." },
+        { name: "Enter current heating system", text: "Select your fuel type (gas, propane, oil, or electric) and enter fuel and electricity rates." },
+        { name: "Set equipment performance", text: "Enter the heat pump COP and furnace AFUE efficiency ratings." },
+        { name: "Input installation costs", text: "Enter the installed cost for the heat pump and comparable furnace." },
+        { name: "Add incentives", text: "Apply the federal heat pump tax credit (up to $2,000) and any state credits." },
+        { name: "Calculate savings", text: "Click Calculate to compare annual heating costs, lifetime savings, and payback period." },
+      ]}
       methodology={`This calculator compares heat pump and furnace heating costs based on your climate zone's Heating Degree Days (HDD). Heating load is estimated from home size and HDD values for your IECC climate zone. Heat pump costs are calculated from the load divided by COP × electricity rate. Furnace costs use the load divided by efficiency × fuel rate. Year-over-year cost escalation is applied to both fuel and electricity. If AC savings are included, the heat pump's cooling COP is used to estimate savings versus conventional AC. The federal IRA heat pump tax credit of up to $2,000 is available for qualifying installations.`}
       faqs={[
         {

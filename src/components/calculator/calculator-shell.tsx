@@ -9,6 +9,8 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { CalculatorMethodology } from "./calculator-methodology";
 import { CalculatorFaq } from "./calculator-faq";
+import { AdUnit } from "@/components/ads/ad-unit";
+import { HowToSchema } from "@/components/seo/howto-schema";
 import type { LucideIcon } from "lucide-react";
 
 interface RelatedCalculator {
@@ -23,6 +25,11 @@ interface FAQ {
   answer: string;
 }
 
+interface HowToStep {
+  name: string;
+  text: string;
+}
+
 interface CalculatorShellProps {
   title: string;
   description: string;
@@ -32,6 +39,8 @@ interface CalculatorShellProps {
   methodology?: string;
   faqs?: FAQ[];
   relatedCalculators?: RelatedCalculator[];
+  howToSteps?: HowToStep[];
+  url?: string;
 }
 
 export function CalculatorShell({
@@ -43,9 +52,21 @@ export function CalculatorShell({
   methodology,
   faqs,
   relatedCalculators,
+  howToSteps,
+  url,
 }: CalculatorShellProps) {
   return (
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-6 sm:space-y-8 md:py-12">
+      {/* HowTo Schema */}
+      {howToSteps && url && (
+        <HowToSchema
+          name={title}
+          description={description}
+          url={url}
+          steps={howToSteps}
+        />
+      )}
+
       {/* Hero Section */}
       <section className="space-y-4 text-center">
         <Badge variant="secondary" className="text-xs">
@@ -83,6 +104,9 @@ export function CalculatorShell({
         )}
       </AnimatePresence>
 
+      {/* Ad: between results and methodology */}
+      <AdUnit slot="CALC_MID_SLOT" className="my-6" />
+
       {/* Methodology */}
       {methodology && (
         <>
@@ -98,6 +122,9 @@ export function CalculatorShell({
           <CalculatorFaq faqs={faqs} />
         </>
       )}
+
+      {/* Ad: after FAQ */}
+      <AdUnit slot="CALC_BOTTOM_SLOT" className="my-6" />
 
       {/* Related Calculators */}
       {relatedCalculators && relatedCalculators.length > 0 && (
