@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   description:
     "Free calculators for EV costs, solar payback, heat pump savings, and clean energy tax credits. Make smarter green energy decisions with real data.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://gogreencalc.tools"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://gogreencalc.com"
   ),
   openGraph: {
     type: "website",

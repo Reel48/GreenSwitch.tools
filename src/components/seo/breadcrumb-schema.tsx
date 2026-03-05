@@ -15,7 +15,7 @@ export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `https://gogreencalc.tools${item.href}`,
+      item: `https://gogreencalc.com${item.href}`,
     })),
   };
 

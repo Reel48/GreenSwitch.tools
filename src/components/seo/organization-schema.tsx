@@ -4,19 +4,19 @@ export function OrganizationSchema() {
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://gogreencalc.tools/#organization",
+        "@id": "https://gogreencalc.com/#organization",
         name: "GoGreenCalc",
-        url: "https://gogreencalc.tools",
+        url: "https://gogreencalc.com",
         description:
           "Free calculators to help you make smarter clean energy decisions with real data.",
       },
       {
         "@type": "WebSite",
-        "@id": "https://gogreencalc.tools/#website",
-        url: "https://gogreencalc.tools",
+        "@id": "https://gogreencalc.com/#website",
+        url: "https://gogreencalc.com",
         name: "GoGreenCalc",
         publisher: {
-          "@id": "https://gogreencalc.tools/#organization",
+          "@id": "https://gogreencalc.com/#organization",
         },
       },
     ],

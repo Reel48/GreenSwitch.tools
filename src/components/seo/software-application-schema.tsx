@@ -14,7 +14,7 @@ export function SoftwareApplicationSchema({
     "@type": "SoftwareApplication",
     name,
     description,
-    url: `https://gogreencalc.tools${url}`,
+    url: `https://gogreencalc.com${url}`,
     applicationCategory: "FinanceApplication",
     operatingSystem: "Any",
     offers: {
@@ -23,7 +23,7 @@ export function SoftwareApplicationSchema({
       priceCurrency: "USD",
     },
     provider: {
-      "@id": "https://gogreencalc.tools/#organization",
+      "@id": "https://gogreencalc.com/#organization",
     },
   };
 

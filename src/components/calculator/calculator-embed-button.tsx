@@ -23,7 +23,7 @@ export function CalculatorEmbedButton({
   const [copied, setCopied] = useState(false);
 
   const embedCode = `<iframe
-  src="https://gogreencalc.tools/embed/${calculatorSlug}"
+  src="https://gogreencalc.com/embed/${calculatorSlug}"
   width="100%"
   height="600"
   frameborder="0"

@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://gogreencalc.tools",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://gogreencalc.com",
   generateRobotsTxt: true,
   exclude: ["/api/*"],
   robotsTxtOptions: {

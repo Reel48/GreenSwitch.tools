@@ -19,16 +19,16 @@ export function ArticleSchema({
     author: {
       "@type": "Organization",
       name: "GoGreenCalc",
-      url: "https://gogreencalc.tools",
+      url: "https://gogreencalc.com",
     },
     publisher: {
       "@type": "Organization",
       name: "GoGreenCalc",
-      url: "https://gogreencalc.tools",
+      url: "https://gogreencalc.com",
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://gogreencalc.tools${url}`,
+      "@id": `https://gogreencalc.com${url}`,
     },
   };
 
