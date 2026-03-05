@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { OrganizationSchema } from "@/components/seo/organization-schema";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { AdSense } from "@/components/ads/adsense";
 import "./globals.css";
 
 const inter = Inter({
@@ -56,6 +57,7 @@ export default function RootLayout({
         className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <GoogleAnalytics />
+        <AdSense />
         <TRPCProvider>
           <TooltipProvider>
             <div className="flex min-h-screen flex-col">
