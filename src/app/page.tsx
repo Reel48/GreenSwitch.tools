@@ -226,20 +226,6 @@ export default function Home() {
                 </StaggerItem>
               );
             })}
-
-            {/* "More coming" card */}
-            <StaggerItem>
-              <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-border/60 p-6">
-                <div className="text-center">
-                  <div className="mx-auto mb-3 inline-flex size-11 items-center justify-center rounded-xl bg-muted">
-                    <Calculator className="size-5 text-muted-foreground" />
-                  </div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    More calculators coming soon
-                  </p>
-                </div>
-              </div>
-            </StaggerItem>
           </StaggerGrid>
         </div>
       </section>
