@@ -103,7 +103,7 @@ export default function BatteryStoragePage() {
         },
         {
           title: "Heat Pump vs Furnace",
-          href: "/calculators/heat-pump-vs-furnace",
+          href: "/calculators/heat-pump",
           description: "Electrify your heating with battery backup.",
           icon: Thermometer,
         },

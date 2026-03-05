@@ -5,12 +5,13 @@ const calculatorLinks = [
   { label: "EV vs Gas Cost", href: "/calculators/ev-vs-gas-cost" },
   { label: "Solar Payback", href: "/calculators/solar-payback" },
   { label: "EV Charging Cost", href: "/calculators/ev-charging-cost" },
-  { label: "Heat Pump vs Furnace", href: "/calculators/heat-pump-vs-furnace" },
+  { label: "Heat Pump vs Furnace", href: "/calculators/heat-pump" },
   { label: "EV Tax Credit", href: "/calculators/ev-tax-credit" },
   { label: "Battery Storage", href: "/calculators/battery-storage" },
 ] as const;
 
 const resourceLinks = [
+  { label: "Learn", href: "/learn" },
   { label: "Methodology", href: "/methodology" },
 ] as const;
 

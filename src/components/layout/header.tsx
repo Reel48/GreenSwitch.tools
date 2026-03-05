@@ -27,7 +27,7 @@ const calculators = [
   },
   {
     label: "Heat Pump vs Furnace",
-    href: "/calculators/heat-pump-vs-furnace",
+    href: "/calculators/heat-pump",
     icon: Flame,
     description: "Compare heating system costs",
   },
@@ -128,6 +128,13 @@ export function Header() {
             </div>
           </div>
 
+          <Link
+            href="/learn"
+            className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Learn
+          </Link>
+
           {/* CTA */}
           <div className="ml-2">
             <Button asChild size="sm">
@@ -180,6 +187,15 @@ export function Header() {
               );
             })}
           </div>
+
+          {/* Mobile Learn Link */}
+          <Link
+            href="/learn"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+          >
+            Learn
+          </Link>
 
           {/* Mobile CTA */}
           <div className="pt-2">

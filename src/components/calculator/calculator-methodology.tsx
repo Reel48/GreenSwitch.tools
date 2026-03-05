@@ -13,7 +13,7 @@ interface CalculatorMethodologyProps {
 export function CalculatorMethodology({
   content,
 }: CalculatorMethodologyProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
     <section className="space-y-3">

@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCProvider } from "@/lib/trpc/react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { OrganizationSchema } from "@/components/seo/organization-schema";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import "./globals.css";
 
 const inter = Inter({
@@ -47,9 +49,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <OrganizationSchema />
+      </head>
       <body
         className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}
       >
+        <GoogleAnalytics />
         <TRPCProvider>
           <TooltipProvider>
             <div className="flex min-h-screen flex-col">

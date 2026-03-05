@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { CalculatorMethodology } from "./calculator-methodology";
 import { CalculatorFaq } from "./calculator-faq";
@@ -110,7 +111,7 @@ export function CalculatorShell({
               {relatedCalculators.map((calc) => {
                 const Icon = calc.icon;
                 return (
-                  <a
+                  <Link
                     key={calc.href}
                     href={calc.href}
                     className="group block"
@@ -136,7 +137,7 @@ export function CalculatorShell({
                         </p>
                       </CardContent>
                     </Card>
-                  </a>
+                  </Link>
                 );
               })}
             </div>

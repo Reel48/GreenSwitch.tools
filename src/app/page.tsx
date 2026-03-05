@@ -48,7 +48,7 @@ const calculators = [
     title: "Heat Pump vs Furnace",
     description:
       "Compare heating system costs including installation, energy bills, maintenance, and long-term savings.",
-    href: "/calculators/heat-pump-vs-furnace",
+    href: "/calculators/heat-pump",
     icon: Flame,
     color: "bg-orange-500/10 text-orange-600",
   },
