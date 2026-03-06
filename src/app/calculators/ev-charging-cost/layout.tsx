@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 import { SoftwareApplicationSchema } from "@/components/seo/software-application-schema";
+import { RelatedArticles } from "@/components/blog/related-articles";
+import { getPostsByCalculator } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "EV Charging Cost Estimator",
@@ -25,6 +27,8 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const articles = getPostsByCalculator("ev-charging-cost");
+
   return (
     <>
       <BreadcrumbSchema
@@ -40,6 +44,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         url="/calculators/ev-charging-cost"
       />
       {children}
+      {articles.length > 0 && (
+        <div className="mx-auto max-w-4xl px-4 pb-12">
+          <RelatedArticles articles={articles} heading="Learn More About EV Charging" />
+        </div>
+      )}
     </>
   );
 }

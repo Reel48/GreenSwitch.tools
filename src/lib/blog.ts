@@ -87,3 +87,42 @@ export function getAllSlugs(): string[] {
 export function getWordCount(content: string): number {
   return content.split(/\s+/).filter(Boolean).length;
 }
+
+/**
+ * Get related posts for a given article slug.
+ * Scores by matching tags and shared calculator, then sorts by score + date.
+ */
+export function getRelatedPosts(
+  currentSlug: string,
+  limit: number = 3
+): BlogPostMeta[] {
+  const currentPost = getPostBySlug(currentSlug);
+  if (!currentPost) return [];
+
+  const allPosts = getAllPosts().filter((p) => p.slug !== currentSlug);
+
+  const scored = allPosts.map((post) => {
+    let score = 0;
+    for (const tag of post.tags) {
+      if (currentPost.tags.includes(tag)) score += 2;
+    }
+    if (post.calculator && post.calculator === currentPost.calculator)
+      score += 1;
+    return { ...post, score };
+  });
+
+  return scored
+    .sort(
+      (a, b) =>
+        b.score - a.score ||
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
+    .slice(0, limit);
+}
+
+/**
+ * Get all posts linked to a specific calculator slug.
+ */
+export function getPostsByCalculator(calculatorSlug: string): BlogPostMeta[] {
+  return getAllPosts().filter((p) => p.calculator === calculatorSlug);
+}

@@ -4,9 +4,10 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
-import { getAllSlugs, getPostBySlug, getWordCount } from "@/lib/blog";
+import { getAllSlugs, getPostBySlug, getWordCount, getRelatedPosts } from "@/lib/blog";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 import { ArticleSchema } from "@/components/blog/article-schema";
+import { RelatedArticles } from "@/components/blog/related-articles";
 import { AdUnit } from "@/components/ads/ad-unit";
 
 interface PageProps {
@@ -78,6 +79,7 @@ export default async function LearnArticlePage({ params }: PageProps) {
   if (!post) notFound();
 
   const calculator = post.calculator ? CALCULATOR_LINKS[post.calculator] : null;
+  const relatedArticles = getRelatedPosts(slug, 3);
 
   return (
     <>
@@ -171,6 +173,13 @@ export default async function LearnArticlePage({ params }: PageProps) {
             >
               Try the {calculator.name}
             </Link>
+          </div>
+        )}
+
+        {/* Related Articles */}
+        {relatedArticles.length > 0 && (
+          <div className="mt-16">
+            <RelatedArticles articles={relatedArticles} />
           </div>
         )}
 
