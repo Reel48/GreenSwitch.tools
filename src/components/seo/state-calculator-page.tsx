@@ -9,6 +9,7 @@ import {
   calculatorInfo,
   type CalculatorSlug,
 } from "@/lib/state-pages";
+import { getStateEditorial } from "@/lib/state-editorial";
 import { states } from "@/data/states";
 import { stateIncentives, federalIncentives } from "@/data/incentives";
 
@@ -34,10 +35,16 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
   };
   const relevantCategory = categoryMap[calculator];
   const relevantFederal = federalIncentives.filter(
-    (i) => i.category === relevantCategory || i.category === "used-ev" && relevantCategory === "ev"
+    (i) => i.category === relevantCategory || (i.category === "used-ev" && relevantCategory === "ev")
   );
   const relevantStateIncentives = localIncentives.filter(
     (i) => i.category === relevantCategory
+  );
+  const editorial = getStateEditorial(
+    calculator,
+    state.name,
+    data,
+    localIncentives
   );
 
   return (
@@ -63,6 +70,23 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
         <p className="mt-4 text-lg text-muted-foreground">
           {info.description(state.name)}
         </p>
+
+        {/* Editorial content — unique per state + calculator */}
+        {editorial.length > 0 && (
+          <section className="mt-8 space-y-4">
+            <h2 className="text-2xl font-semibold">
+              What {state.name} Residents Should Know
+            </h2>
+            {editorial.map((paragraph, i) => (
+              <p
+                key={i}
+                className="text-base leading-relaxed text-muted-foreground"
+              >
+                {paragraph}
+              </p>
+            ))}
+          </section>
+        )}
 
         {/* Key data highlights */}
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
