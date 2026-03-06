@@ -8,7 +8,6 @@ import { getAllSlugs, getPostBySlug, getWordCount, getRelatedPosts } from "@/lib
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 import { ArticleSchema } from "@/components/blog/article-schema";
 import { RelatedArticles } from "@/components/blog/related-articles";
-import { AdUnit } from "@/components/ads/ad-unit";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -141,9 +140,6 @@ export default async function LearnArticlePage({ params }: PageProps) {
           </div>
         )}
 
-        {/* Ad: before article body */}
-        <AdUnit slot="ARTICLE_TOP_SLOT" className="mb-8" />
-
         {/* Article body */}
         <div className="prose prose-lg prose-green mx-auto max-w-none prose-headings:scroll-mt-20 prose-a:text-green-700 prose-a:no-underline hover:prose-a:underline">
           <MDXRemote
@@ -156,9 +152,6 @@ export default async function LearnArticlePage({ params }: PageProps) {
             }}
           />
         </div>
-
-        {/* Ad: after article body */}
-        <AdUnit slot="ARTICLE_BOTTOM_SLOT" className="mt-10" />
 
         {/* Bottom CTA */}
         {calculator && (

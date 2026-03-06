@@ -9,7 +9,6 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { CalculatorMethodology } from "./calculator-methodology";
 import { CalculatorFaq } from "./calculator-faq";
-import { AdUnit } from "@/components/ads/ad-unit";
 import { HowToSchema } from "@/components/seo/howto-schema";
 import type { LucideIcon } from "lucide-react";
 
@@ -104,9 +103,6 @@ export function CalculatorShell({
         )}
       </AnimatePresence>
 
-      {/* Ad: between results and methodology */}
-      <AdUnit slot="CALC_MID_SLOT" className="my-6" />
-
       {/* Methodology */}
       {methodology && (
         <>
@@ -122,9 +118,6 @@ export function CalculatorShell({
           <CalculatorFaq faqs={faqs} />
         </>
       )}
-
-      {/* Ad: after FAQ */}
-      <AdUnit slot="CALC_BOTTOM_SLOT" className="my-6" />
 
       {/* Related Calculators */}
       {relatedCalculators && relatedCalculators.length > 0 && (
