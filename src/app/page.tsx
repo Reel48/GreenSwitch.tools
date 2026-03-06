@@ -125,7 +125,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="mx-auto max-w-6xl px-4 pb-14 pt-14 sm:px-6 sm:pb-28 sm:pt-28 lg:px-8">
-          <FadeIn className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
               <Leaf className="size-3.5" />
               Free clean energy calculators
@@ -155,7 +155,7 @@ export default function Home() {
                 <Link href="#calculators">See All Calculators</Link>
               </Button>
             </div>
-          </FadeIn>
+          </div>
         </div>
         <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 size-[40rem] -translate-x-1/2 rounded-full bg-primary/5 blur-3xl" />
       </section>
