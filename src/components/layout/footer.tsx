@@ -8,6 +8,7 @@ const calculatorLinks = [
   { label: "Heat Pump vs Furnace", href: "/calculators/heat-pump" },
   { label: "EV Tax Credit", href: "/calculators/ev-tax-credit" },
   { label: "Battery Storage", href: "/calculators/battery-storage" },
+  { label: "Heat Pump Water Heater", href: "/calculators/heat-pump-water-heater" },
 ] as const;
 
 const resourceLinks = [

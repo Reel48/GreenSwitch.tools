@@ -69,6 +69,12 @@ const CALCULATOR_LINKS: Record<string, { name: string; href: string; description
     href: "/calculators/ev-charging-cost",
     description: "Calculate EV charging costs at home and on the go.",
   },
+  "heat-pump-water-heater": {
+    name: "Heat Pump Water Heater Calculator",
+    href: "/calculators/heat-pump-water-heater",
+    description:
+      "Compare heat pump water heater costs against electric, gas, or propane and see your payback period.",
+  },
 };
 
 export default async function LearnArticlePage({ params }: PageProps) {

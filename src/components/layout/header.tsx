@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Leaf, Menu, X, ChevronDown, Calculator, Sun, Zap, Flame, DollarSign, Battery } from "lucide-react";
+import { Leaf, Menu, X, ChevronDown, Calculator, Sun, Zap, Flame, DollarSign, Battery, Droplets } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -42,6 +42,12 @@ const calculators = [
     href: "/calculators/battery-storage",
     icon: Battery,
     description: "Evaluate home battery ROI",
+  },
+  {
+    label: "Heat Pump Water Heater",
+    href: "/calculators/heat-pump-water-heater",
+    icon: Droplets,
+    description: "Cut your water heating costs",
   },
 ] as const;
 

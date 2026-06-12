@@ -25,6 +25,7 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
   const data = getStateData(state.code);
   const localIncentives = stateIncentives[state.code] ?? [];
   const categoryMap: Record<string, string> = {
+    "heat-pump-water-heater": "heat-pump",
     "ev-vs-gas-cost": "ev",
     "solar-payback": "solar",
     "ev-charging-cost": "ev",

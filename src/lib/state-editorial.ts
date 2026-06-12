@@ -238,6 +238,53 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
     return paragraphs;
   },
 
+  "heat-pump-water-heater": (stateName, data, incentives) => {
+    const paragraphs: string[] = [];
+    const elec = data.electricity;
+    const fuel = data.fuel;
+
+    if (elec && fuel) {
+      const elecPct = pct(elec.rate, NAT_ELEC_RATE);
+      const elecDir = rateLabel(elecPct);
+
+      // Paragraph 1 — vs electric resistance (the strongest case)
+      // Typical 3-person household: ~2,800 kWh/yr of delivered hot-water heat
+      const thermalKwh = 2810;
+      const resistanceCost = Math.round((thermalKwh / 0.92) * elec.rate);
+      const hpwhCost = Math.round((thermalKwh / 3.5) * elec.rate);
+      paragraphs.push(
+        `Electricity in ${stateName} averages ${formatDollars(elec.rate, 3)} per kWh — ${elecDir} the national average. For a typical three-person household, heating water with a standard electric resistance tank costs roughly ${formatDollars(resistanceCost, 0)} per year, while a heat pump water heater doing the same job draws about a third of the electricity, costing around ${formatDollars(hpwhCost, 0)}. That gap, roughly ${formatDollars(resistanceCost - hpwhCost, 0)} every year, is what pays off the higher upfront price.`
+      );
+
+      // Paragraph 2 — vs gas, using the state's gas price
+      const gasCost = Math.round((thermalKwh / 0.62 / 29.3) * fuel.naturalGasTherm);
+      if (gasCost > hpwhCost) {
+        paragraphs.push(
+          `Against natural gas the math is closer but still favorable in ${stateName}: at ${formatDollars(fuel.naturalGasTherm)} per therm, a standard gas tank costs roughly ${formatDollars(gasCost, 0)} per year for the same household, versus about ${formatDollars(hpwhCost, 0)} for a heat pump water heater. Whether the difference justifies switching depends on installation cost and how long you plan to stay — run the calculator above with your actual numbers.`
+        );
+      } else {
+        paragraphs.push(
+          `Against natural gas, the case is tougher in ${stateName}: at ${formatDollars(fuel.naturalGasTherm)} per therm, a standard gas tank costs roughly ${formatDollars(gasCost, 0)} per year for the same household — close to or below the heat pump water heater's ${formatDollars(hpwhCost, 0)}. If you're on gas, the switch usually only pencils out with meaningful rebates or when paired with rooftop solar. The calculator above models both scenarios with your actual rates.`
+        );
+      }
+
+      // Paragraph 3 — incentives
+      const hpIncentives = incentives.filter((i) => i.category === "heat-pump");
+      if (hpIncentives.length > 0) {
+        const totalMax = hpIncentives.reduce((s, i) => s + i.maxAmount, 0);
+        paragraphs.push(
+          `With the federal 25C credit having ended December 31, 2025, state and utility programs are now the main incentives — ${stateName} residents can access up to ${formatDollars(totalMax, 0)} through state heat pump programs, and many utilities offer their own water heater rebates of $300–$1,500. Heat pump water heaters typically install for $2,500–$4,000, so these rebates meaningfully shorten the payback period.`
+        );
+      } else {
+        paragraphs.push(
+          `The federal 25C credit for heat pump water heaters ended December 31, 2025, and ${stateName} does not currently offer dedicated state-level programs — but many utilities still provide water heater rebates of $300–$1,500, so check with yours before buying. Even at full price, replacing an electric resistance tank typically pays back within 4–8 years of a 10–15 year lifespan.`
+        );
+      }
+    }
+
+    return paragraphs;
+  },
+
   "ev-tax-credit": (stateName, _data, incentives) => {
     const paragraphs: string[] = [];
 

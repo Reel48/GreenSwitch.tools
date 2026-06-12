@@ -11,6 +11,7 @@ export type CalculatorSlug =
   | "solar-payback"
   | "ev-charging-cost"
   | "heat-pump"
+  | "heat-pump-water-heater"
   | "ev-tax-credit"
   | "battery-storage";
 
@@ -49,6 +50,13 @@ export const calculatorInfo: Record<CalculatorSlug, CalculatorInfo> = {
     description: (s) =>
       `Compare heat pump and furnace heating costs in ${s}. Uses local climate data (${climateZones[getStateCode(s)]?.heatingDegreeDays ?? "N/A"} HDD), electricity rates, and fuel prices for accurate savings estimates.`,
     relevantDataKeys: ["electricity", "fuel", "climate"],
+  },
+  "heat-pump-water-heater": {
+    name: "Heat Pump Water Heater Calculator",
+    shortName: "Heat Pump Water Heater",
+    description: (s) =>
+      `See whether a heat pump water heater is worth it in ${s}. Compares operating costs against electric, gas ($${fuelPrices[getStateCode(s)]?.naturalGasTherm ?? "N/A"}/therm), or propane using local rates ($${electricityRates[getStateCode(s)]?.rate ?? "N/A"}/kWh).`,
+    relevantDataKeys: ["electricity", "fuel"],
   },
   "ev-tax-credit": {
     name: "EV Tax Credit Eligibility",

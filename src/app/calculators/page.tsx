@@ -7,6 +7,7 @@ import {
   Thermometer,
   Receipt,
   Battery,
+  Droplets,
   ArrowRight,
 } from "lucide-react";
 import {
@@ -93,6 +94,15 @@ const calculators = [
     icon: Battery,
     color: "text-teal-600 dark:text-teal-400",
     bg: "bg-teal-50 dark:bg-teal-950/50",
+  },
+  {
+    title: "Heat Pump Water Heater Savings",
+    description:
+      "See whether a heat pump water heater is worth it. Compare operating costs against your electric, gas, or propane tank and get your payback period.",
+    href: "/calculators/heat-pump-water-heater",
+    icon: Droplets,
+    color: "text-cyan-600 dark:text-cyan-400",
+    bg: "bg-cyan-50 dark:bg-cyan-950/50",
   },
 ] as const;
 
