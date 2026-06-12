@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/analytics";
 
 interface MobileSummaryBarProps {
   label: string;
@@ -40,6 +41,7 @@ export function MobileSummaryBar({
   }, []);
 
   const scrollToResults = () => {
+    track("summary_bar_click");
     document
       .getElementById("calc-results")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });

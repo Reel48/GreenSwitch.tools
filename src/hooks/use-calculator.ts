@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { track } from "@/lib/analytics";
 import {
   useForm,
   type UseFormReturn,
@@ -104,11 +105,16 @@ export function useCalculator<TInput extends FieldValues, TResult>({
 
   // Live recalculation: compute once on mount (after localStorage restore above),
   // then on every form change with a short debounce to smooth slider drags
+  const engagedRef = useRef(false);
   useEffect(() => {
     recalc(form.getValues());
 
     let timeout: ReturnType<typeof setTimeout>;
     const subscription = form.watch((values) => {
+      if (!engagedRef.current) {
+        engagedRef.current = true;
+        track("calculator_engaged", { calculator: storageKey });
+      }
       clearTimeout(timeout);
       timeout = setTimeout(() => recalc(values), 150);
     });
@@ -117,7 +123,7 @@ export function useCalculator<TInput extends FieldValues, TResult>({
       clearTimeout(timeout);
       subscription.unsubscribe();
     };
-  }, [form, recalc]);
+  }, [form, recalc, storageKey]);
 
   const onCalculate = useCallback(() => {
     recalc(form.getValues());
@@ -129,6 +135,7 @@ export function useCalculator<TInput extends FieldValues, TResult>({
   const onReset = useCallback(() => {
     form.reset(defaults);
     recalc(defaults);
+    track("calculator_reset", { calculator: storageKey });
 
     if (storageKey) {
       try {

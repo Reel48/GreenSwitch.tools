@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { useCountUp } from "@/hooks/use-count-up";
 import { cn, formatCurrency } from "@/lib/utils";
+import { track } from "@/lib/analytics";
 
 type VerdictTone = "positive" | "negative" | "neutral";
 
@@ -47,6 +48,11 @@ export function VerdictBanner({
 }: VerdictBannerProps) {
   const animated = useCountUp(amount);
   const styles = toneStyles[tone];
+
+  // Track which way the verdict lands (and flips, as users adjust inputs)
+  React.useEffect(() => {
+    track("verdict_shown", { tone });
+  }, [tone]);
 
   return (
     <motion.div

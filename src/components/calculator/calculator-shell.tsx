@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/analytics";
 import { CalculatorMethodology } from "./calculator-methodology";
 import { CalculatorFaq } from "./calculator-faq";
 import { HowToSchema } from "@/components/seo/howto-schema";
@@ -153,6 +154,9 @@ export function CalculatorShell({
                     key={calc.href}
                     href={calc.href}
                     className="group block"
+                    onClick={() =>
+                      track("related_calculator_click", { to: calc.href })
+                    }
                   >
                     <Card
                       className={cn(

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { track } from "@/lib/analytics";
 import { Settings2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -62,6 +63,16 @@ export function AdvancedSections({
   children,
 }: AdvancedSectionsProps) {
   const count = React.Children.count(children);
+  const openedRef = React.useRef<Set<string>>(new Set());
+
+  const handleValueChange = (open: string[]) => {
+    for (const section of open) {
+      if (!openedRef.current.has(section)) {
+        openedRef.current.add(section);
+        track("advanced_section_opened", { section });
+      }
+    }
+  };
 
   return (
     <div className="rounded-lg border bg-muted/30 px-4">
@@ -72,7 +83,9 @@ export function AdvancedSections({
           {count} {count === 1 ? "section" : "sections"}
         </Badge>
       </div>
-      <Accordion type="multiple">{children}</Accordion>
+      <Accordion type="multiple" onValueChange={handleValueChange}>
+        {children}
+      </Accordion>
     </div>
   );
 }
