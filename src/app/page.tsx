@@ -18,7 +18,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, StaggerGrid, StaggerItem } from "./_components/home-sections";
+import { calculatorInfo } from "@/lib/state-pages";
 
+// Single source of truth — every calculator is registered in calculatorInfo,
+// so this count stays correct as new ones are added
+const CALCULATOR_COUNT = Object.keys(calculatorInfo).length;
+
+// The six featured on the homepage; the full list lives at /calculators
 const calculators = [
   {
     title: "EV vs Gas Cost",
@@ -71,7 +77,11 @@ const calculators = [
 ] as const;
 
 const stats = [
-  { icon: Calculator, value: "6", label: "Free calculators" },
+  {
+    icon: Calculator,
+    value: String(CALCULATOR_COUNT),
+    label: "Free calculators",
+  },
   { icon: Database, value: "50+", label: "Data sources" },
   { icon: RefreshCw, value: "2026", label: "Rates & incentives" },
   { icon: DollarSign, value: "$0", label: "Always free" },
@@ -194,7 +204,8 @@ export default function Home() {
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
               Whether you&rsquo;re considering solar panels, an electric
-              vehicle, or a new heating system, we have a calculator for you.
+              vehicle, or a new heating system, we have {CALCULATOR_COUNT} free
+              calculators to help you decide. Here are the most popular six.
             </p>
           </FadeIn>
 
@@ -227,6 +238,15 @@ export default function Home() {
               );
             })}
           </StaggerGrid>
+
+          <FadeIn className="mt-8 text-center sm:mt-10">
+            <Button asChild variant="outline" size="lg">
+              <Link href="/calculators">
+                View all {CALCULATOR_COUNT} calculators
+                <ArrowRight className="ml-2 size-4" />
+              </Link>
+            </Button>
+          </FadeIn>
         </div>
       </section>
 
