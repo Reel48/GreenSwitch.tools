@@ -3,12 +3,20 @@
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
 import { InputGroup } from "@/components/calculator/input-group";
+import {
+  InputSection,
+  AdvancedSections,
+  AdvancedSection,
+} from "@/components/calculator/input-section";
 import { RangeInput } from "@/components/calculator/range-input";
 import { ResultCard } from "@/components/calculator/result-card";
 import { ComparisonBar } from "@/components/calculator/comparison-bar";
+import { VerdictBanner } from "@/components/calculator/verdict-banner";
+import { CostOverTimeChart } from "@/components/calculator/cost-over-time-chart";
+import { MobileSummaryBar } from "@/components/calculator/mobile-summary-bar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,20 +32,23 @@ import { heatPumpDefaults } from "@/calculators/heat-pump/defaults";
 import { calculateHeatPump } from "@/calculators/heat-pump/calculate";
 import {
   Thermometer,
-  DollarSign,
   TrendingDown,
   Leaf,
   Zap,
   Sun,
   Car,
-  CreditCard,
   Flame,
+  Home,
+  Wrench,
+  Clock,
+  CreditCard,
+  RotateCcw,
 } from "lucide-react";
 
 const fmt = (n: number) => "$" + n.toLocaleString();
 
 export default function HeatPumpPage() {
-  const { form, results, isCalculated, onCalculate, onReset } = useCalculator({
+  const { form, results, onReset } = useCalculator({
     schema: heatPumpSchema,
     defaults: heatPumpDefaults,
     calculate: calculateHeatPump,
@@ -54,12 +65,30 @@ export default function HeatPumpPage() {
       lastUpdated="March 2025"
       url="/calculators/heat-pump"
       howToSteps={[
-        { name: "Select climate and home size", text: "Choose your IECC climate zone and enter your home's square footage." },
-        { name: "Enter current heating system", text: "Select your fuel type (gas, propane, oil, or electric) and enter fuel and electricity rates." },
-        { name: "Set equipment performance", text: "Enter the heat pump COP and furnace AFUE efficiency ratings." },
-        { name: "Input installation costs", text: "Enter the installed cost for the heat pump and comparable furnace." },
-        { name: "Add incentives", text: "Apply the federal heat pump tax credit (up to $2,000) and any state credits." },
-        { name: "Calculate savings", text: "Click Calculate to compare annual heating costs, lifetime savings, and payback period." },
+        {
+          name: "Select climate and home size",
+          text: "Choose your IECC climate zone and enter your home's square footage.",
+        },
+        {
+          name: "Enter current heating system",
+          text: "Select your fuel type (gas, propane, oil, or electric) and enter fuel and electricity rates.",
+        },
+        {
+          name: "Set equipment performance",
+          text: "Enter the heat pump COP and furnace AFUE efficiency ratings.",
+        },
+        {
+          name: "Input installation costs",
+          text: "Enter the installed cost for the heat pump and comparable furnace.",
+        },
+        {
+          name: "Add incentives",
+          text: "Apply the federal heat pump tax credit (up to $2,000) and any state credits.",
+        },
+        {
+          name: "Review your savings",
+          text: "Results update instantly as you adjust any input — compare annual heating costs, lifetime savings, and payback period.",
+        },
       ]}
       methodology={`This calculator compares heat pump and furnace heating costs based on your climate zone's Heating Degree Days (HDD). Heating load is estimated from home size and HDD values for your IECC climate zone. Heat pump costs are calculated from the load divided by COP × electricity rate. Furnace costs use the load divided by efficiency × fuel rate. Year-over-year cost escalation is applied to both fuel and electricity. If AC savings are included, the heat pump's cooling COP is used to estimate savings versus conventional AC. The federal IRA heat pump tax credit of up to $2,000 is available for qualifying installations.`}
       faqs={[
@@ -88,7 +117,8 @@ export default function HeatPumpPage() {
         {
           title: "Solar Payback",
           href: "/calculators/solar-payback",
-          description: "Pair solar panels with your heat pump for maximum savings.",
+          description:
+            "Pair solar panels with your heat pump for maximum savings.",
           icon: Sun,
         },
         {
@@ -104,15 +134,63 @@ export default function HeatPumpPage() {
           icon: Zap,
         },
       ]}
+      mobileSummary={
+        results ? (
+          <MobileSummaryBar
+            label={
+              results.totalSavings > 0
+                ? `Heat pump savings over ${form.watch("ownershipYears")} years`
+                : `Extra heat pump cost`
+            }
+            value={fmt(Math.abs(results.totalSavings))}
+            tone={results.totalSavings > 0 ? "positive" : "negative"}
+          />
+        ) : undefined
+      }
       results={
-        isCalculated && results ? (
-          <div className="space-y-6">
+        results ? (
+          <div className="space-y-4">
+            <VerdictBanner
+              headline={
+                results.totalSavings > 0
+                  ? "The heat pump saves you"
+                  : "The furnace costs less by"
+              }
+              amount={Math.abs(results.totalSavings)}
+              caption={`over ${form.watch("ownershipYears")} years`}
+              tone={results.totalSavings > 0 ? "positive" : "negative"}
+              detail={
+                results.paybackYears ? (
+                  <Badge variant="secondary">
+                    Pays for itself in {results.paybackYears.toFixed(1)} years
+                  </Badge>
+                ) : undefined
+              }
+            />
+
             <Card>
               <CardHeader>
-                <CardTitle>Heat Pump vs Furnace Results</CardTitle>
+                <CardTitle className="text-base">
+                  Cumulative cost over time
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <CardContent>
+                <CostOverTimeChart
+                  data={results.yearlyBreakdown}
+                  labelA="Heat pump"
+                  labelB="Furnace"
+                  breakEvenYear={results.paybackYears}
+                  formatValue={fmt}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">The numbers</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="Total Heat Pump Cost"
                     value={fmt(results.totalCostHP)}
@@ -126,32 +204,6 @@ export default function HeatPumpPage() {
                     subtext={`Over ${form.watch("ownershipYears")} years`}
                     icon={Flame}
                   />
-                  <ResultCard
-                    label="Total Savings"
-                    value={fmt(results.totalSavings)}
-                    subtext={results.totalSavings > 0 ? "By choosing a heat pump" : "Furnace is cheaper"}
-                    icon={DollarSign}
-                    variant={results.totalSavings > 0 ? "savings" : "default"}
-                  />
-                  <ResultCard
-                    label="Payback Period"
-                    value={
-                      results.paybackYears
-                        ? `${results.paybackYears.toFixed(1)} years`
-                        : "N/A"
-                    }
-                    subtext={
-                      results.paybackYears
-                        ? "When heat pump breaks even"
-                        : "Doesn't break even in this period"
-                    }
-                    icon={TrendingDown}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <ResultCard
                     label="Heat Pump Heating Cost"
                     value={`${fmt(results.annualHeatingCostHP)}/yr`}
@@ -175,25 +227,25 @@ export default function HeatPumpPage() {
                   )}
                 </div>
 
-                <Separator />
-
                 <div>
-                  <h3 className="mb-3 text-lg font-semibold">
-                    Cost Breakdown
-                  </h3>
+                  <h3 className="mb-3 text-sm font-semibold">Cost Breakdown</h3>
                   <ComparisonBar
-                    items={results.costBreakdown.map((b: { label: string; amount: number; color?: string }) => ({
-                      label: b.label,
-                      value: b.amount,
-                      color: b.color ?? "#16a34a",
-                    }))}
+                    items={results.costBreakdown.map(
+                      (b: {
+                        label: string;
+                        amount: number;
+                        color?: string;
+                      }) => ({
+                        label: b.label,
+                        value: b.amount,
+                        color: b.color ?? "var(--chart-1)",
+                      }),
+                    )}
                     formatValue={(v) => fmt(v)}
                   />
                 </div>
 
-                <Separator />
-
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="CO₂ Reduction"
                     value={`${results.co2ReductionTons.toFixed(1)} tons/yr`}
@@ -209,11 +261,7 @@ export default function HeatPumpPage() {
       }
     >
       <div className="space-y-6">
-        {/* Climate & Home */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Climate & Home
-          </h3>
+        <InputSection title="Climate & Home" icon={Home}>
           <div className="grid gap-4 sm:grid-cols-2">
             <InputGroup
               label="Climate Zone"
@@ -227,18 +275,28 @@ export default function HeatPumpPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1A">1A - Very Hot Humid (Miami)</SelectItem>
+                  <SelectItem value="1A">
+                    1A - Very Hot Humid (Miami)
+                  </SelectItem>
                   <SelectItem value="2A">2A - Hot Humid (Houston)</SelectItem>
                   <SelectItem value="2B">2B - Hot Dry (Phoenix)</SelectItem>
                   <SelectItem value="3A">3A - Warm Humid (Atlanta)</SelectItem>
                   <SelectItem value="3B">3B - Warm Dry (Las Vegas)</SelectItem>
-                  <SelectItem value="3C">3C - Warm Marine (San Francisco)</SelectItem>
+                  <SelectItem value="3C">
+                    3C - Warm Marine (San Francisco)
+                  </SelectItem>
                   <SelectItem value="4A">4A - Mixed Humid (DC/NYC)</SelectItem>
-                  <SelectItem value="4B">4B - Mixed Dry (Albuquerque)</SelectItem>
-                  <SelectItem value="4C">4C - Mixed Marine (Seattle)</SelectItem>
+                  <SelectItem value="4B">
+                    4B - Mixed Dry (Albuquerque)
+                  </SelectItem>
+                  <SelectItem value="4C">
+                    4C - Mixed Marine (Seattle)
+                  </SelectItem>
                   <SelectItem value="5A">5A - Cool Humid (Chicago)</SelectItem>
                   <SelectItem value="5B">5B - Cool Dry (Denver)</SelectItem>
-                  <SelectItem value="6A">6A - Cold Humid (Minneapolis)</SelectItem>
+                  <SelectItem value="6A">
+                    6A - Cold Humid (Minneapolis)
+                  </SelectItem>
                   <SelectItem value="6B">6B - Cold Dry (Helena)</SelectItem>
                   <SelectItem value="7">7 - Very Cold (Duluth)</SelectItem>
                   <SelectItem value="8">8 - Subarctic (Fairbanks)</SelectItem>
@@ -255,15 +313,9 @@ export default function HeatPumpPage() {
               unit="sq ft"
             />
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Current Fuel System */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Current Heating System
-          </h3>
+        <InputSection title="Current Heating System" icon={Flame}>
           <div className="space-y-4">
             <InputGroup label="Current Fuel Type">
               <Select
@@ -271,7 +323,11 @@ export default function HeatPumpPage() {
                 onValueChange={(v) =>
                   form.setValue(
                     "currentFuelType",
-                    v as "natural_gas" | "propane" | "oil" | "electric_resistance"
+                    v as
+                      | "natural_gas"
+                      | "propane"
+                      | "oil"
+                      | "electric_resistance",
                   )
                 }
               >
@@ -334,15 +390,9 @@ export default function HeatPumpPage() {
               />
             </div>
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Equipment Performance */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Equipment Performance
-          </h3>
+        <InputSection title="Equipment Performance" icon={Thermometer}>
           <div className="grid gap-4 sm:grid-cols-2">
             <RangeInput
               label="Heat Pump COP"
@@ -363,193 +413,167 @@ export default function HeatPumpPage() {
               onChange={(v) => form.setValue("furnaceEfficiency", v)}
             />
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Installation Costs */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Installation Costs
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <RangeInput
-              label="Heat Pump Install Cost"
-              min={0}
-              max={50000}
-              step={500}
-              value={form.watch("heatPumpInstallCost")}
-              onChange={(v) => form.setValue("heatPumpInstallCost", v)}
-              unit="$"
-            />
-            <RangeInput
-              label="Furnace Install Cost"
-              min={0}
-              max={30000}
-              step={500}
-              value={form.watch("furnaceInstallCost")}
-              onChange={(v) => form.setValue("furnaceInstallCost", v)}
-              unit="$"
-            />
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Cooling Savings */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Cooling Savings
-          </h3>
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Switch
-                checked={includeAC}
-                onCheckedChange={(v) => form.setValue("includeACSavings", v)}
+        <AdvancedSections>
+          <AdvancedSection title="Installation Costs" icon={Wrench}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="Heat Pump Install Cost"
+                min={0}
+                max={50000}
+                step={500}
+                value={form.watch("heatPumpInstallCost")}
+                onChange={(v) => form.setValue("heatPumpInstallCost", v)}
+                unit="$"
               />
-              <Label>Include AC cooling savings</Label>
+              <RangeInput
+                label="Furnace Install Cost"
+                min={0}
+                max={30000}
+                step={500}
+                value={form.watch("furnaceInstallCost")}
+                onChange={(v) => form.setValue("furnaceInstallCost", v)}
+                unit="$"
+              />
             </div>
+          </AdvancedSection>
 
-            {includeAC && (
-              <div className="grid gap-4 sm:grid-cols-2">
-                <RangeInput
-                  label="Current Annual AC Cost"
-                  min={0}
-                  max={5000}
-                  step={50}
-                  value={form.watch("currentACCost")}
-                  onChange={(v) => form.setValue("currentACCost", v)}
-                  unit="$"
+          <AdvancedSection title="Cooling Savings" icon={Zap}>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Switch
+                  checked={includeAC}
+                  onCheckedChange={(v) => form.setValue("includeACSavings", v)}
                 />
-                <RangeInput
-                  label="Heat Pump Cooling COP"
-                  tooltip="Cooling efficiency (higher = better)"
-                  min={2}
-                  max={8}
-                  step={0.1}
-                  value={form.watch("heatPumpCoolingCOP")}
-                  onChange={(v) => form.setValue("heatPumpCoolingCOP", v)}
-                />
+                <Label>Include AC cooling savings</Label>
               </div>
-            )}
-          </div>
-        </div>
 
-        <Separator />
+              {includeAC && (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <RangeInput
+                    label="Current Annual AC Cost"
+                    min={0}
+                    max={5000}
+                    step={50}
+                    value={form.watch("currentACCost")}
+                    onChange={(v) => form.setValue("currentACCost", v)}
+                    unit="$"
+                  />
+                  <RangeInput
+                    label="Heat Pump Cooling COP"
+                    tooltip="Cooling efficiency (higher = better)"
+                    min={2}
+                    max={8}
+                    step={0.1}
+                    value={form.watch("heatPumpCoolingCOP")}
+                    onChange={(v) => form.setValue("heatPumpCoolingCOP", v)}
+                  />
+                </div>
+              )}
+            </div>
+          </AdvancedSection>
 
-        {/* Ownership & Maintenance */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Ownership & Maintenance
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <RangeInput
-              label="Ownership Period"
-              min={1}
-              max={30}
-              step={1}
-              value={form.watch("ownershipYears")}
-              onChange={(v) => form.setValue("ownershipYears", v)}
-              unit="years"
-            />
-            <RangeInput
-              label="Heat Pump Maintenance"
-              min={0}
-              max={2000}
-              step={25}
-              value={form.watch("annualMaintenanceHP")}
-              onChange={(v) => form.setValue("annualMaintenanceHP", v)}
-              unit="$/yr"
-            />
-            <RangeInput
-              label="Furnace Maintenance"
-              min={0}
-              max={2000}
-              step={25}
-              value={form.watch("annualMaintenanceFurnace")}
-              onChange={(v) => form.setValue("annualMaintenanceFurnace", v)}
-              unit="$/yr"
-            />
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Escalation Rates */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Price Escalation
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <RangeInput
-              label="Annual Fuel Price Increase"
-              min={0}
-              max={0.15}
-              step={0.005}
-              value={form.watch("fuelEscalation")}
-              onChange={(v) => form.setValue("fuelEscalation", v)}
-              unit="%/yr"
-            />
-            <RangeInput
-              label="Annual Electricity Price Increase"
-              min={0}
-              max={0.15}
-              step={0.005}
-              value={form.watch("electricityEscalation")}
-              onChange={(v) => form.setValue("electricityEscalation", v)}
-              unit="%/yr"
-            />
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Incentives & Location */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Incentives & Location
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <RangeInput
-              label="Federal Tax Credit"
-              tooltip="IRA heat pump credit (up to $2,000)"
-              min={0}
-              max={10000}
-              step={100}
-              value={form.watch("federalTaxCredit")}
-              onChange={(v) => form.setValue("federalTaxCredit", v)}
-              unit="$"
-            />
-            <RangeInput
-              label="State Tax Credit"
-              min={0}
-              max={10000}
-              step={100}
-              value={form.watch("stateTaxCredit")}
-              onChange={(v) => form.setValue("stateTaxCredit", v)}
-              unit="$"
-            />
-            <InputGroup label="State Code" tooltip="Two-letter state code">
-              <Input
-                className="w-24"
-                maxLength={2}
-                value={form.watch("stateCode")}
-                onChange={(e) =>
-                  form.setValue("stateCode", e.target.value.toUpperCase())
-                }
+          <AdvancedSection title="Ownership & Maintenance" icon={Clock}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="Ownership Period"
+                min={1}
+                max={30}
+                step={1}
+                value={form.watch("ownershipYears")}
+                onChange={(v) => form.setValue("ownershipYears", v)}
+                unit="years"
               />
-            </InputGroup>
-          </div>
-        </div>
+              <RangeInput
+                label="Heat Pump Maintenance"
+                min={0}
+                max={2000}
+                step={25}
+                value={form.watch("annualMaintenanceHP")}
+                onChange={(v) => form.setValue("annualMaintenanceHP", v)}
+                unit="$/yr"
+              />
+              <RangeInput
+                label="Furnace Maintenance"
+                min={0}
+                max={2000}
+                step={25}
+                value={form.watch("annualMaintenanceFurnace")}
+                onChange={(v) => form.setValue("annualMaintenanceFurnace", v)}
+                unit="$/yr"
+              />
+            </div>
+          </AdvancedSection>
+
+          <AdvancedSection title="Price Escalation" icon={TrendingDown}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="Annual Fuel Price Increase"
+                min={0}
+                max={0.15}
+                step={0.005}
+                value={form.watch("fuelEscalation")}
+                onChange={(v) => form.setValue("fuelEscalation", v)}
+                unit="%/yr"
+              />
+              <RangeInput
+                label="Annual Electricity Price Increase"
+                min={0}
+                max={0.15}
+                step={0.005}
+                value={form.watch("electricityEscalation")}
+                onChange={(v) => form.setValue("electricityEscalation", v)}
+                unit="%/yr"
+              />
+            </div>
+          </AdvancedSection>
+
+          <AdvancedSection title="Incentives & Location" icon={CreditCard}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="Federal Tax Credit"
+                tooltip="IRA heat pump credit (up to $2,000)"
+                min={0}
+                max={10000}
+                step={100}
+                value={form.watch("federalTaxCredit")}
+                onChange={(v) => form.setValue("federalTaxCredit", v)}
+                unit="$"
+              />
+              <RangeInput
+                label="State Tax Credit"
+                min={0}
+                max={10000}
+                step={100}
+                value={form.watch("stateTaxCredit")}
+                onChange={(v) => form.setValue("stateTaxCredit", v)}
+                unit="$"
+              />
+              <InputGroup label="State Code" tooltip="Two-letter state code">
+                <Input
+                  className="w-24"
+                  maxLength={2}
+                  value={form.watch("stateCode")}
+                  onChange={(e) =>
+                    form.setValue("stateCode", e.target.value.toUpperCase())
+                  }
+                />
+              </InputGroup>
+            </div>
+          </AdvancedSection>
+        </AdvancedSections>
 
         {/* Actions */}
-        <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-          <Button onClick={onCalculate} size="lg">
-            <Thermometer className="mr-2 size-4" />
-            Calculate
-          </Button>
-          <Button variant="outline" size="lg" onClick={onReset}>
-            Reset
+        <div className="flex justify-end pt-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReset}
+            className="text-muted-foreground"
+          >
+            <RotateCcw className="mr-2 size-3.5" />
+            Reset to defaults
           </Button>
         </div>
       </div>

@@ -3,11 +3,14 @@
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
 import { InputGroup } from "@/components/calculator/input-group";
+import { InputSection } from "@/components/calculator/input-section";
 import { RangeInput } from "@/components/calculator/range-input";
 import { ResultCard } from "@/components/calculator/result-card";
+import { ComparisonBar } from "@/components/calculator/comparison-bar";
+import { VerdictBanner } from "@/components/calculator/verdict-banner";
+import { MobileSummaryBar } from "@/components/calculator/mobile-summary-bar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -31,12 +34,14 @@ import {
   Car,
   Zap,
   Sun,
+  MapPin,
+  RotateCcw,
 } from "lucide-react";
 
 const fmt = (n: number) => "$" + n.toLocaleString();
 
 export default function EvTaxCreditPage() {
-  const { form, results, isCalculated, onCalculate, onReset } = useCalculator({
+  const { form, results, onReset } = useCalculator({
     schema: evTaxCreditSchema,
     defaults: evTaxCreditDefaults,
     calculate: calculateEvTaxCredit,
@@ -52,11 +57,26 @@ export default function EvTaxCreditPage() {
       lastUpdated="March 2025"
       url="/calculators/ev-tax-credit"
       howToSteps={[
-        { name: "Enter filing status and income", text: "Select your tax filing status and enter your adjusted gross income (AGI)." },
-        { name: "Choose purchase type", text: "Select whether you are buying a new or used EV, and confirm it is a dealer purchase." },
-        { name: "Enter vehicle details", text: "Input the vehicle make, model, MSRP or sale price, and model year." },
-        { name: "Select your state", text: "Choose your state to include any available state-level EV incentives." },
-        { name: "Check eligibility", text: "Click Check Eligibility to see your federal credit amount, income and MSRP qualification, and total savings." },
+        {
+          name: "Enter filing status and income",
+          text: "Select your tax filing status and enter your adjusted gross income (AGI).",
+        },
+        {
+          name: "Choose purchase type",
+          text: "Select whether you are buying a new or used EV, and confirm it is a dealer purchase.",
+        },
+        {
+          name: "Enter vehicle details",
+          text: "Input the vehicle make, model, MSRP or sale price, and model year.",
+        },
+        {
+          name: "Select your state",
+          text: "Choose your state to include any available state-level EV incentives.",
+        },
+        {
+          name: "Review your eligibility",
+          text: "Your eligibility updates instantly as you adjust any input — see your federal credit amount, income and MSRP qualification, and total savings.",
+        },
       ]}
       methodology={`This calculator evaluates eligibility for the federal clean vehicle tax credit under IRC 30D (new vehicles, up to $7,500) and IRC 25E (used vehicles, lesser of $4,000 or 30% of sale price). Income limits vary by filing status. MSRP caps are $55,000 for sedans and $80,000 for SUVs/trucks/vans (new vehicles) or $25,000 (used vehicles). Vehicle classification uses keyword matching on the model name. State credits are simplified estimates based on publicly available incentive programs. Always verify eligibility with the IRS clean vehicle list and your state's incentive program.`}
       faqs={[
@@ -101,29 +121,134 @@ export default function EvTaxCreditPage() {
           icon: Sun,
         },
       ]}
+      mobileSummary={
+        results ? (
+          <MobileSummaryBar
+            label="Estimated incentives"
+            value={fmt(results.totalSavings)}
+            tone={
+              results.federalEligible
+                ? "positive"
+                : results.stateCredit > 0
+                  ? "neutral"
+                  : "negative"
+            }
+          />
+        ) : undefined
+      }
       results={
-        isCalculated && results ? (
-          <div className="space-y-6">
+        results ? (
+          <div className="space-y-4">
+            {results.federalEligible ? (
+              <VerdictBanner
+                headline="You likely qualify for"
+                amount={results.totalSavings}
+                caption={`${results.savingsPercent}% off the purchase price`}
+                tone="positive"
+                detail={
+                  <>
+                    <Badge variant="secondary">
+                      Federal: {fmt(results.federalCreditAmount)}
+                    </Badge>
+                    <Badge variant="secondary">
+                      State: {fmt(results.stateCredit)}
+                    </Badge>
+                  </>
+                }
+              />
+            ) : results.stateCredit > 0 ? (
+              <VerdictBanner
+                headline="Federal credit unavailable — state incentives could still save you"
+                amount={results.stateCredit}
+                caption="see the checklist below for why"
+                tone="neutral"
+              />
+            ) : (
+              <VerdictBanner
+                headline="Estimated incentives"
+                amount={0}
+                caption="you don't appear to qualify — see the checklist below"
+                tone="negative"
+              />
+            )}
+
             <Card>
               <CardHeader>
-                <CardTitle>Tax Credit Results</CardTitle>
+                <CardTitle className="text-base">
+                  Price after incentives
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <Badge
-                    variant={results.federalEligible ? "default" : "destructive"}
-                    className="text-sm px-3 py-1"
-                  >
-                    {results.federalEligible
-                      ? "Likely Eligible"
-                      : "Not Eligible"}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    Federal Clean Vehicle Credit
-                  </span>
-                </div>
+              <CardContent>
+                <ComparisonBar
+                  items={[
+                    {
+                      label: "Vehicle price",
+                      value: form.watch("vehicleMSRP"),
+                      color: "var(--chart-4)",
+                    },
+                    {
+                      label: "Federal credit",
+                      value: -results.federalCreditAmount,
+                      color: "var(--chart-1)",
+                    },
+                    {
+                      label: "State incentive",
+                      value: -results.stateCredit,
+                      color: "var(--chart-2)",
+                    },
+                    {
+                      label: "You pay",
+                      value: results.effectivePrice,
+                      color: "var(--chart-3)",
+                    },
+                  ]}
+                  formatValue={fmt}
+                />
+              </CardContent>
+            </Card>
 
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">
+                  Eligibility checklist
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {results.eligibilityReasons.map(
+                    (
+                      reason: {
+                        label: string;
+                        passed: boolean;
+                        detail: string;
+                      },
+                      i: number,
+                    ) => (
+                      <div key={i} className="flex items-start gap-3">
+                        {reason.passed ? (
+                          <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-green-600" />
+                        ) : (
+                          <XCircle className="mt-0.5 size-5 shrink-0 text-red-500" />
+                        )}
+                        <div>
+                          <p className="font-medium">{reason.label}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {reason.detail}
+                          </p>
+                        </div>
+                      </div>
+                    ),
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">The numbers</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="Federal Credit"
                     value={fmt(results.federalCreditAmount)}
@@ -155,40 +280,6 @@ export default function EvTaxCreditPage() {
                     icon={Percent}
                   />
                 </div>
-
-                <Separator />
-
-                <div>
-                  <h3 className="mb-3 text-lg font-semibold">
-                    Eligibility Checklist
-                  </h3>
-                  <div className="space-y-3">
-                    {results.eligibilityReasons.map(
-                      (
-                        reason: {
-                          label: string;
-                          passed: boolean;
-                          detail: string;
-                        },
-                        i: number
-                      ) => (
-                        <div key={i} className="flex items-start gap-3">
-                          {reason.passed ? (
-                            <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-green-600" />
-                          ) : (
-                            <XCircle className="mt-0.5 size-5 shrink-0 text-red-500" />
-                          )}
-                          <div>
-                            <p className="font-medium">{reason.label}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {reason.detail}
-                            </p>
-                          </div>
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -196,11 +287,7 @@ export default function EvTaxCreditPage() {
       }
     >
       <div className="space-y-6">
-        {/* Filing & Income */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Filing & Income
-          </h3>
+        <InputSection title="Filing & Income" icon={DollarSign}>
           <div className="grid gap-4 sm:grid-cols-2">
             <InputGroup label="Filing Status">
               <Select
@@ -212,7 +299,7 @@ export default function EvTaxCreditPage() {
                       | "single"
                       | "married_jointly"
                       | "married_separately"
-                      | "head_of_household"
+                      | "head_of_household",
                   )
                 }
               >
@@ -245,124 +332,115 @@ export default function EvTaxCreditPage() {
               unit="$"
             />
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Purchase Details */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Purchase Details
-          </h3>
-          <div className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <InputGroup label="Purchase Type">
-                <Select
-                  value={purchaseType}
-                  onValueChange={(v) =>
-                    form.setValue("purchaseType", v as "new" | "used")
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="new">New Vehicle</SelectItem>
-                    <SelectItem value="used">Used Vehicle</SelectItem>
-                  </SelectContent>
-                </Select>
-              </InputGroup>
-
-              <div className="flex items-center gap-3 pt-6">
-                <Switch
-                  checked={form.watch("dealerPurchase")}
-                  onCheckedChange={(v) => form.setValue("dealerPurchase", v)}
-                />
-                <Label>Purchased from a licensed dealer</Label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Vehicle Information */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Vehicle Information
-          </h3>
-          <div className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <InputGroup label="Vehicle Make" tooltip="e.g. Tesla, Chevrolet, Ford">
-                <Input
-                  value={form.watch("vehicleMake")}
-                  onChange={(e) => form.setValue("vehicleMake", e.target.value)}
-                  placeholder="e.g. Tesla"
-                />
-              </InputGroup>
-
-              <InputGroup
-                label="Vehicle Model"
-                tooltip="Include body type (e.g. 'Model Y SUV') for accurate MSRP cap"
-              >
-                <Input
-                  value={form.watch("vehicleModel")}
-                  onChange={(e) => form.setValue("vehicleModel", e.target.value)}
-                  placeholder="e.g. Model Y SUV"
-                />
-              </InputGroup>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <RangeInput
-                label={purchaseType === "new" ? "Vehicle MSRP" : "Sale Price"}
-                tooltip={
-                  purchaseType === "new"
-                    ? "Manufacturer's suggested retail price"
-                    : "Actual purchase price of the used vehicle"
+        <InputSection title="Purchase Details" icon={Car}>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <InputGroup label="Purchase Type">
+              <Select
+                value={purchaseType}
+                onValueChange={(v) =>
+                  form.setValue("purchaseType", v as "new" | "used")
                 }
-                min={0}
-                max={purchaseType === "new" ? 150000 : 50000}
-                step={1000}
-                value={form.watch("vehicleMSRP")}
-                onChange={(v) => form.setValue("vehicleMSRP", v)}
-                unit="$"
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="new">New Vehicle</SelectItem>
+                  <SelectItem value="used">Used Vehicle</SelectItem>
+                </SelectContent>
+              </Select>
+            </InputGroup>
+
+            <div className="flex items-center gap-3 pt-6">
+              <Switch
+                checked={form.watch("dealerPurchase")}
+                onCheckedChange={(v) => form.setValue("dealerPurchase", v)}
               />
-              <RangeInput
-                label="Model Year"
-                min={2023}
-                max={2027}
-                step={1}
-                value={form.watch("vehicleYear")}
-                onChange={(v) => form.setValue("vehicleYear", v)}
-                unit=""
-              />
+              <Label>Purchased from a licensed dealer</Label>
             </div>
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
+        <InputSection title="Vehicle Information" icon={CreditCard}>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <InputGroup
+              label="Vehicle Make"
+              tooltip="e.g. Tesla, Chevrolet, Ford"
+            >
+              <Input
+                value={form.watch("vehicleMake")}
+                onChange={(e) => form.setValue("vehicleMake", e.target.value)}
+                placeholder="e.g. Tesla"
+              />
+            </InputGroup>
 
-        {/* Location */}
-        <InputGroup label="State Code" tooltip="Two-letter state code for state incentive lookup">
-          <Input
-            className="w-24"
-            maxLength={2}
-            value={form.watch("stateCode")}
-            onChange={(e) =>
-              form.setValue("stateCode", e.target.value.toUpperCase())
-            }
-          />
-        </InputGroup>
+            <InputGroup
+              label="Vehicle Model"
+              tooltip="Include body type (e.g. 'Model Y SUV') for accurate MSRP cap"
+            >
+              <Input
+                value={form.watch("vehicleModel")}
+                onChange={(e) => form.setValue("vehicleModel", e.target.value)}
+                placeholder="e.g. Model Y SUV"
+              />
+            </InputGroup>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <RangeInput
+              label={purchaseType === "new" ? "Vehicle MSRP" : "Sale Price"}
+              tooltip={
+                purchaseType === "new"
+                  ? "Manufacturer's suggested retail price"
+                  : "Actual purchase price of the used vehicle"
+              }
+              min={0}
+              max={purchaseType === "new" ? 150000 : 50000}
+              step={1000}
+              value={form.watch("vehicleMSRP")}
+              onChange={(v) => form.setValue("vehicleMSRP", v)}
+              unit="$"
+            />
+            <RangeInput
+              label="Model Year"
+              min={2023}
+              max={2027}
+              step={1}
+              value={form.watch("vehicleYear")}
+              onChange={(v) => form.setValue("vehicleYear", v)}
+              unit=""
+            />
+          </div>
+        </InputSection>
+
+        <InputSection title="Location" icon={MapPin}>
+          <InputGroup
+            label="State Code"
+            tooltip="Two-letter state code for state incentive lookup"
+          >
+            <Input
+              className="w-24"
+              maxLength={2}
+              value={form.watch("stateCode")}
+              onChange={(e) =>
+                form.setValue("stateCode", e.target.value.toUpperCase())
+              }
+            />
+          </InputGroup>
+        </InputSection>
 
         {/* Actions */}
-        <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-          <Button onClick={onCalculate} size="lg">
-            <CreditCard className="mr-2 size-4" />
-            Check Eligibility
-          </Button>
-          <Button variant="outline" size="lg" onClick={onReset}>
-            Reset
+        <div className="flex justify-end pt-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReset}
+            className="text-muted-foreground"
+          >
+            <RotateCcw className="mr-2 size-3.5" />
+            Reset to defaults
           </Button>
         </div>
       </div>

@@ -3,12 +3,20 @@
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
 import { InputGroup } from "@/components/calculator/input-group";
+import {
+  InputSection,
+  AdvancedSections,
+  AdvancedSection,
+} from "@/components/calculator/input-section";
 import { RangeInput } from "@/components/calculator/range-input";
 import { ResultCard } from "@/components/calculator/result-card";
 import { ComparisonBar } from "@/components/calculator/comparison-bar";
+import { VerdictBanner } from "@/components/calculator/verdict-banner";
+import { CostOverTimeChart } from "@/components/calculator/cost-over-time-chart";
+import { MobileSummaryBar } from "@/components/calculator/mobile-summary-bar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { evVsGasSchema } from "@/calculators/ev-vs-gas/schema";
 import { evVsGasDefaults } from "@/calculators/ev-vs-gas/defaults";
@@ -16,24 +24,31 @@ import { calculateEvVsGas } from "@/calculators/ev-vs-gas/calculate";
 import {
   Car,
   DollarSign,
-  TrendingUp,
   Leaf,
   Zap,
   Fuel,
   Sun,
   CreditCard,
-  Thermometer,
+  Gauge,
+  Wrench,
+  Percent,
+  TrendingDown,
+  MapPin,
+  RotateCcw,
 } from "lucide-react";
 
 const fmt = (n: number) => "$" + n.toLocaleString();
 
 export default function EvVsGasCostPage() {
-  const { form, results, isCalculated, onCalculate, onReset } = useCalculator({
+  const { form, results, onReset } = useCalculator({
     schema: evVsGasSchema,
     defaults: evVsGasDefaults,
     calculate: calculateEvVsGas,
     storageKey: "ev-vs-gas-cost",
   });
+
+  const ownershipYears = form.watch("ownershipYears");
+  const evWins = results ? results.totalSavings > 0 : true;
 
   return (
     <CalculatorShell
@@ -42,12 +57,30 @@ export default function EvVsGasCostPage() {
       lastUpdated="March 2025"
       url="/calculators/ev-vs-gas-cost"
       howToSteps={[
-        { name: "Enter vehicle prices", text: "Enter the purchase price for the EV and gas vehicle you want to compare." },
-        { name: "Set driving details", text: "Enter your annual miles driven and how long you plan to own the vehicles." },
-        { name: "Input energy costs", text: "Set your local electricity rate ($/kWh) and gas price ($/gallon)." },
-        { name: "Add vehicle efficiency", text: "Enter the EV efficiency (kWh/100 mi) and gas car fuel economy (MPG)." },
-        { name: "Include ownership costs", text: "Add annual maintenance, insurance, and any available tax credits or incentives." },
-        { name: "Calculate and compare", text: "Click Calculate to see a side-by-side total cost comparison, break-even year, and lifetime savings." },
+        {
+          name: "Enter vehicle prices",
+          text: "Enter the purchase price for the EV and gas vehicle you want to compare.",
+        },
+        {
+          name: "Set driving details",
+          text: "Enter your annual miles driven and how long you plan to own the vehicles.",
+        },
+        {
+          name: "Input energy costs",
+          text: "Set your local electricity rate ($/kWh) and gas price ($/gallon).",
+        },
+        {
+          name: "Add vehicle efficiency",
+          text: "Enter the EV efficiency (kWh/100 mi) and gas car fuel economy (MPG).",
+        },
+        {
+          name: "Include ownership costs",
+          text: "Add annual maintenance, insurance, and any available tax credits or incentives.",
+        },
+        {
+          name: "Compare your results",
+          text: "Results update instantly as you adjust any input — see a side-by-side total cost comparison, break-even year, and lifetime savings.",
+        },
       ]}
       methodology={`This calculator compares EV and gas vehicle total cost of ownership (TCO) over your chosen ownership period. It accounts for purchase price (net of incentives for EVs), loan financing with standard amortization, fuel/electricity costs with annual price escalation, maintenance, insurance, and depreciation. Break-even year is when the EV's cumulative cost drops below the gas car's. CO₂ estimates use EPA averages: 0.855 lbs/kWh for electricity and 19.6 lbs/gallon for gasoline.`}
       faqs={[
@@ -62,7 +95,8 @@ export default function EvVsGasCostPage() {
             "Under the Inflation Reduction Act, new EVs can qualify for up to $7,500 in federal tax credits, and used EVs for up to $4,000. Eligibility depends on your income, the vehicle's MSRP, and manufacturing requirements.",
         },
         {
-          question: "How much does it cost to charge an EV vs filling a gas tank?",
+          question:
+            "How much does it cost to charge an EV vs filling a gas tank?",
           answer:
             "At average US electricity rates (~$0.16/kWh), it costs about $5-8 to fully charge a typical EV (vs. $40-60+ for a gas fill-up). EV fuel costs work out to roughly $0.04-0.06 per mile compared to $0.10-0.15+ for gas vehicles.",
         },
@@ -92,47 +126,83 @@ export default function EvVsGasCostPage() {
           icon: Sun,
         },
       ]}
+      mobileSummary={
+        results ? (
+          <MobileSummaryBar
+            label={
+              evWins
+                ? `EV savings over ${ownershipYears} years`
+                : `Extra EV cost over ${ownershipYears} years`
+            }
+            value={fmt(Math.abs(results.totalSavings))}
+            tone={evWins ? "positive" : "negative"}
+          />
+        ) : undefined
+      }
       results={
-        isCalculated && results ? (
-          <div className="space-y-6">
+        results ? (
+          <div className="space-y-4">
+            <VerdictBanner
+              headline={
+                evWins
+                  ? "Choosing the EV saves you"
+                  : "The gas car costs less by"
+              }
+              amount={Math.abs(results.totalSavings)}
+              caption={`over ${ownershipYears} years of ownership`}
+              tone={evWins ? "positive" : "negative"}
+              detail={
+                <>
+                  {results.breakEvenYear && (
+                    <Badge variant="secondary">
+                      Breaks even in year {results.breakEvenYear}
+                    </Badge>
+                  )}
+                  {evWins && (
+                    <Badge variant="secondary">
+                      {fmt(results.savingsPerMonth)}/month
+                    </Badge>
+                  )}
+                </>
+              }
+            />
+
             <Card>
               <CardHeader>
-                <CardTitle>Cost Comparison Results</CardTitle>
+                <CardTitle className="text-base">
+                  Cumulative cost over time
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <CardContent>
+                <CostOverTimeChart
+                  data={results.yearlyBreakdown}
+                  labelA="Electric vehicle"
+                  labelB="Gas car"
+                  breakEvenYear={results.breakEvenYear}
+                  formatValue={fmt}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">The numbers</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="EV Total Cost"
                     value={fmt(results.evTotalCost)}
-                    subtext={`Over ${form.watch("ownershipYears")} years`}
+                    subtext={`Over ${ownershipYears} years`}
                     icon={Car}
                     variant="highlight"
                   />
                   <ResultCard
                     label="Gas Car Total Cost"
                     value={fmt(results.gasTotalCost)}
-                    subtext={`Over ${form.watch("ownershipYears")} years`}
+                    subtext={`Over ${ownershipYears} years`}
                     icon={Fuel}
                   />
-                  <ResultCard
-                    label="Total Savings"
-                    value={fmt(results.totalSavings)}
-                    subtext={`${fmt(results.savingsPerMonth)}/month`}
-                    icon={DollarSign}
-                    variant={results.totalSavings > 0 ? "savings" : "default"}
-                  />
-                  <ResultCard
-                    label="Break-Even Year"
-                    value={results.breakEvenYear ? `Year ${results.breakEvenYear}` : "N/A"}
-                    subtext={results.breakEvenYear ? "EV becomes cheaper" : "EV doesn't break even"}
-                    icon={TrendingUp}
-                    variant={results.breakEvenYear ? "highlight" : "default"}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   <ResultCard
                     label="EV Fuel Cost/Mile"
                     value={`$${results.evCostPerMile.toFixed(2)}`}
@@ -159,51 +229,47 @@ export default function EvVsGasCostPage() {
                   />
                 </div>
 
-                <Separator />
-
                 <div>
-                  <h3 className="mb-3 text-lg font-semibold">EV Cost Breakdown</h3>
+                  <h3 className="mb-3 text-sm font-semibold">
+                    EV cost breakdown
+                  </h3>
                   <ComparisonBar
                     items={results.evCostBreakdown.map((b) => ({
                       label: b.label,
                       value: b.amount,
-                      color: b.color ?? "#16a34a",
+                      color: b.color ?? "var(--chart-1)",
                     }))}
-                    formatValue={(v) => fmt(v)}
+                    formatValue={fmt}
                   />
                 </div>
 
                 <div>
-                  <h3 className="mb-3 text-lg font-semibold">Gas Car Cost Breakdown</h3>
+                  <h3 className="mb-3 text-sm font-semibold">
+                    Gas car cost breakdown
+                  </h3>
                   <ComparisonBar
                     items={results.gasCostBreakdown.map((b) => ({
                       label: b.label,
                       value: b.amount,
-                      color: b.color ?? "#ef4444",
+                      color: b.color ?? "var(--chart-4)",
                     }))}
-                    formatValue={(v) => fmt(v)}
+                    formatValue={fmt}
                   />
                 </div>
 
-                <Separator />
-
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <ResultCard
-                    label="EV Annual CO₂"
-                    value={`${results.evAnnualCO2Tons} tons`}
-                    icon={Leaf}
-                  />
-                  <ResultCard
-                    label="Gas Annual CO₂"
-                    value={`${results.gasAnnualCO2Tons} tons`}
-                    icon={Leaf}
-                  />
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="CO₂ Savings"
                     value={`${results.co2SavingsTons} tons`}
-                    subtext={`Over ${form.watch("ownershipYears")} years`}
+                    subtext={`Over ${ownershipYears} years`}
                     icon={Leaf}
                     variant="savings"
+                  />
+                  <ResultCard
+                    label="EV vs Gas Annual CO₂"
+                    value={`${results.evAnnualCO2Tons} vs ${results.gasAnnualCO2Tons} tons`}
+                    subtext="Per year of driving"
+                    icon={Leaf}
                   />
                 </div>
               </CardContent>
@@ -213,11 +279,7 @@ export default function EvVsGasCostPage() {
       }
     >
       <div className="space-y-6">
-        {/* Vehicle Prices */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Vehicle Prices
-          </h3>
+        <InputSection title="Vehicle Prices" icon={Car}>
           <div className="grid gap-4 sm:grid-cols-2">
             <RangeInput
               label="EV Purchase Price"
@@ -238,15 +300,9 @@ export default function EvVsGasCostPage() {
               unit="$"
             />
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Driving & Ownership */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Driving & Ownership
-          </h3>
+        <InputSection title="Driving & Ownership" icon={Gauge}>
           <div className="grid gap-4 sm:grid-cols-2">
             <RangeInput
               label="Annual Miles"
@@ -267,15 +323,9 @@ export default function EvVsGasCostPage() {
               unit="years"
             />
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Energy Costs */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Fuel & Energy
-          </h3>
+        <InputSection title="Fuel & Energy" icon={Fuel}>
           <div className="grid gap-4 sm:grid-cols-2">
             <RangeInput
               label="Electricity Rate"
@@ -315,194 +365,181 @@ export default function EvVsGasCostPage() {
               unit="mpg"
             />
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
+        <AdvancedSections>
+          <AdvancedSection title="Annual Costs" icon={Wrench}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="EV Annual Maintenance"
+                min={0}
+                max={5000}
+                step={50}
+                value={form.watch("evAnnualMaintenance")}
+                onChange={(v) => form.setValue("evAnnualMaintenance", v)}
+                unit="$"
+              />
+              <RangeInput
+                label="Gas Annual Maintenance"
+                min={0}
+                max={5000}
+                step={50}
+                value={form.watch("gasAnnualMaintenance")}
+                onChange={(v) => form.setValue("gasAnnualMaintenance", v)}
+                unit="$"
+              />
+              <RangeInput
+                label="EV Annual Insurance"
+                min={0}
+                max={5000}
+                step={50}
+                value={form.watch("evAnnualInsurance")}
+                onChange={(v) => form.setValue("evAnnualInsurance", v)}
+                unit="$"
+              />
+              <RangeInput
+                label="Gas Annual Insurance"
+                min={0}
+                max={5000}
+                step={50}
+                value={form.watch("gasAnnualInsurance")}
+                onChange={(v) => form.setValue("gasAnnualInsurance", v)}
+                unit="$"
+              />
+            </div>
+          </AdvancedSection>
 
-        {/* Annual Costs */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Annual Costs
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <RangeInput
-              label="EV Annual Maintenance"
-              min={0}
-              max={5000}
-              step={50}
-              value={form.watch("evAnnualMaintenance")}
-              onChange={(v) => form.setValue("evAnnualMaintenance", v)}
-              unit="$"
-            />
-            <RangeInput
-              label="Gas Annual Maintenance"
-              min={0}
-              max={5000}
-              step={50}
-              value={form.watch("gasAnnualMaintenance")}
-              onChange={(v) => form.setValue("gasAnnualMaintenance", v)}
-              unit="$"
-            />
-            <RangeInput
-              label="EV Annual Insurance"
-              min={0}
-              max={5000}
-              step={50}
-              value={form.watch("evAnnualInsurance")}
-              onChange={(v) => form.setValue("evAnnualInsurance", v)}
-              unit="$"
-            />
-            <RangeInput
-              label="Gas Annual Insurance"
-              min={0}
-              max={5000}
-              step={50}
-              value={form.watch("gasAnnualInsurance")}
-              onChange={(v) => form.setValue("gasAnnualInsurance", v)}
-              unit="$"
-            />
-          </div>
-        </div>
+          <AdvancedSection title="EV Incentives" icon={CreditCard}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="Federal Tax Credit"
+                min={0}
+                max={7500}
+                step={500}
+                value={form.watch("federalTaxCredit")}
+                onChange={(v) => form.setValue("federalTaxCredit", v)}
+                unit="$"
+              />
+              <RangeInput
+                label="State Tax Credit"
+                min={0}
+                max={10000}
+                step={500}
+                value={form.watch("stateTaxCredit")}
+                onChange={(v) => form.setValue("stateTaxCredit", v)}
+                unit="$"
+              />
+            </div>
+          </AdvancedSection>
 
-        <Separator />
+          <AdvancedSection title="Financing" icon={Percent}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="Down Payment"
+                min={0}
+                max={100}
+                step={5}
+                value={form.watch("downPaymentPercent")}
+                onChange={(v) => form.setValue("downPaymentPercent", v)}
+                unit="%"
+              />
+              <RangeInput
+                label="Loan Term"
+                min={1}
+                max={8}
+                step={1}
+                value={form.watch("loanTermYears")}
+                onChange={(v) => form.setValue("loanTermYears", v)}
+                unit="years"
+              />
+              <RangeInput
+                label="Interest Rate"
+                min={0}
+                max={20}
+                step={0.25}
+                value={form.watch("interestRate")}
+                onChange={(v) => form.setValue("interestRate", v)}
+                unit="%"
+              />
+            </div>
+          </AdvancedSection>
 
-        {/* EV Incentives */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            EV Incentives
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <RangeInput
-              label="Federal Tax Credit"
-              min={0}
-              max={7500}
-              step={500}
-              value={form.watch("federalTaxCredit")}
-              onChange={(v) => form.setValue("federalTaxCredit", v)}
-              unit="$"
-            />
-            <RangeInput
-              label="State Tax Credit"
-              min={0}
-              max={10000}
-              step={500}
-              value={form.watch("stateTaxCredit")}
-              onChange={(v) => form.setValue("stateTaxCredit", v)}
-              unit="$"
-            />
-          </div>
-        </div>
+          <AdvancedSection
+            title="Depreciation & Price Escalation"
+            icon={TrendingDown}
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="EV Depreciation Rate"
+                tooltip="Annual depreciation as a percentage of remaining value"
+                min={0.05}
+                max={0.3}
+                step={0.01}
+                value={form.watch("evDepreciationRate")}
+                onChange={(v) => form.setValue("evDepreciationRate", v)}
+                unit="%/yr"
+              />
+              <RangeInput
+                label="Gas Depreciation Rate"
+                min={0.05}
+                max={0.3}
+                step={0.01}
+                value={form.watch("gasDepreciationRate")}
+                onChange={(v) => form.setValue("gasDepreciationRate", v)}
+                unit="%/yr"
+              />
+              <RangeInput
+                label="Fuel Price Increase"
+                tooltip="Expected annual increase in gas prices"
+                min={0}
+                max={0.15}
+                step={0.005}
+                value={form.watch("annualFuelPriceIncrease")}
+                onChange={(v) => form.setValue("annualFuelPriceIncrease", v)}
+                unit="%/yr"
+              />
+              <RangeInput
+                label="Electricity Price Increase"
+                tooltip="Expected annual increase in electricity rates"
+                min={0}
+                max={0.15}
+                step={0.005}
+                value={form.watch("annualElectricityPriceIncrease")}
+                onChange={(v) =>
+                  form.setValue("annualElectricityPriceIncrease", v)
+                }
+                unit="%/yr"
+              />
+            </div>
+          </AdvancedSection>
 
-        <Separator />
-
-        {/* Financing */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Financing
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <RangeInput
-              label="Down Payment"
-              min={0}
-              max={100}
-              step={5}
-              value={form.watch("downPaymentPercent")}
-              onChange={(v) => form.setValue("downPaymentPercent", v)}
-              unit="%"
-            />
-            <RangeInput
-              label="Loan Term"
-              min={1}
-              max={8}
-              step={1}
-              value={form.watch("loanTermYears")}
-              onChange={(v) => form.setValue("loanTermYears", v)}
-              unit="years"
-            />
-            <RangeInput
-              label="Interest Rate"
-              min={0}
-              max={20}
-              step={0.25}
-              value={form.watch("interestRate")}
-              onChange={(v) => form.setValue("interestRate", v)}
-              unit="%"
-            />
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Depreciation & Escalation */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Depreciation & Price Escalation
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <RangeInput
-              label="EV Depreciation Rate"
-              tooltip="Annual depreciation as a percentage of remaining value"
-              min={0.05}
-              max={0.3}
-              step={0.01}
-              value={form.watch("evDepreciationRate")}
-              onChange={(v) => form.setValue("evDepreciationRate", v)}
-              unit="%/yr"
-            />
-            <RangeInput
-              label="Gas Depreciation Rate"
-              min={0.05}
-              max={0.3}
-              step={0.01}
-              value={form.watch("gasDepreciationRate")}
-              onChange={(v) => form.setValue("gasDepreciationRate", v)}
-              unit="%/yr"
-            />
-            <RangeInput
-              label="Fuel Price Increase"
-              tooltip="Expected annual increase in gas prices"
-              min={0}
-              max={0.15}
-              step={0.005}
-              value={form.watch("annualFuelPriceIncrease")}
-              onChange={(v) => form.setValue("annualFuelPriceIncrease", v)}
-              unit="%/yr"
-            />
-            <RangeInput
-              label="Electricity Price Increase"
-              tooltip="Expected annual increase in electricity rates"
-              min={0}
-              max={0.15}
-              step={0.005}
-              value={form.watch("annualElectricityPriceIncrease")}
-              onChange={(v) => form.setValue("annualElectricityPriceIncrease", v)}
-              unit="%/yr"
-            />
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* State */}
-        <InputGroup label="State Code" tooltip="Two-letter state code for regional data">
-          <Input
-            className="w-24"
-            maxLength={2}
-            value={form.watch("stateCode")}
-            onChange={(e) =>
-              form.setValue("stateCode", e.target.value.toUpperCase())
-            }
-          />
-        </InputGroup>
+          <AdvancedSection title="Location" icon={MapPin}>
+            <InputGroup
+              label="State Code"
+              tooltip="Two-letter state code for regional data"
+            >
+              <Input
+                className="w-24"
+                maxLength={2}
+                value={form.watch("stateCode")}
+                onChange={(e) =>
+                  form.setValue("stateCode", e.target.value.toUpperCase())
+                }
+              />
+            </InputGroup>
+          </AdvancedSection>
+        </AdvancedSections>
 
         {/* Actions */}
-        <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-          <Button onClick={onCalculate} size="lg">
-            <Car className="mr-2 size-4" />
-            Calculate
-          </Button>
-          <Button variant="outline" size="lg" onClick={onReset}>
-            Reset
+        <div className="flex justify-end pt-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReset}
+            className="text-muted-foreground"
+          >
+            <RotateCcw className="mr-2 size-3.5" />
+            Reset to defaults
           </Button>
         </div>
       </div>

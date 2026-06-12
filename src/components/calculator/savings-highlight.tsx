@@ -66,9 +66,7 @@ export function SavingsHighlight({
       <p className="mt-2 text-4xl font-bold tracking-tight text-green-700 dark:text-green-400 md:text-5xl">
         {formatCurrency(animatedAmount)}
       </p>
-      {period && (
-        <p className="mt-1 text-sm text-muted-foreground">{period}</p>
-      )}
+      {period && <p className="mt-1 text-sm text-muted-foreground">{period}</p>}
     </motion.div>
   );
 }

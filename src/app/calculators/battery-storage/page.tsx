@@ -3,12 +3,20 @@
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
 import { InputGroup } from "@/components/calculator/input-group";
+import {
+  InputSection,
+  AdvancedSections,
+  AdvancedSection,
+} from "@/components/calculator/input-section";
 import { RangeInput } from "@/components/calculator/range-input";
 import { ResultCard } from "@/components/calculator/result-card";
 import { ComparisonBar } from "@/components/calculator/comparison-bar";
+import { VerdictBanner } from "@/components/calculator/verdict-banner";
+import { CostOverTimeChart } from "@/components/calculator/cost-over-time-chart";
+import { MobileSummaryBar } from "@/components/calculator/mobile-summary-bar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,22 +32,24 @@ import { batteryStorageDefaults } from "@/calculators/battery-storage/defaults";
 import { calculateBatteryStorage } from "@/calculators/battery-storage/calculate";
 import {
   Battery,
+  Calendar,
   DollarSign,
-  TrendingUp,
   Leaf,
   Zap,
   Sun,
   CreditCard,
-  Clock,
+  Settings2,
+  Percent,
+  MapPin,
   ShieldCheck,
   Thermometer,
-  Car,
+  RotateCcw,
 } from "lucide-react";
 
 const fmt = (n: number) => "$" + n.toLocaleString();
 
 export default function BatteryStoragePage() {
-  const { form, results, isCalculated, onCalculate, onReset } = useCalculator({
+  const { form, results, onReset } = useCalculator({
     schema: batteryStorageSchema,
     defaults: batteryStorageDefaults,
     calculate: calculateBatteryStorage,
@@ -49,6 +59,7 @@ export default function BatteryStoragePage() {
   const financingType = form.watch("financingType");
   const rateStructure = form.watch("rateStructure");
   const hasSolar = form.watch("hasSolar");
+  const batteryWins = results ? results.lifetimeSavings > 0 : true;
 
   return (
     <CalculatorShell
@@ -57,12 +68,30 @@ export default function BatteryStoragePage() {
       lastUpdated="March 2026"
       url="/calculators/battery-storage"
       howToSteps={[
-        { name: "Enter system details", text: "Set battery capacity (kWh), usable percentage, round-trip efficiency, and system cost." },
-        { name: "Input energy usage", text: "Enter your monthly electric bill and whether you have solar panels installed." },
-        { name: "Set rate structure", text: "Choose time-of-use (TOU) or flat rate, and enter your on-peak and off-peak electricity prices." },
-        { name: "Choose financing", text: "Select cash or loan financing with your interest rate and loan term." },
-        { name: "Apply incentives", text: "Enable the 30% federal ITC and any available state battery incentives." },
-        { name: "Calculate ROI", text: "Click Calculate to see your payback period, annual savings, and 15-year return on investment." },
+        {
+          name: "Enter system details",
+          text: "Set battery capacity (kWh), usable percentage, round-trip efficiency, and system cost.",
+        },
+        {
+          name: "Input energy usage",
+          text: "Enter your monthly electric bill and whether you have solar panels installed.",
+        },
+        {
+          name: "Set rate structure",
+          text: "Choose time-of-use (TOU) or flat rate, and enter your on-peak and off-peak electricity prices.",
+        },
+        {
+          name: "Choose financing",
+          text: "Select cash or loan financing with your interest rate and loan term.",
+        },
+        {
+          name: "Apply incentives",
+          text: "Enable the 30% federal ITC and any available state battery incentives.",
+        },
+        {
+          name: "Review your ROI",
+          text: "Results update instantly as you adjust any input — see your payback period, annual savings, and 15-year return on investment.",
+        },
       ]}
       methodology={`This calculator models home battery storage savings over 15 years. For time-of-use (TOU) rate structures, savings come from charging the battery at off-peak rates and discharging during on-peak hours (rate arbitrage). For flat-rate plans with solar, the battery captures excess solar generation for later self-consumption instead of exporting at a lower net metering rate. Battery capacity degrades annually (default 3%/year), while utility rates escalate at 3%/year. The federal Investment Tax Credit (ITC) of 30% applies to standalone battery storage under the Inflation Reduction Act. State incentives (e.g., California's SGIP) are applied when available. Net system cost equals the gross cost minus all applicable incentives. The payback period is the year when cumulative net savings first exceed zero.`}
       faqs={[
@@ -117,15 +146,68 @@ export default function BatteryStoragePage() {
           icon: Thermometer,
         },
       ]}
+      mobileSummary={
+        results ? (
+          <MobileSummaryBar
+            label="15-year battery savings"
+            value={fmt(Math.abs(results.lifetimeSavings))}
+            tone={results.lifetimeSavings > 0 ? "positive" : "negative"}
+          />
+        ) : undefined
+      }
       results={
-        isCalculated && results ? (
-          <div className="space-y-6">
+        results ? (
+          <div className="space-y-4">
+            <VerdictBanner
+              headline={
+                batteryWins
+                  ? "Your battery returns"
+                  : "The battery costs more by"
+              }
+              amount={Math.abs(results.lifetimeSavings)}
+              caption="over 15 years of operation"
+              tone={batteryWins ? "positive" : "negative"}
+              detail={
+                <>
+                  <Badge variant="secondary">
+                    {results.paybackPeriodYears > 15
+                      ? "15+ year payback"
+                      : `Pays back in ${results.paybackPeriodYears} years`}
+                  </Badge>
+                  {batteryWins && (
+                    <Badge variant="secondary">{results.roi}% ROI</Badge>
+                  )}
+                </>
+              }
+            />
+
             <Card>
               <CardHeader>
-                <CardTitle>Battery Storage Results</CardTitle>
+                <CardTitle className="text-base">
+                  Cumulative cost over time
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <CardContent>
+                <CostOverTimeChart
+                  data={results.yearlyBreakdown}
+                  labelA="With battery"
+                  labelB="Without battery"
+                  breakEvenYear={
+                    results.paybackPeriodYears <= 15
+                      ? results.paybackPeriodYears
+                      : null
+                  }
+                  formatValue={fmt}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">The numbers</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="Payback Period"
                     value={
@@ -134,7 +216,7 @@ export default function BatteryStoragePage() {
                         : `${results.paybackPeriodYears} years`
                     }
                     subtext="When investment breaks even"
-                    icon={TrendingUp}
+                    icon={Calendar}
                     variant="highlight"
                   />
                   <ResultCard
@@ -154,14 +236,9 @@ export default function BatteryStoragePage() {
                     label="15-Year ROI"
                     value={`${results.roi}%`}
                     subtext={`Lifetime savings: ${fmt(results.lifetimeSavings)}`}
-                    icon={TrendingUp}
+                    icon={Percent}
                     variant={results.roi > 0 ? "savings" : undefined}
                   />
-                </div>
-
-                <Separator />
-
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <ResultCard
                     label="Warranty-Period Savings"
                     value={fmt(results.warrantySavings)}
@@ -184,68 +261,52 @@ export default function BatteryStoragePage() {
                 </div>
 
                 {results.federalTaxCredit > 0 || results.stateIncentive > 0 ? (
-                  <>
-                    <Separator />
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {results.federalTaxCredit > 0 && (
-                        <ResultCard
-                          label="Federal Tax Credit"
-                          value={fmt(results.federalTaxCredit)}
-                          subtext="30% ITC"
-                          icon={CreditCard}
-                          variant="savings"
-                        />
-                      )}
-                      {results.stateIncentive > 0 && (
-                        <ResultCard
-                          label="State Incentive"
-                          value={fmt(results.stateIncentive)}
-                          subtext="State rebate/credit"
-                          icon={CreditCard}
-                          variant="savings"
-                        />
-                      )}
-                    </div>
-                  </>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {results.federalTaxCredit > 0 && (
+                      <ResultCard
+                        label="Federal Tax Credit"
+                        value={fmt(results.federalTaxCredit)}
+                        subtext="30% ITC"
+                        icon={CreditCard}
+                        variant="savings"
+                      />
+                    )}
+                    {results.stateIncentive > 0 && (
+                      <ResultCard
+                        label="State Incentive"
+                        value={fmt(results.stateIncentive)}
+                        subtext="State rebate/credit"
+                        icon={CreditCard}
+                        variant="savings"
+                      />
+                    )}
+                  </div>
                 ) : null}
 
                 {financingType === "loan" && (
-                  <>
-                    <Separator />
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <ResultCard
-                        label="Monthly Loan Payment"
-                        value={fmt(results.monthlyLoanPayment)}
-                        icon={DollarSign}
-                      />
-                      <ResultCard
-                        label="Total Interest Paid"
-                        value={fmt(results.totalInterestPaid)}
-                        icon={DollarSign}
-                      />
-                    </div>
-                  </>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <ResultCard
+                      label="Monthly Loan Payment"
+                      value={fmt(results.monthlyLoanPayment)}
+                      icon={DollarSign}
+                    />
+                    <ResultCard
+                      label="Total Interest Paid"
+                      value={fmt(results.totalInterestPaid)}
+                      icon={DollarSign}
+                    />
+                  </div>
                 )}
 
-                <Separator />
-
                 <div>
-                  <h3 className="mb-3 text-lg font-semibold">
-                    Cost Breakdown
-                  </h3>
+                  <h3 className="mb-3 text-sm font-semibold">Cost Breakdown</h3>
                   <ComparisonBar
-                    items={results.costBreakdown.map(
-                      (b: {
-                        label: string;
-                        amount: number;
-                        color?: string;
-                      }) => ({
-                        label: b.label,
-                        value: b.amount,
-                        color: b.color ?? "#0891b2",
-                      }),
-                    )}
-                    formatValue={(v) => fmt(v)}
+                    items={results.costBreakdown.map((b) => ({
+                      label: b.label,
+                      value: b.amount,
+                      color: b.color ?? "var(--chart-3)",
+                    }))}
+                    formatValue={fmt}
                   />
                 </div>
               </CardContent>
@@ -255,11 +316,7 @@ export default function BatteryStoragePage() {
       }
     >
       <div className="space-y-6">
-        {/* System Details */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            System Details
-          </h3>
+        <InputSection title="Battery System" icon={Battery}>
           <div className="grid gap-4 sm:grid-cols-2">
             <RangeInput
               label="Battery Capacity"
@@ -270,36 +327,6 @@ export default function BatteryStoragePage() {
               value={form.watch("batteryCapacityKwh")}
               onChange={(v) => form.setValue("batteryCapacityKwh", v)}
               unit="kWh"
-            />
-            <RangeInput
-              label="Usable Capacity"
-              tooltip="Depth of discharge — percentage of capacity actually usable"
-              min={80}
-              max={100}
-              step={1}
-              value={form.watch("usableCapacityPercent")}
-              onChange={(v) => form.setValue("usableCapacityPercent", v)}
-              unit="%"
-            />
-            <RangeInput
-              label="Round-Trip Efficiency"
-              tooltip="Energy retained after charge/discharge cycle"
-              min={80}
-              max={100}
-              step={1}
-              value={form.watch("roundTripEfficiency")}
-              onChange={(v) => form.setValue("roundTripEfficiency", v)}
-              unit="%"
-            />
-            <RangeInput
-              label="Annual Degradation"
-              tooltip="Battery capacity loss per year"
-              min={0}
-              max={10}
-              step={0.5}
-              value={form.watch("annualDegradation")}
-              onChange={(v) => form.setValue("annualDegradation", v)}
-              unit="%"
             />
             <RangeInput
               label="System Cost"
@@ -320,25 +347,10 @@ export default function BatteryStoragePage() {
               onChange={(v) => form.setValue("installationCost", v)}
               unit="$"
             />
-            <RangeInput
-              label="Warranty Period"
-              min={5}
-              max={25}
-              step={1}
-              value={form.watch("warrantyYears")}
-              onChange={(v) => form.setValue("warrantyYears", v)}
-              unit="years"
-            />
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Energy Usage */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Energy Usage
-          </h3>
+        <InputSection title="Energy Usage" icon={Zap}>
           <div className="space-y-4">
             <RangeInput
               label="Monthly Electric Bill"
@@ -369,15 +381,9 @@ export default function BatteryStoragePage() {
               />
             )}
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Rate Structure */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Rate Structure
-          </h3>
+        <InputSection title="Rate Structure" icon={DollarSign}>
           <div className="space-y-4">
             <InputGroup
               label="Rate Type"
@@ -444,16 +450,54 @@ export default function BatteryStoragePage() {
               />
             )}
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
+        <AdvancedSections>
+          <AdvancedSection title="Battery Technical Details" icon={Settings2}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="Usable Capacity"
+                tooltip="Depth of discharge — percentage of capacity actually usable"
+                min={80}
+                max={100}
+                step={1}
+                value={form.watch("usableCapacityPercent")}
+                onChange={(v) => form.setValue("usableCapacityPercent", v)}
+                unit="%"
+              />
+              <RangeInput
+                label="Round-Trip Efficiency"
+                tooltip="Energy retained after charge/discharge cycle"
+                min={80}
+                max={100}
+                step={1}
+                value={form.watch("roundTripEfficiency")}
+                onChange={(v) => form.setValue("roundTripEfficiency", v)}
+                unit="%"
+              />
+              <RangeInput
+                label="Annual Degradation"
+                tooltip="Battery capacity loss per year"
+                min={0}
+                max={10}
+                step={0.5}
+                value={form.watch("annualDegradation")}
+                onChange={(v) => form.setValue("annualDegradation", v)}
+                unit="%"
+              />
+              <RangeInput
+                label="Warranty Period"
+                min={5}
+                max={25}
+                step={1}
+                value={form.watch("warrantyYears")}
+                onChange={(v) => form.setValue("warrantyYears", v)}
+                unit="years"
+              />
+            </div>
+          </AdvancedSection>
 
-        {/* Financing */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Financing
-          </h3>
-          <div className="space-y-4">
+          <AdvancedSection title="Financing" icon={Percent}>
             <InputGroup label="Financing Type">
               <Select
                 value={financingType}
@@ -493,59 +537,58 @@ export default function BatteryStoragePage() {
                 />
               </div>
             )}
-          </div>
-        </div>
+          </AdvancedSection>
 
-        <Separator />
-
-        {/* Incentives */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Incentives
-          </h3>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <Switch
-                checked={form.watch("applyFederalCredit")}
-                onCheckedChange={(v) => form.setValue("applyFederalCredit", v)}
-              />
-              <Label>Apply 30% federal tax credit (ITC)</Label>
+          <AdvancedSection title="Incentives" icon={CreditCard}>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Switch
+                  checked={form.watch("applyFederalCredit")}
+                  onCheckedChange={(v) =>
+                    form.setValue("applyFederalCredit", v)
+                  }
+                />
+                <Label>Apply 30% federal tax credit (ITC)</Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Switch
+                  checked={form.watch("applyStateIncentive")}
+                  onCheckedChange={(v) =>
+                    form.setValue("applyStateIncentive", v)
+                  }
+                />
+                <Label>Apply state incentive (if available)</Label>
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Switch
-                checked={form.watch("applyStateIncentive")}
-                onCheckedChange={(v) => form.setValue("applyStateIncentive", v)}
+          </AdvancedSection>
+
+          <AdvancedSection title="Location" icon={MapPin}>
+            <InputGroup
+              label="State Code"
+              tooltip="Two-letter state code for regional rates and incentives"
+            >
+              <Input
+                className="w-24"
+                maxLength={2}
+                value={form.watch("stateCode")}
+                onChange={(e) =>
+                  form.setValue("stateCode", e.target.value.toUpperCase())
+                }
               />
-              <Label>Apply state incentive (if available)</Label>
-            </div>
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* State */}
-        <InputGroup
-          label="State Code"
-          tooltip="Two-letter state code for regional rates and incentives"
-        >
-          <Input
-            className="w-24"
-            maxLength={2}
-            value={form.watch("stateCode")}
-            onChange={(e) =>
-              form.setValue("stateCode", e.target.value.toUpperCase())
-            }
-          />
-        </InputGroup>
+            </InputGroup>
+          </AdvancedSection>
+        </AdvancedSections>
 
         {/* Actions */}
-        <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-          <Button onClick={onCalculate} size="lg">
-            <Battery className="mr-2 size-4" />
-            Calculate
-          </Button>
-          <Button variant="outline" size="lg" onClick={onReset}>
-            Reset
+        <div className="flex justify-end pt-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReset}
+            className="text-muted-foreground"
+          >
+            <RotateCcw className="mr-2 size-3.5" />
+            Reset to defaults
           </Button>
         </div>
       </div>

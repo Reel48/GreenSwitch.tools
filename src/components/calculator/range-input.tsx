@@ -1,9 +1,16 @@
 "use client";
 
 import * as React from "react";
+import { Info } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
-import { InputGroup } from "./input-group";
+import { Label } from "@/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 interface RangeInputProps {
@@ -43,10 +50,35 @@ export function RangeInput({
     }
   };
 
-  const displayLabel = unit ? `${label}: ${value} ${unit}` : `${label}: ${value}`;
-
   return (
-    <InputGroup label={displayLabel} tooltip={tooltip} className={className}>
+    <div className={cn("space-y-2", className)}>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5">
+          <Label>{label}</Label>
+          {tooltip && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <Info className="size-3.5" />
+                    <span className="sr-only">More information</span>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs">
+                  <p>{tooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+        <span className="shrink-0 rounded-md bg-primary/8 px-2 py-0.5 text-xs font-medium tabular-nums text-primary">
+          {value.toLocaleString("en-US", { maximumFractionDigits: 3 })}
+          {unit ? ` ${unit}` : ""}
+        </span>
+      </div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
         <Slider
           min={min}
@@ -56,7 +88,7 @@ export function RangeInput({
           onValueChange={handleSliderChange}
           className="flex-1"
         />
-        <div className="relative w-full shrink-0 sm:w-24">
+        <div className="w-full shrink-0 sm:w-24">
           <Input
             type="number"
             min={min}
@@ -64,15 +96,10 @@ export function RangeInput({
             step={step}
             value={value}
             onChange={handleInputChange}
-            className={cn("pr-2 text-right", unit && "pr-12")}
+            className="pr-2 text-right tabular-nums"
           />
-          {unit && (
-            <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-xs text-muted-foreground">
-              {unit}
-            </span>
-          )}
         </div>
       </div>
-    </InputGroup>
+    </div>
   );
 }

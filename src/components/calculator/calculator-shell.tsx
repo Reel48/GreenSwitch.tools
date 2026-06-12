@@ -35,6 +35,7 @@ interface CalculatorShellProps {
   lastUpdated: string;
   children: React.ReactNode;
   results?: React.ReactNode;
+  mobileSummary?: React.ReactNode;
   methodology?: string;
   faqs?: FAQ[];
   relatedCalculators?: RelatedCalculator[];
@@ -48,6 +49,7 @@ export function CalculatorShell({
   lastUpdated,
   children,
   results,
+  mobileSummary,
   methodology,
   faqs,
   relatedCalculators,
@@ -55,7 +57,7 @@ export function CalculatorShell({
   url,
 }: CalculatorShellProps) {
   return (
-    <div className="mx-auto max-w-4xl space-y-6 px-4 py-6 sm:space-y-8 md:py-12">
+    <div className="mx-auto max-w-4xl space-y-6 px-4 py-6 sm:space-y-8 md:py-12 lg:max-w-7xl">
       {/* HowTo Schema */}
       {howToSteps && url && (
         <HowToSchema
@@ -67,7 +69,11 @@ export function CalculatorShell({
       )}
 
       {/* Hero Section */}
-      <section className="space-y-4 text-center">
+      <section className="relative space-y-4 text-center">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-x-8 -top-12 -bottom-4 -z-10 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--primary)_8%,transparent),transparent_65%)]"
+        />
         <Badge variant="secondary" className="text-xs">
           Updated {lastUpdated}
         </Badge>
@@ -81,42 +87,54 @@ export function CalculatorShell({
 
       <Separator />
 
-      {/* Calculator Form */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Calculator Inputs</CardTitle>
-        </CardHeader>
-        <CardContent>{children}</CardContent>
-      </Card>
+      {/* Calculator: inputs + live results */}
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:items-start">
+        <Card>
+          <CardHeader>
+            <CardTitle>Your Inputs</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Results update instantly as you make changes.
+            </p>
+          </CardHeader>
+          <CardContent>{children}</CardContent>
+        </Card>
 
-      {/* Results Panel */}
-      <AnimatePresence mode="wait">
-        {results && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          >
-            {results}
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <div
+          id="calc-results"
+          className="scroll-mt-20 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pb-2"
+        >
+          <AnimatePresence>
+            {results && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                {results}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Mobile sticky headline (hidden while results are on screen) */}
+      {mobileSummary}
 
       {/* Methodology */}
       {methodology && (
-        <>
+        <div className="mx-auto w-full max-w-4xl space-y-6 sm:space-y-8">
           <Separator />
           <CalculatorMethodology content={methodology} />
-        </>
+        </div>
       )}
 
       {/* FAQ */}
       {faqs && faqs.length > 0 && (
-        <>
+        <div className="mx-auto w-full max-w-4xl space-y-6 sm:space-y-8">
           <Separator />
           <CalculatorFaq faqs={faqs} />
-        </>
+        </div>
       )}
 
       {/* Related Calculators */}
@@ -138,7 +156,7 @@ export function CalculatorShell({
                   >
                     <Card
                       className={cn(
-                        "h-full transition-colors hover:border-primary/50 hover:shadow-md"
+                        "h-full transition-colors hover:border-primary/50 hover:shadow-md",
                       )}
                     >
                       <CardHeader>

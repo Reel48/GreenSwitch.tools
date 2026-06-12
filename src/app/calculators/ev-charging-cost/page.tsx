@@ -3,12 +3,20 @@
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
 import { InputGroup } from "@/components/calculator/input-group";
+import {
+  InputSection,
+  AdvancedSections,
+  AdvancedSection,
+} from "@/components/calculator/input-section";
 import { RangeInput } from "@/components/calculator/range-input";
 import { ResultCard } from "@/components/calculator/result-card";
 import { ComparisonBar } from "@/components/calculator/comparison-bar";
+import { VerdictBanner } from "@/components/calculator/verdict-banner";
+import { CostOverTimeChart } from "@/components/calculator/cost-over-time-chart";
+import { MobileSummaryBar } from "@/components/calculator/mobile-summary-bar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,14 +39,16 @@ import {
   Sun,
   Clock,
   CreditCard,
-  Thermometer,
   Fuel,
+  Plug,
+  MapPin,
+  RotateCcw,
 } from "lucide-react";
 
 const fmt = (n: number) => "$" + n.toLocaleString();
 
 export default function EvChargingCostPage() {
-  const { form, results, isCalculated, onCalculate, onReset } = useCalculator({
+  const { form, results, onReset } = useCalculator({
     schema: evChargingSchema,
     defaults: evChargingDefaults,
     calculate: calculateEvCharging,
@@ -47,6 +57,7 @@ export default function EvChargingCostPage() {
 
   const hasTouRates = form.watch("hasTouRates");
   const chargerLevel = form.watch("chargerLevel");
+  const evWins = results ? results.annualSavingsVsGas > 0 : true;
 
   return (
     <CalculatorShell
@@ -55,12 +66,30 @@ export default function EvChargingCostPage() {
       lastUpdated="March 2025"
       url="/calculators/ev-charging-cost"
       howToSteps={[
-        { name: "Enter driving habits", text: "Input your annual miles driven and EV efficiency (kWh per 100 miles)." },
-        { name: "Set electricity rates", text: "Enter your flat electricity rate, or enable time-of-use pricing with off-peak and on-peak rates." },
-        { name: "Choose charger setup", text: "Select Level 1 or Level 2 home charging and enter any installation costs." },
-        { name: "Add public charging", text: "Set the percentage of charging done at public stations and the public charging rate." },
-        { name: "Enter gas comparison", text: "Input gas price and a comparable gas car's MPG to see fuel cost savings." },
-        { name: "Calculate costs", text: "Click Calculate to see your annual charging cost, gas savings, and cost per mile." },
+        {
+          name: "Enter driving habits",
+          text: "Input your annual miles driven and EV efficiency (kWh per 100 miles).",
+        },
+        {
+          name: "Set electricity rates",
+          text: "Enter your flat electricity rate, or enable time-of-use pricing with off-peak and on-peak rates.",
+        },
+        {
+          name: "Choose charger setup",
+          text: "Select Level 1 or Level 2 home charging and enter any installation costs.",
+        },
+        {
+          name: "Add public charging",
+          text: "Set the percentage of charging done at public stations and the public charging rate.",
+        },
+        {
+          name: "Enter gas comparison",
+          text: "Input gas price and a comparable gas car's MPG to see fuel cost savings.",
+        },
+        {
+          name: "Review your costs",
+          text: "Results update instantly as you adjust any input — see your annual charging cost, gas savings, and cost per mile.",
+        },
       ]}
       methodology={`This calculator estimates annual EV charging costs based on your driving habits and electricity rates. Energy consumption is calculated as (annual miles / 100) × EV efficiency (kWh/100mi). Costs are split between home and public charging based on your specified percentages. For time-of-use (TOU) rates, the effective rate is the weighted average of off-peak and on-peak rates. Gas comparison uses standard MPG calculations. Charging times are estimated at 1.4 kW for Level 1 and 7.6 kW for Level 2. CO₂ savings use EPA averages: 0.855 lbs CO₂/kWh for the grid and 19.6 lbs CO₂/gallon of gasoline.`}
       faqs={[
@@ -105,15 +134,67 @@ export default function EvChargingCostPage() {
           icon: CreditCard,
         },
       ]}
+      mobileSummary={
+        results ? (
+          <MobileSummaryBar
+            label="Annual savings vs gas"
+            value={fmt(Math.abs(results.annualSavingsVsGas))}
+            tone={results.annualSavingsVsGas > 0 ? "positive" : "negative"}
+          />
+        ) : undefined
+      }
       results={
-        isCalculated && results ? (
-          <div className="space-y-6">
+        results ? (
+          <div className="space-y-4">
+            <VerdictBanner
+              headline={
+                evWins ? "Charging beats gas by" : "Charging costs more by"
+              }
+              amount={Math.abs(results.annualSavingsVsGas)}
+              caption="per year vs. a comparable gas car"
+              tone={evWins ? "positive" : "negative"}
+              detail={
+                <>
+                  <Badge variant="secondary">
+                    ${results.costPerMile.toFixed(2)}/mile vs $
+                    {results.gasCostPerMile.toFixed(2)} gas
+                  </Badge>
+                  {evWins && (
+                    <Badge variant="secondary">
+                      {fmt(results.monthlySavingsVsGas)}/month
+                    </Badge>
+                  )}
+                </>
+              }
+            />
+
             <Card>
               <CardHeader>
-                <CardTitle>Charging Cost Results</CardTitle>
+                <CardTitle className="text-base">
+                  Cumulative cost over time
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <CardContent>
+                <CostOverTimeChart
+                  data={results.yearlyBreakdown}
+                  labelA="EV charging"
+                  labelB="Gas fill-ups"
+                  breakEvenYear={
+                    results.totalSetupCost > 0 && results.setupPaybackMonths > 0
+                      ? Math.ceil(results.setupPaybackMonths / 12)
+                      : null
+                  }
+                  formatValue={fmt}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">The numbers</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="Annual Charging Cost"
                     value={fmt(results.annualChargingCost)}
@@ -132,7 +213,9 @@ export default function EvChargingCostPage() {
                     value={fmt(results.annualSavingsVsGas)}
                     subtext={`${fmt(results.monthlySavingsVsGas)}/month`}
                     icon={DollarSign}
-                    variant={results.annualSavingsVsGas > 0 ? "savings" : "default"}
+                    variant={
+                      results.annualSavingsVsGas > 0 ? "savings" : "default"
+                    }
                   />
                   <ResultCard
                     label="CO₂ Savings"
@@ -143,9 +226,7 @@ export default function EvChargingCostPage() {
                   />
                 </div>
 
-                <Separator />
-
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="Home Charging Cost"
                     value={`${fmt(results.homeChargingCostAnnual)}/yr`}
@@ -162,11 +243,7 @@ export default function EvChargingCostPage() {
                     subtext="Blended home + public"
                     icon={DollarSign}
                   />
-                </div>
-
-                {hasTouRates && results.touSavingsAnnual > 0 && (
-                  <>
-                    <Separator />
+                  {hasTouRates && results.touSavingsAnnual > 0 && (
                     <ResultCard
                       label="TOU Savings"
                       value={`${fmt(results.touSavingsAnnual)}/yr`}
@@ -174,12 +251,10 @@ export default function EvChargingCostPage() {
                       icon={TrendingUp}
                       variant="savings"
                     />
-                  </>
-                )}
+                  )}
+                </div>
 
-                <Separator />
-
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="Level 1 Charging Time"
                     value={`${results.level1HoursPerDay} hrs/day`}
@@ -195,42 +270,37 @@ export default function EvChargingCostPage() {
                 </div>
 
                 {results.totalSetupCost > 0 && (
-                  <>
-                    <Separator />
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <ResultCard
-                        label="Charger Setup Cost"
-                        value={fmt(results.totalSetupCost)}
-                        subtext="Hardware + installation"
-                        icon={DollarSign}
-                      />
-                      <ResultCard
-                        label="Setup Payback"
-                        value={`${results.setupPaybackMonths} months`}
-                        subtext="Based on gas savings"
-                        icon={TrendingUp}
-                      />
-                    </div>
-                  </>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <ResultCard
+                      label="Charger Setup Cost"
+                      value={fmt(results.totalSetupCost)}
+                      subtext="Hardware + installation"
+                      icon={DollarSign}
+                    />
+                    <ResultCard
+                      label="Setup Payback"
+                      value={`${results.setupPaybackMonths} months`}
+                      subtext="Based on gas savings"
+                      icon={TrendingUp}
+                    />
+                  </div>
                 )}
 
-                <Separator />
-
                 <div>
-                  <h3 className="mb-3 text-lg font-semibold">Cost Comparison</h3>
+                  <h3 className="mb-3 text-sm font-semibold">
+                    Cost Comparison
+                  </h3>
                   <ComparisonBar
                     items={results.costComparison.map((b) => ({
                       label: b.label,
                       value: b.amount,
-                      color: b.color ?? "#16a34a",
+                      color: b.color ?? "var(--chart-1)",
                     }))}
                     formatValue={(v) => fmt(v)}
                   />
                 </div>
 
-                <Separator />
-
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2">
                   <ResultCard
                     label="Annual Energy Used"
                     value={`${results.annualKwhUsed.toLocaleString()} kWh`}
@@ -251,11 +321,7 @@ export default function EvChargingCostPage() {
       }
     >
       <div className="space-y-6">
-        {/* Driving & Vehicle */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Driving & Vehicle
-          </h3>
+        <InputSection title="Driving & Vehicle" icon={Car}>
           <div className="grid gap-4 sm:grid-cols-2">
             <RangeInput
               label="Annual Miles"
@@ -277,15 +343,9 @@ export default function EvChargingCostPage() {
               unit="kWh/100mi"
             />
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Electricity Rates */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Electricity Rates
-          </h3>
+        <InputSection title="Electricity Rates" icon={Zap}>
           <div className="space-y-4">
             <RangeInput
               label="Flat Electricity Rate"
@@ -338,96 +398,9 @@ export default function EvChargingCostPage() {
               </div>
             )}
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
-
-        {/* Charger Setup */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Charger Setup
-          </h3>
-          <div className="space-y-4">
-            <InputGroup label="Charger Level" tooltip="Level 1 uses a standard 120V outlet; Level 2 requires a 240V circuit">
-              <Select
-                value={chargerLevel}
-                onValueChange={(v) =>
-                  form.setValue("chargerLevel", v as "level1" | "level2")
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="level1">Level 1 (120V — Standard Outlet)</SelectItem>
-                  <SelectItem value="level2">Level 2 (240V — Dedicated Charger)</SelectItem>
-                </SelectContent>
-              </Select>
-            </InputGroup>
-
-            {chargerLevel === "level2" && (
-              <div className="grid gap-4 sm:grid-cols-2">
-                <RangeInput
-                  label="Installation Cost"
-                  tooltip="Electrical work for 240V circuit"
-                  min={0}
-                  max={5000}
-                  step={100}
-                  value={form.watch("level2InstallCost")}
-                  onChange={(v) => form.setValue("level2InstallCost", v)}
-                  unit="$"
-                />
-                <RangeInput
-                  label="Charger Hardware Cost"
-                  min={0}
-                  max={3000}
-                  step={50}
-                  value={form.watch("chargerHardwareCost")}
-                  onChange={(v) => form.setValue("chargerHardwareCost", v)}
-                  unit="$"
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Public Charging */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Public Charging
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <RangeInput
-              label="Public Charging"
-              tooltip="Percentage of total charging done at public stations"
-              min={0}
-              max={100}
-              step={5}
-              value={form.watch("publicChargingPercent")}
-              onChange={(v) => form.setValue("publicChargingPercent", v)}
-              unit="%"
-            />
-            <RangeInput
-              label="Public Charging Rate"
-              min={0.1}
-              max={1.0}
-              step={0.05}
-              value={form.watch("publicChargingRate")}
-              onChange={(v) => form.setValue("publicChargingRate", v)}
-              unit="$/kWh"
-            />
-          </div>
-        </div>
-
-        <Separator />
-
-        {/* Gas Comparison */}
-        <div>
-          <h3 className="mb-3 text-sm font-medium text-muted-foreground">
-            Gas Comparison
-          </h3>
+        <InputSection title="Gas Comparison" icon={Fuel}>
           <div className="grid gap-4 sm:grid-cols-2">
             <RangeInput
               label="Gas Price"
@@ -449,30 +422,112 @@ export default function EvChargingCostPage() {
               unit="mpg"
             />
           </div>
-        </div>
+        </InputSection>
 
-        <Separator />
+        <AdvancedSections>
+          <AdvancedSection title="Charger Setup" icon={Plug}>
+            <div className="space-y-4">
+              <InputGroup
+                label="Charger Level"
+                tooltip="Level 1 uses a standard 120V outlet; Level 2 requires a 240V circuit"
+              >
+                <Select
+                  value={chargerLevel}
+                  onValueChange={(v) =>
+                    form.setValue("chargerLevel", v as "level1" | "level2")
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="level1">
+                      Level 1 (120V — Standard Outlet)
+                    </SelectItem>
+                    <SelectItem value="level2">
+                      Level 2 (240V — Dedicated Charger)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </InputGroup>
 
-        {/* State */}
-        <InputGroup label="State Code" tooltip="Two-letter state code for regional data">
-          <Input
-            className="w-24"
-            maxLength={2}
-            value={form.watch("stateCode")}
-            onChange={(e) =>
-              form.setValue("stateCode", e.target.value.toUpperCase())
-            }
-          />
-        </InputGroup>
+              {chargerLevel === "level2" && (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <RangeInput
+                    label="Installation Cost"
+                    tooltip="Electrical work for 240V circuit"
+                    min={0}
+                    max={5000}
+                    step={100}
+                    value={form.watch("level2InstallCost")}
+                    onChange={(v) => form.setValue("level2InstallCost", v)}
+                    unit="$"
+                  />
+                  <RangeInput
+                    label="Charger Hardware Cost"
+                    min={0}
+                    max={3000}
+                    step={50}
+                    value={form.watch("chargerHardwareCost")}
+                    onChange={(v) => form.setValue("chargerHardwareCost", v)}
+                    unit="$"
+                  />
+                </div>
+              )}
+            </div>
+          </AdvancedSection>
+
+          <AdvancedSection title="Public Charging" icon={MapPin}>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <RangeInput
+                label="Public Charging"
+                tooltip="Percentage of total charging done at public stations"
+                min={0}
+                max={100}
+                step={5}
+                value={form.watch("publicChargingPercent")}
+                onChange={(v) => form.setValue("publicChargingPercent", v)}
+                unit="%"
+              />
+              <RangeInput
+                label="Public Charging Rate"
+                min={0.1}
+                max={1.0}
+                step={0.05}
+                value={form.watch("publicChargingRate")}
+                onChange={(v) => form.setValue("publicChargingRate", v)}
+                unit="$/kWh"
+              />
+            </div>
+          </AdvancedSection>
+
+          <AdvancedSection title="Location" icon={MapPin}>
+            <InputGroup
+              label="State Code"
+              tooltip="Two-letter state code for regional data"
+            >
+              <Input
+                className="w-24"
+                maxLength={2}
+                value={form.watch("stateCode")}
+                onChange={(e) =>
+                  form.setValue("stateCode", e.target.value.toUpperCase())
+                }
+              />
+            </InputGroup>
+          </AdvancedSection>
+        </AdvancedSections>
 
         {/* Actions */}
-        <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-          <Button onClick={onCalculate} size="lg">
-            <Zap className="mr-2 size-4" />
-            Calculate
-          </Button>
-          <Button variant="outline" size="lg" onClick={onReset}>
-            Reset
+        <div className="flex justify-end pt-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onReset}
+            className="text-muted-foreground"
+          >
+            <RotateCcw className="mr-2 size-3.5" />
+            Reset to defaults
           </Button>
         </div>
       </div>

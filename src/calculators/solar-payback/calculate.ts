@@ -134,7 +134,7 @@ export function calculateSolarPayback(input: SolarPaybackInput): SolarPaybackRes
     const srecIncome = srecAnnualValue;
 
     // Total annual benefit
-    let annualBenefit = annualEnergySavings + srecIncome;
+    const annualBenefit = annualEnergySavings + srecIncome;
 
     // Subtract loan payment if applicable
     let annualCostWithSolar = 0;

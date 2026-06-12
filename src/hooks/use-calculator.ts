@@ -90,18 +90,45 @@ export function useCalculator<TInput extends FieldValues, TResult>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const recalc = useCallback(
+    (values: unknown) => {
+      const parsed = schema.safeParse(values);
+      if (parsed.success) {
+        setResults(calculate(parsed.data));
+        setIsCalculated(true);
+      }
+      // On parse failure keep the last good result so the panel never flashes empty
+    },
+    [schema, calculate],
+  );
+
+  // Live recalculation: compute once on mount (after localStorage restore above),
+  // then on every form change with a short debounce to smooth slider drags
+  useEffect(() => {
+    recalc(form.getValues());
+
+    let timeout: ReturnType<typeof setTimeout>;
+    const subscription = form.watch((values) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => recalc(values), 150);
+    });
+
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
+  }, [form, recalc]);
+
   const onCalculate = useCallback(() => {
-    form.handleSubmit((data) => {
-      const result = calculate(data);
-      setResults(result);
-      setIsCalculated(true);
-    })();
-  }, [form, calculate]);
+    recalc(form.getValues());
+    document
+      .getElementById("calc-results")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [form, recalc]);
 
   const onReset = useCallback(() => {
     form.reset(defaults);
-    setResults(null);
-    setIsCalculated(false);
+    recalc(defaults);
 
     if (storageKey) {
       try {
@@ -110,7 +137,7 @@ export function useCalculator<TInput extends FieldValues, TResult>({
         // Ignore storage errors
       }
     }
-  }, [form, defaults, storageKey]);
+  }, [form, defaults, storageKey, recalc]);
 
   return {
     form,

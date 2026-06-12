@@ -10,9 +10,7 @@ interface CalculatorMethodologyProps {
   content: string;
 }
 
-export function CalculatorMethodology({
-  content,
-}: CalculatorMethodologyProps) {
+export function CalculatorMethodology({ content }: CalculatorMethodologyProps) {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -28,14 +26,14 @@ export function CalculatorMethodology({
         <ChevronDown
           className={cn(
             "size-5 text-muted-foreground transition-transform duration-200",
-            isOpen && "rotate-180"
+            isOpen && "rotate-180",
           )}
         />
       </Button>
       <div
         className={cn(
           "grid transition-[grid-template-rows] duration-300 ease-in-out",
-          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
         )}
       >
         <div className="overflow-hidden">

@@ -25,7 +25,12 @@ export function ResultCard({
   variant = "default",
 }: ResultCardProps) {
   return (
-    <Card className={cn("transition-shadow hover:shadow-md", variantStyles[variant])}>
+    <Card
+      className={cn(
+        "transition-shadow hover:shadow-md",
+        variantStyles[variant],
+      )}
+    >
       <CardContent className="flex items-start gap-4">
         {Icon && (
           <div
@@ -33,7 +38,7 @@ export function ResultCard({
               "flex size-10 shrink-0 items-center justify-center rounded-lg",
               variant === "savings"
                 ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400"
-                : "bg-primary/10 text-primary"
+                : "bg-primary/10 text-primary",
             )}
           >
             <Icon className="size-5" />
@@ -43,10 +48,10 @@ export function ResultCard({
           <p className="text-sm text-muted-foreground">{label}</p>
           <p
             className={cn(
-              "font-semibold tracking-tight",
+              "font-semibold tracking-tight tabular-nums",
               variant === "savings"
                 ? "text-xl text-green-700 sm:text-2xl dark:text-green-400"
-                : "text-lg sm:text-xl"
+                : "text-lg sm:text-xl",
             )}
           >
             {value}

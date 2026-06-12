@@ -1,5 +1,5 @@
 import type { EvChargingInput } from "./schema";
-import type { CostBreakdown } from "../types";
+import type { YearlyBreakdown, CostBreakdown } from "../types";
 
 export type EvChargingResult = {
   // Annual costs
@@ -41,6 +41,7 @@ export type EvChargingResult = {
 
   // Chart data
   costComparison: CostBreakdown[];
+  yearlyBreakdown: YearlyBreakdown[]; // EV (incl. setup) vs gas, cumulative over 10 years
 };
 
 export function calculateEvCharging(input: EvChargingInput): EvChargingResult {
@@ -80,7 +81,8 @@ export function calculateEvCharging(input: EvChargingInput): EvChargingResult {
   if (hasTouRates) {
     const offPeakFraction = offPeakChargePercent / 100;
     const onPeakFraction = 1 - offPeakFraction;
-    effectiveHomeRate = touOffPeakRate * offPeakFraction + touOnPeakRate * onPeakFraction;
+    effectiveHomeRate =
+      touOffPeakRate * offPeakFraction + touOnPeakRate * onPeakFraction;
 
     // Savings compared to flat rate
     const flatRateCost = homeKwh * electricityRate;
@@ -112,14 +114,12 @@ export function calculateEvCharging(input: EvChargingInput): EvChargingResult {
   const level2HoursPerDay = dailyKwhNeeded / level2Power;
 
   // Setup costs
-  const totalSetupCost = chargerLevel === "level2"
-    ? level2InstallCost + chargerHardwareCost
-    : 0; // Level 1 uses standard outlet
+  const totalSetupCost =
+    chargerLevel === "level2" ? level2InstallCost + chargerHardwareCost : 0; // Level 1 uses standard outlet
 
   const monthlySavings = annualSavingsVsGas / 12;
-  const setupPaybackMonths = monthlySavings > 0
-    ? Math.ceil(totalSetupCost / monthlySavings)
-    : 0;
+  const setupPaybackMonths =
+    monthlySavings > 0 ? Math.ceil(totalSetupCost / monthlySavings) : 0;
 
   // CO2 savings
   const evCO2Lbs = annualKwhUsed * 0.855; // US avg grid
@@ -128,10 +128,36 @@ export function calculateEvCharging(input: EvChargingInput): EvChargingResult {
 
   const effectiveRate = annualChargingCost / annualKwhUsed;
 
+  // Cumulative EV charging (incl. one-time setup) vs gas over 10 years
+  const yearlyBreakdown: YearlyBreakdown[] = [];
+  for (let year = 1; year <= 10; year++) {
+    yearlyBreakdown.push({
+      year,
+      cumulativeCostA: Math.round(totalSetupCost + annualChargingCost * year),
+      cumulativeCostB: Math.round(equivalentGasCostAnnual * year),
+      annualCostA: Math.round(
+        annualChargingCost + (year === 1 ? totalSetupCost : 0),
+      ),
+      annualCostB: Math.round(equivalentGasCostAnnual),
+    });
+  }
+
   const costComparison: CostBreakdown[] = [
-    { label: "EV Home Charging", amount: Math.round(homeChargingCostAnnual), color: "#16a34a" },
-    { label: "EV Public Charging", amount: Math.round(publicChargingCostAnnual), color: "#22c55e" },
-    { label: "Equivalent Gas Cost", amount: Math.round(equivalentGasCostAnnual), color: "#ef4444" },
+    {
+      label: "EV Home Charging",
+      amount: Math.round(homeChargingCostAnnual),
+      color: "#16a34a",
+    },
+    {
+      label: "EV Public Charging",
+      amount: Math.round(publicChargingCostAnnual),
+      color: "#22c55e",
+    },
+    {
+      label: "Equivalent Gas Cost",
+      amount: Math.round(equivalentGasCostAnnual),
+      color: "#ef4444",
+    },
   ];
 
   return {
@@ -157,5 +183,6 @@ export function calculateEvCharging(input: EvChargingInput): EvChargingResult {
     monthlyKwhUsed: Math.round(monthlyKwhUsed),
     co2SavingsVsGasTons: Math.round(co2SavingsVsGasTons * 10) / 10,
     costComparison,
+    yearlyBreakdown,
   };
 }
