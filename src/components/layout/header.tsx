@@ -194,7 +194,7 @@ export function Header() {
                   key={calc.href}
                   href={calc.href}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+                  className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
                 >
                   <Icon className="size-4 text-primary" />
                   {calc.label}
@@ -207,7 +207,7 @@ export function Header() {
           <Link
             href="/learn"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
             Learn
           </Link>
