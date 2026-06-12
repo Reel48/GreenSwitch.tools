@@ -8,6 +8,7 @@ import { getAllSlugs, getPostBySlug, getWordCount, getRelatedPosts } from "@/lib
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 import { ArticleSchema } from "@/components/blog/article-schema";
 import { RelatedArticles } from "@/components/blog/related-articles";
+import { mdxComponents } from "@/components/blog/mdx-components";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -150,6 +151,7 @@ export default async function LearnArticlePage({ params }: PageProps) {
         <div className="prose prose-lg prose-green mx-auto max-w-none prose-headings:scroll-mt-20 prose-a:text-green-700 prose-a:no-underline hover:prose-a:underline">
           <MDXRemote
             source={post.content}
+            components={mdxComponents}
             options={{
               mdxOptions: {
                 remarkPlugins: [remarkGfm],

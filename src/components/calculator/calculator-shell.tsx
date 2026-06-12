@@ -58,7 +58,13 @@ export function CalculatorShell({
   url,
 }: CalculatorShellProps) {
   return (
-    <div className="mx-auto max-w-4xl space-y-6 px-4 py-6 sm:space-y-8 md:py-12 lg:max-w-7xl">
+    <div
+      className={cn(
+        "mx-auto max-w-4xl space-y-6 px-4 py-6 sm:space-y-8 md:py-12 lg:max-w-7xl",
+        // clearance for the fixed mobile summary bar (hidden at lg+)
+        mobileSummary && "max-lg:pb-24",
+      )}
+    >
       {/* HowTo Schema */}
       {howToSteps && url && (
         <HowToSchema

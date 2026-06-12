@@ -28,16 +28,31 @@ export function MobileSummaryBar({
   tone = "positive",
 }: MobileSummaryBarProps) {
   const [resultsVisible, setResultsVisible] = React.useState(true);
+  const [footerVisible, setFooterVisible] = React.useState(false);
 
   React.useEffect(() => {
-    const target = document.getElementById("calc-results");
-    if (!target) return;
-    const observer = new IntersectionObserver(
+    const results = document.getElementById("calc-results");
+    if (!results) return;
+    const resultsObserver = new IntersectionObserver(
       ([entry]) => setResultsVisible(entry.isIntersecting),
       { threshold: 0.1 },
     );
-    observer.observe(target);
-    return () => observer.disconnect();
+    resultsObserver.observe(results);
+
+    // Hide the bar at the page bottom so it never covers footer links
+    const footer = document.querySelector("footer");
+    let footerObserver: IntersectionObserver | undefined;
+    if (footer) {
+      footerObserver = new IntersectionObserver(([entry]) =>
+        setFooterVisible(entry.isIntersecting),
+      );
+      footerObserver.observe(footer);
+    }
+
+    return () => {
+      resultsObserver.disconnect();
+      footerObserver?.disconnect();
+    };
   }, []);
 
   const scrollToResults = () => {
@@ -49,7 +64,7 @@ export function MobileSummaryBar({
 
   return (
     <AnimatePresence>
-      {!resultsVisible && (
+      {!resultsVisible && !footerVisible && (
         <motion.div
           initial={{ y: 72, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
