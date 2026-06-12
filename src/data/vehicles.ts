@@ -15,9 +15,9 @@ export interface Vehicle {
   annualMaintenance: number;
   /** Battery capacity in kWh, null for gas/hybrid */
   batteryKwh: number | null;
-  /** Federal tax credit amount in $ */
+  /** Federal tax credit amount in $ (historical 30D credit — ended Sept 30, 2025; 0 for current purchases) */
   federalTaxCredit: number;
-  /** Whether the vehicle is eligible for federal tax credit */
+  /** Whether the vehicle was eligible for the federal credit before it ended Sept 30, 2025 */
   eligibleForCredit: boolean;
   /** MSRP cap for tax credit eligibility, null if N/A */
   msrpCap: number | null;
@@ -36,8 +36,8 @@ export const vehicles: Vehicle[] = [
     mpgCombined: null,
     annualMaintenance: 600,
     batteryKwh: 60,
-    federalTaxCredit: 7500,
-    eligibleForCredit: true,
+    federalTaxCredit: 0,
+    eligibleForCredit: false,
     msrpCap: 55000,
   },
   {
@@ -51,8 +51,8 @@ export const vehicles: Vehicle[] = [
     mpgCombined: null,
     annualMaintenance: 600,
     batteryKwh: 75,
-    federalTaxCredit: 7500,
-    eligibleForCredit: true,
+    federalTaxCredit: 0,
+    eligibleForCredit: false,
     msrpCap: 80000,
   },
   {
@@ -81,8 +81,8 @@ export const vehicles: Vehicle[] = [
     mpgCombined: null,
     annualMaintenance: 550,
     batteryKwh: 85,
-    federalTaxCredit: 7500,
-    eligibleForCredit: true,
+    federalTaxCredit: 0,
+    eligibleForCredit: false,
     msrpCap: 80000,
   },
   {
@@ -96,8 +96,8 @@ export const vehicles: Vehicle[] = [
     mpgCombined: null,
     annualMaintenance: 500,
     batteryKwh: 65,
-    federalTaxCredit: 7500,
-    eligibleForCredit: true,
+    federalTaxCredit: 0,
+    eligibleForCredit: false,
     msrpCap: 55000,
   },
   {
@@ -111,8 +111,8 @@ export const vehicles: Vehicle[] = [
     mpgCombined: null,
     annualMaintenance: 600,
     batteryKwh: 91,
-    federalTaxCredit: 3750,
-    eligibleForCredit: true,
+    federalTaxCredit: 0,
+    eligibleForCredit: false,
     msrpCap: 80000,
   },
   {
@@ -126,8 +126,8 @@ export const vehicles: Vehicle[] = [
     mpgCombined: null,
     annualMaintenance: 700,
     batteryKwh: 131,
-    federalTaxCredit: 7500,
-    eligibleForCredit: true,
+    federalTaxCredit: 0,
+    eligibleForCredit: false,
     msrpCap: 80000,
   },
   {
@@ -231,8 +231,8 @@ export const vehicles: Vehicle[] = [
     mpgCombined: null,
     annualMaintenance: 700,
     batteryKwh: 135,
-    federalTaxCredit: 3750,
-    eligibleForCredit: true,
+    federalTaxCredit: 0,
+    eligibleForCredit: false,
     msrpCap: 80000,
   },
   {
@@ -246,8 +246,8 @@ export const vehicles: Vehicle[] = [
     mpgCombined: null,
     annualMaintenance: 700,
     batteryKwh: 135,
-    federalTaxCredit: 3750,
-    eligibleForCredit: true,
+    federalTaxCredit: 0,
+    eligibleForCredit: false,
     msrpCap: 80000,
   },
   {
@@ -276,8 +276,8 @@ export const vehicles: Vehicle[] = [
     mpgCombined: null,
     annualMaintenance: 550,
     batteryKwh: 82,
-    federalTaxCredit: 7500,
-    eligibleForCredit: true,
+    federalTaxCredit: 0,
+    eligibleForCredit: false,
     msrpCap: 80000,
   },
 

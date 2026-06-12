@@ -52,7 +52,7 @@ export default function HeatPumpPage() {
     schema: heatPumpSchema,
     defaults: heatPumpDefaults,
     calculate: calculateHeatPump,
-    storageKey: "heat-pump",
+    storageKey: "heat-pump-v2",
   });
 
   const fuelType = form.watch("currentFuelType");
@@ -62,7 +62,7 @@ export default function HeatPumpPage() {
     <CalculatorShell
       title="Heat Pump Savings Calculator"
       description="Compare the cost of heating with a heat pump versus a traditional furnace. Includes installation costs, operating expenses, incentives, and environmental impact."
-      lastUpdated="March 2025"
+      lastUpdated="June 2026"
       url="/calculators/heat-pump"
       howToSteps={[
         {
@@ -83,14 +83,14 @@ export default function HeatPumpPage() {
         },
         {
           name: "Add incentives",
-          text: "Apply the federal heat pump tax credit (up to $2,000) and any state credits.",
+          text: "Enter any state or utility heat pump rebates you qualify for. The federal 25C credit ended December 31, 2025, so it defaults to $0.",
         },
         {
           name: "Review your savings",
           text: "Results update instantly as you adjust any input — compare annual heating costs, lifetime savings, and payback period.",
         },
       ]}
-      methodology={`This calculator compares heat pump and furnace heating costs based on your climate zone's Heating Degree Days (HDD). Heating load is estimated from home size and HDD values for your IECC climate zone. Heat pump costs are calculated from the load divided by COP × electricity rate. Furnace costs use the load divided by efficiency × fuel rate. Year-over-year cost escalation is applied to both fuel and electricity. If AC savings are included, the heat pump's cooling COP is used to estimate savings versus conventional AC. The federal IRA heat pump tax credit of up to $2,000 is available for qualifying installations.`}
+      methodology={`This calculator compares heat pump and furnace heating costs based on your climate zone's Heating Degree Days (HDD). Heating load is estimated from home size and HDD values for your IECC climate zone. Heat pump costs are calculated from the load divided by COP × electricity rate. Furnace costs use the load divided by efficiency × fuel rate. Year-over-year cost escalation is applied to both fuel and electricity. If AC savings are included, the heat pump's cooling COP is used to estimate savings versus conventional AC. Note on incentives: the federal 25C heat pump credit of up to $2,000 ended December 31, 2025 — systems placed in service after that date do not qualify, so the federal credit defaults to $0. Many states and utilities still offer heat pump rebates, including state-administered Home Energy Rebates programs; enter whatever you qualify for.`}
       faqs={[
         {
           question: "Are heat pumps effective in cold climates?",
@@ -103,9 +103,9 @@ export default function HeatPumpPage() {
             "COP (Coefficient of Performance) measures heat pump efficiency. A COP of 3.0 means the heat pump produces 3 units of heat for every 1 unit of electricity consumed, making it 3x more efficient than electric resistance heating.",
         },
         {
-          question: "What federal incentives are available for heat pumps?",
+          question: "Are there still incentives for heat pumps?",
           answer:
-            "The Inflation Reduction Act provides a tax credit of up to $2,000 for qualifying heat pump installations. Additional rebates of up to $8,000 may be available through the HOMES program for income-qualifying households.",
+            "The federal 25C tax credit of up to $2,000 ended December 31, 2025 — heat pumps installed after that date don't qualify (those installed by the deadline can still be claimed on that year's return). What remains: state-administered Home Energy Rebates in participating states (worth up to $8,000 for income-qualifying households), plus state and utility rebate programs such as Mass Save and Efficiency Maine. Check your state energy office and utility for current offerings.",
         },
         {
           question: "Can a heat pump replace both my furnace and AC?",
@@ -533,7 +533,7 @@ export default function HeatPumpPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <RangeInput
                 label="Federal Tax Credit"
-                tooltip="IRA heat pump credit (up to $2,000)"
+                tooltip="The federal 25C credit ended Dec 31, 2025 — leave at $0 unless your system was installed by then"
                 min={0}
                 max={10000}
                 step={100}

@@ -79,7 +79,7 @@ const calculators = [
   {
     title: "EV Tax Credit Eligibility",
     description:
-      "Check if you qualify for federal EV tax credits worth up to $7,500 for new or $4,000 for used electric vehicles. See income and MSRP limits.",
+      "Federal EV credits ended Sept 30, 2025 — check whether a grandfathered purchase qualifies and see which state EV incentives are still available.",
     href: "/calculators/ev-tax-credit",
     icon: Receipt,
     color: "text-purple-600 dark:text-purple-400",
@@ -88,7 +88,7 @@ const calculators = [
   {
     title: "Home Battery Storage ROI",
     description:
-      "Evaluate whether home battery storage makes financial sense. Factor in TOU rate arbitrage, solar pairing, backup power value, and federal tax credits.",
+      "Evaluate whether home battery storage makes financial sense. Factor in TOU rate arbitrage, solar pairing, backup power value, and state incentives.",
     href: "/calculators/battery-storage",
     icon: Battery,
     color: "text-teal-600 dark:text-teal-400",
@@ -161,7 +161,8 @@ export default function CalculatorsPage() {
               >
                 EV Tax Credit calculator
               </Link>{" "}
-              to see if you qualify for up to $7,500 in credits, and use the{" "}
+              to check grandfathered federal eligibility and current state
+              incentives, and use the{" "}
               <Link
                 href="/calculators/ev-charging-cost"
                 className="font-medium text-primary underline-offset-4 hover:underline"

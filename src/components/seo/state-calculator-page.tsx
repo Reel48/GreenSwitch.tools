@@ -141,8 +141,15 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
         {(relevantFederal.length > 0 || relevantStateIncentives.length > 0) && (
           <section className="mt-12">
             <h2 className="text-2xl font-semibold">
-              Available Incentives in {state.name}
+              Incentives in {state.name}
             </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Federal clean energy tax credits ended in late 2025 under
+              legislation passed in July 2025; they are shown below for
+              reference since recent purchasers may still claim them. State
+              programs are governed separately and many remain active — always
+              verify current details with the program before purchasing.
+            </p>
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
@@ -154,18 +161,30 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
                   </tr>
                 </thead>
                 <tbody className="divide-y">
-                  {relevantFederal.map((inc) => (
-                    <tr key={inc.id}>
-                      <td className="py-2 pr-4 font-medium">{inc.name}</td>
-                      <td className="py-2 pr-4 capitalize">{inc.type.replace("-", " ")}</td>
-                      <td className="py-2 pr-4">
-                        {inc.percentageCovered
-                          ? `${inc.percentageCovered}%`
-                          : `$${inc.maxAmount.toLocaleString()}`}
-                      </td>
-                      <td className="py-2 text-muted-foreground">{inc.description}</td>
-                    </tr>
-                  ))}
+                  {relevantFederal.map((inc) => {
+                    const expired =
+                      inc.expirationDate !== null &&
+                      inc.expirationDate < "2026-01-01";
+                    return (
+                      <tr key={inc.id}>
+                        <td className="py-2 pr-4 font-medium">
+                          {inc.name}
+                          {expired && (
+                            <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-950/50 dark:text-amber-400">
+                              Ended
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-2 pr-4 capitalize">{inc.type.replace("-", " ")}</td>
+                        <td className="py-2 pr-4">
+                          {inc.percentageCovered
+                            ? `${inc.percentageCovered}%`
+                            : `$${inc.maxAmount.toLocaleString()}`}
+                        </td>
+                        <td className="py-2 text-muted-foreground">{inc.description}</td>
+                      </tr>
+                    );
+                  })}
                   {relevantStateIncentives.map((inc) => (
                     <tr key={inc.id}>
                       <td className="py-2 pr-4 font-medium">{inc.name}</td>

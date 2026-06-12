@@ -110,6 +110,10 @@ function filingLabel(status: EvTaxCreditInput["filingStatus"]): string {
 // Main calculation
 // ---------------------------------------------------------------------------
 
+// The One Big Beautiful Bill Act (July 2025) terminated the 30D and 25E
+// clean vehicle credits for vehicles acquired after this date.
+const FEDERAL_CREDIT_END_DATE = "2025-09-30";
+
 export function calculateEvTaxCredit(input: EvTaxCreditInput): EvTaxCreditResult {
   const {
     filingStatus,
@@ -118,12 +122,23 @@ export function calculateEvTaxCredit(input: EvTaxCreditInput): EvTaxCreditResult
     vehicleMSRP,
     vehicleYear,
     purchaseType,
+    purchaseDate,
     dealerPurchase,
     stateCode,
   } = input;
 
   const reasons: EligibilityReason[] = [];
   let federalCreditAmount = 0;
+
+  // Acquisition deadline — applies to both new (30D) and used (25E) credits
+  const acquiredInTime = purchaseDate <= FEDERAL_CREDIT_END_DATE;
+  reasons.push({
+    label: "Acquired by September 30, 2025",
+    passed: acquiredInTime,
+    detail: acquiredInTime
+      ? "Vehicle acquired before the federal credit ended on September 30, 2025 (binding contract and payment by that date also qualifies)"
+      : "The federal clean vehicle credits ended September 30, 2025 — vehicles acquired after that date do not qualify. State incentives may still apply.",
+  });
 
   if (purchaseType === "new") {
     // -----------------------------------------------------------------------
@@ -179,7 +194,7 @@ export function calculateEvTaxCredit(input: EvTaxCreditInput): EvTaxCreditResult
     });
 
     // Determine credit amount
-    const coreEligible = incomeOk && msrpOk && dealerPurchase;
+    const coreEligible = acquiredInTime && incomeOk && msrpOk && dealerPurchase;
     federalCreditAmount = coreEligible ? 7500 : 0;
   } else {
     // -----------------------------------------------------------------------
@@ -236,7 +251,8 @@ export function calculateEvTaxCredit(input: EvTaxCreditInput): EvTaxCreditResult
     });
 
     // Determine credit amount: lesser of $4,000 or 30% of sale price
-    const coreEligible = incomeOk && priceOk && dealerPurchase && ageOk;
+    const coreEligible =
+      acquiredInTime && incomeOk && priceOk && dealerPurchase && ageOk;
     if (coreEligible) {
       federalCreditAmount = Math.min(4000, Math.round(vehicleMSRP * 0.3));
     }

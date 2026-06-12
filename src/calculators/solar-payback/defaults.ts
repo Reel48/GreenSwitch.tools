@@ -11,7 +11,7 @@ export const solarPaybackDefaults: SolarPaybackInput = {
   netMetering: true,
   netMeteringRate: 0.08,
   systemDegradation: 0.005,
-  federalTaxCreditPercent: 0.30,
+  federalTaxCreditPercent: 0, // 25D credit ended Dec 31, 2025 for purchased systems
   stateTaxCredit: 0,
   srecAnnualValue: 0,
   roofDirection: "south",

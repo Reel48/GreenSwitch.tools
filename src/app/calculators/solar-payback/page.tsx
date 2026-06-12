@@ -53,7 +53,7 @@ export default function SolarPaybackPage() {
     schema: solarPaybackSchema,
     defaults: solarPaybackDefaults,
     calculate: calculateSolarPayback,
-    storageKey: "solar-payback",
+    storageKey: "solar-payback-v2",
   });
 
   const financingType = form.watch("financingType");
@@ -63,7 +63,7 @@ export default function SolarPaybackPage() {
     <CalculatorShell
       title="Solar Payback Calculator"
       description="Estimate your solar panel payback period, lifetime savings, and return on investment based on your system size, electricity costs, and available incentives."
-      lastUpdated="March 2025"
+      lastUpdated="June 2026"
       url="/calculators/solar-payback"
       howToSteps={[
         {
@@ -80,7 +80,7 @@ export default function SolarPaybackPage() {
         },
         {
           name: "Configure incentives",
-          text: "Apply the 30% federal ITC, any state credits, and SREC income if available.",
+          text: "Enter any state credits and SREC income you qualify for. The 30% federal credit ended December 31, 2025 for purchased systems, so it defaults to 0%.",
         },
         {
           name: "Choose financing",
@@ -91,7 +91,7 @@ export default function SolarPaybackPage() {
           text: "Results update instantly as you adjust any input — see your payback period, lifetime savings, and ROI percentage.",
         },
       ]}
-      methodology={`This calculator estimates solar savings over the system's lifetime. Year-one production is based on system size × annual production per kW, adjusted for roof direction. Each subsequent year accounts for panel degradation (typically 0.5%/year) and rising electricity rates. The payback period is when cumulative savings exceed the net system cost (after tax credits). For loan financing, monthly payments are calculated using standard amortization. CO₂ offset uses the EPA average of 1.22 lbs CO₂ per kWh avoided. The 30% federal Investment Tax Credit (ITC) under the Inflation Reduction Act is applied by default.`}
+      methodology={`This calculator estimates solar savings over the system's lifetime. Year-one production is based on system size × annual production per kW, adjusted for roof direction. Each subsequent year accounts for panel degradation (typically 0.5%/year) and rising electricity rates. The payback period is when cumulative savings exceed the net system cost (after tax credits). For loan financing, monthly payments are calculated using standard amortization. CO₂ offset uses the EPA average of 1.22 lbs CO₂ per kWh avoided. Note on incentives: the 30% federal Residential Clean Energy Credit (25D) ended December 31, 2025 — installations completed after that date do not qualify, so the federal credit defaults to 0%. Homeowners who completed installation by the deadline can set it to 30%. Leased and PPA systems may still benefit indirectly through the commercial (48E) credit claimed by the system owner.`}
       faqs={[
         {
           question:
@@ -100,9 +100,9 @@ export default function SolarPaybackPage() {
             "The average solar payback period in the US is 6-10 years, depending on your electricity rate, sun exposure, system cost, and available incentives. After payback, you're essentially getting free electricity.",
         },
         {
-          question: "What is the federal solar tax credit?",
+          question: "Is the federal solar tax credit still available?",
           answer:
-            "The federal Investment Tax Credit (ITC) allows you to deduct 30% of solar installation costs from your federal taxes through 2032. It steps down to 26% in 2033 and 22% in 2034.",
+            "Not for purchased home systems. The 30% Residential Clean Energy Credit (25D) ended December 31, 2025 — systems whose installation completed after that date don't qualify. Two paths remain: leased or PPA systems can still benefit indirectly because the third-party owner claims the commercial (48E) credit and may pass savings through as lower payments, and many states continue to offer their own credits, rebates, and SREC programs.",
         },
         {
           question: "Does roof direction matter for solar panels?",
@@ -459,7 +459,7 @@ export default function SolarPaybackPage() {
             <div className="grid gap-4 sm:grid-cols-3">
               <RangeInput
                 label="Federal Tax Credit"
-                tooltip="ITC percentage (currently 30%)"
+                tooltip="The federal 25D credit ended Dec 31, 2025 for purchased systems — set to 30% only if your installation was completed by then"
                 min={0}
                 max={0.5}
                 step={0.01}

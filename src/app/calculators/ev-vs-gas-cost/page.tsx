@@ -44,7 +44,7 @@ export default function EvVsGasCostPage() {
     schema: evVsGasSchema,
     defaults: evVsGasDefaults,
     calculate: calculateEvVsGas,
-    storageKey: "ev-vs-gas-cost",
+    storageKey: "ev-vs-gas-cost-v2",
   });
 
   const ownershipYears = form.watch("ownershipYears");
@@ -54,7 +54,7 @@ export default function EvVsGasCostPage() {
     <CalculatorShell
       title="EV vs Gas Cost Calculator"
       description="Compare the total cost of ownership between an electric vehicle and a gas car over time, including purchase price, fuel, maintenance, insurance, and incentives."
-      lastUpdated="March 2025"
+      lastUpdated="June 2026"
       url="/calculators/ev-vs-gas-cost"
       howToSteps={[
         {
@@ -87,12 +87,12 @@ export default function EvVsGasCostPage() {
         {
           question: "Are EVs really cheaper to own than gas cars?",
           answer:
-            "In most cases, yes. While EVs often have a higher upfront cost, they save significantly on fuel and maintenance. Electricity is cheaper per mile than gasoline, and EVs have fewer moving parts — no oil changes, transmission repairs, or exhaust systems. Federal and state incentives further reduce the effective purchase price.",
+            "Often, yes — though the math is closer since federal credits ended. EVs save significantly on fuel and maintenance: electricity is cheaper per mile than gasoline, and EVs have fewer moving parts — no oil changes, transmission repairs, or exhaust systems. State incentives, where available, can further reduce the effective purchase price.",
         },
         {
-          question: "What federal tax credits are available for EVs?",
+          question: "Are there still federal tax credits for EVs?",
           answer:
-            "Under the Inflation Reduction Act, new EVs can qualify for up to $7,500 in federal tax credits, and used EVs for up to $4,000. Eligibility depends on your income, the vehicle's MSRP, and manufacturing requirements.",
+            "No. The federal clean vehicle credits (up to $7,500 for new EVs and $4,000 for used) ended for vehicles acquired after September 30, 2025, under legislation passed in July 2025. Buyers who acquired a vehicle by that deadline can still claim the credit for that tax year. Several states continue to offer their own EV rebates, tax credits, or sales tax exemptions — this calculator's incentive fields let you enter whatever you qualify for.",
         },
         {
           question:
@@ -413,6 +413,7 @@ export default function EvVsGasCostPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <RangeInput
                 label="Federal Tax Credit"
+                tooltip="The federal 30D credit ended for vehicles acquired after Sept 30, 2025 — leave at $0 unless your purchase was grandfathered"
                 min={0}
                 max={7500}
                 step={500}

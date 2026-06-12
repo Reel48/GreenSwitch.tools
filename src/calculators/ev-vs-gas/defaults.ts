@@ -13,7 +13,7 @@ export const evVsGasDefaults: EvVsGasInput = {
   gasAnnualMaintenance: 1200,
   evAnnualInsurance: 1800,
   gasAnnualInsurance: 1600,
-  federalTaxCredit: 7500,
+  federalTaxCredit: 0, // 30D credit ended Sept 30, 2025 — user can override for grandfathered purchases
   stateTaxCredit: 0,
   downPaymentPercent: 20,
   loanTermYears: 5,

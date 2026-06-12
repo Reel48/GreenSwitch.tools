@@ -54,7 +54,7 @@ export const calculatorInfo: Record<CalculatorSlug, CalculatorInfo> = {
     name: "EV Tax Credit Eligibility",
     shortName: "EV Tax Credit",
     description: (s) =>
-      `Check your eligibility for federal and ${s} EV tax credits. Up to $7,500 for new EVs and $4,000 for used EVs, plus available state incentives.`,
+      `Federal EV tax credits ended September 30, 2025. Check whether a grandfathered purchase qualifies and see which ${s} EV incentives are still available today.`,
     relevantDataKeys: [],
   },
   "battery-storage": {

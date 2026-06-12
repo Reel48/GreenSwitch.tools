@@ -40,6 +40,6 @@ export const heatPumpDefaults: HeatPumpInput = {
 
   // Location & incentives
   stateCode: "CA",
-  federalTaxCredit: 2000, // IRA heat pump credit
+  federalTaxCredit: 0, // 25C credit ended Dec 31, 2025 — user can override if grandfathered
   stateTaxCredit: 0,
 };

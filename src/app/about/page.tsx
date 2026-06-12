@@ -54,8 +54,9 @@ export default function AboutPage() {
           and fuel prices, the EPA and Department of Energy for efficiency and
           emissions figures, and the Database of State Incentives for
           Renewables &amp; Efficiency (DSIRE) for state-level incentives.
-          Federal tax credit rules reflect current Inflation Reduction Act
-          provisions. The full details are on our{" "}
+          Federal tax credit rules reflect current law, including the 2025
+          legislation that ended most federal clean energy credits. The full
+          details are on our{" "}
           <Link href="/methodology">methodology page</Link>, and every
           calculator includes its own &ldquo;How We Calculate This&rdquo;
           section.

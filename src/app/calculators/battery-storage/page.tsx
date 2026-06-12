@@ -53,7 +53,7 @@ export default function BatteryStoragePage() {
     schema: batteryStorageSchema,
     defaults: batteryStorageDefaults,
     calculate: calculateBatteryStorage,
-    storageKey: "battery-storage",
+    storageKey: "battery-storage-v2",
   });
 
   const financingType = form.watch("financingType");
@@ -64,8 +64,8 @@ export default function BatteryStoragePage() {
   return (
     <CalculatorShell
       title="Battery Storage Calculator"
-      description="Evaluate home battery ROI with TOU rate arbitrage, solar pairing, federal and state incentives, and degradation modeling over 15 years."
-      lastUpdated="March 2026"
+      description="Evaluate home battery ROI with TOU rate arbitrage, solar pairing, state incentives, and degradation modeling over 15 years."
+      lastUpdated="June 2026"
       url="/calculators/battery-storage"
       howToSteps={[
         {
@@ -86,14 +86,14 @@ export default function BatteryStoragePage() {
         },
         {
           name: "Apply incentives",
-          text: "Enable the 30% federal ITC and any available state battery incentives.",
+          text: "Enable any state battery incentives you qualify for. The 30% federal credit ended December 31, 2025, so it's off by default — enable it only if your system was installed by then.",
         },
         {
           name: "Review your ROI",
           text: "Results update instantly as you adjust any input — see your payback period, annual savings, and 15-year return on investment.",
         },
       ]}
-      methodology={`This calculator models home battery storage savings over 15 years. For time-of-use (TOU) rate structures, savings come from charging the battery at off-peak rates and discharging during on-peak hours (rate arbitrage). For flat-rate plans with solar, the battery captures excess solar generation for later self-consumption instead of exporting at a lower net metering rate. Battery capacity degrades annually (default 3%/year), while utility rates escalate at 3%/year. The federal Investment Tax Credit (ITC) of 30% applies to standalone battery storage under the Inflation Reduction Act. State incentives (e.g., California's SGIP) are applied when available. Net system cost equals the gross cost minus all applicable incentives. The payback period is the year when cumulative net savings first exceed zero.`}
+      methodology={`This calculator models home battery storage savings over 15 years. For time-of-use (TOU) rate structures, savings come from charging the battery at off-peak rates and discharging during on-peak hours (rate arbitrage). For flat-rate plans with solar, the battery captures excess solar generation for later self-consumption instead of exporting at a lower net metering rate. Battery capacity degrades annually (default 3%/year), while utility rates escalate at 3%/year. Note on incentives: the 30% federal Residential Clean Energy Credit (25D) that covered battery storage ended December 31, 2025 — installations completed after that date do not qualify, so the federal credit toggle is off by default and should only be enabled for systems installed by the deadline. State incentives (e.g., California's SGIP) are governed separately, remain available in several states, and are applied when enabled. Net system cost equals the gross cost minus all applicable incentives. The payback period is the year when cumulative net savings first exceed zero.`}
       faqs={[
         {
           question: "How does battery storage save money?",
@@ -116,9 +116,9 @@ export default function BatteryStoragePage() {
             "Yes. Batteries can be retrofitted to most existing solar systems, though some may require an additional inverter. Adding storage to solar increases self-consumption and can provide backup power during outages.",
         },
         {
-          question: "What is the federal battery tax credit?",
+          question: "Is there still a federal battery tax credit?",
           answer:
-            "The Inflation Reduction Act extended the 30% Investment Tax Credit (ITC) to standalone battery storage starting in 2023. Previously, batteries only qualified if installed with solar. The credit applies through 2032 and covers equipment and installation costs.",
+            "Not for new installations. The 30% Residential Clean Energy Credit covered standalone battery storage from 2023 through December 31, 2025, but legislation passed in July 2025 ended it — batteries installed after that date don't qualify. State programs like California's SGIP continue, and some utilities pay battery owners through virtual power plant (VPP) programs, so check what's active in your area.",
         },
         {
           question: "Are batteries worth it with flat-rate electricity?",
@@ -548,7 +548,10 @@ export default function BatteryStoragePage() {
                     form.setValue("applyFederalCredit", v)
                   }
                 />
-                <Label>Apply 30% federal tax credit (ITC)</Label>
+                <Label>
+                  Apply 30% federal credit (ended Dec 31, 2025 — installed
+                  systems only)
+                </Label>
               </div>
               <div className="flex items-center gap-3">
                 <Switch

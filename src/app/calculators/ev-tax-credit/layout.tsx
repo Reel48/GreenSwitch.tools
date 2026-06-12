@@ -7,18 +7,18 @@ import { getPostsByCalculator } from "@/lib/blog";
 export const metadata: Metadata = {
   title: "EV Tax Credit Eligibility",
   description:
-    "Check your eligibility for federal EV tax credits worth up to $7,500 for new or $4,000 for used electric vehicles. See income limits, MSRP caps, and qualifying models.",
+    "The federal EV tax credits ended September 30, 2025. Check whether a grandfathered purchase still qualifies for up to $7,500 (new) or $4,000 (used), and see which state EV incentives remain available.",
   keywords: [
     "EV tax credit",
-    "federal EV tax credit 2026",
+    "is the EV tax credit still available",
+    "EV tax credit expired 2025",
     "EV tax credit eligibility",
-    "electric vehicle tax credit calculator",
-    "7500 EV tax credit",
+    "state EV incentives 2026",
   ],
   openGraph: {
     title: "EV Tax Credit Eligibility Calculator | GoGreenCalc",
     description:
-      "Check eligibility for federal EV tax credits up to $7,500 new or $4,000 used with income and MSRP limits.",
+      "Federal EV credits ended Sept 30, 2025 — check grandfathered eligibility and current state EV incentives.",
     url: "/calculators/ev-tax-credit",
   },
   alternates: {
@@ -40,7 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       />
       <SoftwareApplicationSchema
         name="EV Tax Credit Eligibility Calculator"
-        description="Check eligibility for federal EV tax credits up to $7,500 new or $4,000 used with income and MSRP limits."
+        description="Federal EV credits ended Sept 30, 2025 — check grandfathered eligibility and current state EV incentives."
         url="/calculators/ev-tax-credit"
       />
       {children}

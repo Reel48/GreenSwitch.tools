@@ -24,6 +24,6 @@ export const batteryStorageDefaults: BatteryStorageInput = {
   loanTermYears: 10,
   loanInterestRate: 6.5,
 
-  applyFederalCredit: true,
+  applyFederalCredit: false, // 25D credit ended Dec 31, 2025 — only for systems installed by then
   applyStateIncentive: true,
 };

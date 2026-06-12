@@ -51,9 +51,15 @@ export default function MethodologyPage() {
 
         <h2>Incentives &amp; Tax Credits</h2>
         <p>
-          Federal incentives reflect current Inflation Reduction Act (IRA)
-          provisions. State-level incentives are sourced from the Database of
-          State Incentives for Renewables &amp; Efficiency (DSIRE). We update
+          Federal incentive data reflects the changes made by the July 2025
+          budget reconciliation law: the federal clean vehicle credits ended
+          for vehicles acquired after September 30, 2025, and the residential
+          clean energy (solar/battery) and energy efficient home improvement
+          (heat pump) credits ended December 31, 2025. Our calculators default
+          federal credits to zero and let users override them for grandfathered
+          purchases. State-level incentives are governed separately, remain
+          active in many states, and are sourced from the Database of State
+          Incentives for Renewables &amp; Efficiency (DSIRE). We update
           incentive data as legislation changes.
         </p>
 

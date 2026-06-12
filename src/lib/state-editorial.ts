@@ -91,7 +91,7 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
       if (evIncentives.length > 0) {
         const totalMax = evIncentives.reduce((s, i) => s + i.maxAmount, 0);
         paragraphs.push(
-          `${stateName} residents may also be eligible for up to ${formatDollars(totalMax, 0)} in state EV incentives on top of the federal tax credit. Combined, these can significantly shorten the payback period on a new electric vehicle, often offsetting the higher sticker price within the first few years of ownership. Use the calculator above to see exactly how long it takes an EV to break even in your situation.`
+          `${stateName} residents may also be eligible for up to ${formatDollars(totalMax, 0)} in state EV incentives. With the federal clean vehicle credits having ended September 30, 2025, state programs are now the main purchase incentive, and they can still meaningfully shorten the payback period on a new electric vehicle. Use the calculator above to see exactly how long it takes an EV to break even in your situation.`
         );
       }
     }
@@ -110,18 +110,16 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
       const systemCost = solar.costPerWatt * solar.avgSystemSizeKw * 1000;
       const annualProd = solar.annualProductionPerKw * solar.avgSystemSizeKw;
       const annualValue = annualProd * elec.rate;
-      const federalCredit = systemCost * 0.3;
-      const netCost = systemCost - federalCredit;
-      const simplePayback = Math.round(netCost / annualValue);
+      const simplePayback = Math.round(systemCost / annualValue);
 
       // Paragraph 1 — Solar resource & cost
       paragraphs.push(
-        `${stateName} averages ${solar.avgSunHours} peak sun hours per day, which is ${sunDir} the national average. A typical ${solar.avgSystemSizeKw} kW residential system costs about ${formatDollars(solar.costPerWatt)} per watt installed \u2014 roughly ${formatDollars(systemCost, 0)} before incentives. With the 30% federal solar tax credit, the net cost drops to about ${formatDollars(netCost, 0)}, making solar accessible for a wide range of homeowners.`
+        `${stateName} averages ${solar.avgSunHours} peak sun hours per day, which is ${sunDir} the national average. A typical ${solar.avgSystemSizeKw} kW residential system costs about ${formatDollars(solar.costPerWatt)} per watt installed \u2014 roughly ${formatDollars(systemCost, 0)}. Note that the 30% federal residential solar credit ended December 31, 2025, so purchased systems no longer receive a federal discount; leased and PPA systems may still capture savings indirectly through the commercial credit claimed by the system owner.`
       );
 
       // Paragraph 2 — Production & payback
       paragraphs.push(
-        `At ${stateName}'s electricity rate of ${formatDollars(elec.rate, 3)} per kWh, a ${solar.avgSystemSizeKw} kW system producing roughly ${annualProd.toLocaleString()} kWh per year offsets about ${formatDollars(annualValue, 0)} in annual electricity costs. After the federal credit, the estimated payback period is around ${simplePayback} years, with 15+ years of essentially free electricity after that. Over 25 years, homeowners can expect total savings of ${formatDollars(annualValue * 25 - netCost, 0)}.`
+        `At ${stateName}'s electricity rate of ${formatDollars(elec.rate, 3)} per kWh, a ${solar.avgSystemSizeKw} kW system producing roughly ${annualProd.toLocaleString()} kWh per year offsets about ${formatDollars(annualValue, 0)} in annual electricity costs. At full purchase price, the estimated payback period is around ${simplePayback} years, with many years of essentially free electricity after that. Over 25 years, homeowners can expect total savings of ${formatDollars(annualValue * 25 - systemCost, 0)} — state incentives, where available, improve this further.`
       );
 
       // Paragraph 3 — Net metering + SREC
@@ -228,11 +226,11 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
       if (hpIncentives.length > 0) {
         const totalMax = hpIncentives.reduce((s, i) => s + i.maxAmount, 0);
         paragraphs.push(
-          `${stateName} residents can access up to ${formatDollars(totalMax, 0)} in state rebates and incentives for heat pump installations, in addition to the federal 25C energy efficient home improvement credit. These incentives can significantly reduce the upfront installation cost, which typically ranges from $4,000 to $8,000 depending on system size and complexity. Run the calculator above with your home details to see your personalized payback estimate.`
+          `${stateName} residents can access up to ${formatDollars(totalMax, 0)} in state rebates and incentives for heat pump installations. With the federal 25C credit having ended December 31, 2025, these state and utility programs are now the primary way to reduce the upfront installation cost, which typically ranges from $4,000 to $8,000 depending on system size and complexity. Run the calculator above with your home details to see your personalized payback estimate.`
         );
       } else {
         paragraphs.push(
-          `While ${stateName} does not currently offer state-level heat pump incentives, the federal 25C energy efficient home improvement tax credit covers up to $2,000 for qualifying heat pump systems. This credit, combined with long-term energy savings and the dual heating-cooling functionality, makes heat pumps an investment worth evaluating for most homeowners. Enter your home details above to see your projected savings.`
+          `${stateName} does not currently offer dedicated state-level heat pump incentives, and the federal 25C credit ended December 31, 2025. The case for a heat pump now rests on operating savings and the dual heating-cooling functionality — which, in the right climate and at the right fuel prices, can still make it the better long-term investment. Some utilities also offer their own rebates, so check locally. Enter your home details above to see your projected savings.`
         );
       }
     }
@@ -245,7 +243,7 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
 
     // Paragraph 1 — Federal overview
     paragraphs.push(
-      `Federal EV tax credits remain one of the biggest financial incentives for ${stateName} residents considering an electric vehicle. The Clean Vehicle Credit (Section 30D) offers up to $7,500 for new qualifying EVs, while the Used Clean Vehicle Credit (Section 25E) provides up to $4,000 for qualifying pre-owned EVs purchased from a licensed dealer. Both credits have income limits and vehicle price caps that vary by filing status.`
+      `The federal EV tax credits ended for vehicles acquired after September 30, 2025, under legislation passed in July 2025. The Clean Vehicle Credit (Section 30D) offered up to $7,500 for new qualifying EVs and the Used Clean Vehicle Credit (Section 25E) up to $4,000 for pre-owned EVs from licensed dealers — ${stateName} buyers who acquired a vehicle by the deadline (including via a binding contract with payment made by then) can still claim the credit for that tax year, subject to the original income and price-cap rules.`
     );
 
     // Paragraph 2 — State-specific incentives
@@ -258,17 +256,17 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
         .join(", ");
       const totalState = evIncentives.reduce((s, i) => s + i.maxAmount, 0);
       paragraphs.push(
-        `Beyond federal incentives, ${stateName} offers additional EV benefits including ${descriptions}. When stacked with the federal credit, ${stateName} buyers could receive up to ${formatDollars(totalState + 7500, 0)} in total savings on a new EV. These state incentives may have their own eligibility requirements, so use the calculator above to check whether you qualify for each program.`
+        `For purchases today, state programs are the main incentive: ${stateName} offers EV benefits including ${descriptions}, worth up to ${formatDollars(totalState, 0)} combined. These state incentives have their own eligibility requirements and funding cycles, so verify current availability with each program and use the calculator above to estimate your savings.`
       );
     } else {
       paragraphs.push(
-        `${stateName} does not currently offer dedicated state-level EV purchase incentives beyond the federal credits. However, the federal program alone can save you up to $7,500 on a new EV or $4,000 on a used one. Some ${stateName} utilities also offer EV-specific electricity rates or charger installation rebates that provide indirect savings. Check with your local utility for any available programs.`
+        `${stateName} does not currently offer dedicated state-level EV purchase incentives, so with the federal credits ended, the financial case for an EV in ${stateName} now rests on operating savings — cheaper fuel and lower maintenance. Some ${stateName} utilities offer EV-specific electricity rates or charger installation rebates that provide indirect savings; check with your local utility for available programs.`
       );
     }
 
     // Paragraph 3 — Practical guidance
     paragraphs.push(
-      `Keep in mind that the federal EV tax credit has income thresholds: $150,000 AGI for single filers and $300,000 for joint filers on new vehicles, with lower limits for used EVs. The vehicle MSRP cap is $55,000 for sedans and $80,000 for SUVs, vans, and trucks. Starting in 2024, buyers can also transfer the credit to the dealer at the point of sale for an instant price reduction. Enter your details in the calculator above to verify your eligibility and estimate your total savings in ${stateName}.`
+      `If you acquired your EV by the September 30, 2025 deadline and are claiming the credit, the original rules apply: income thresholds of $150,000 AGI for single filers and $300,000 for joint filers on new vehicles (lower limits for used), and MSRP caps of $55,000 for sedans and $80,000 for SUVs, vans, and trucks. Enter your details in the calculator above to check a grandfathered purchase, or to see current state-level incentives in ${stateName}.`
     );
 
     return paragraphs;
@@ -308,11 +306,11 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
       const stateMax = batteryIncentives.reduce((s, i) => s + i.maxAmount, 0);
       if (stateMax > 0) {
         paragraphs.push(
-          `${stateName} offers up to ${formatDollars(stateMax, 0)} in state incentives for home battery installations, on top of the federal 30% Residential Clean Energy Credit. A typical 10\u201313.5 kWh battery system costs $10,000\u2013$15,000 installed, and with combined federal and state incentives, the net cost can drop below $8,000. Use the calculator above to enter your specific electricity usage and see your personalized payback estimate.`
+          `${stateName} offers up to ${formatDollars(stateMax, 0)} in state incentives for home battery installations \u2014 now the primary purchase incentive, since the federal 30% Residential Clean Energy Credit ended December 31, 2025. A typical 10\u201313.5 kWh battery system costs $10,000\u2013$15,000 installed, and state incentives plus daily rate savings determine the payback. Use the calculator above to enter your specific electricity usage and see your personalized estimate.`
         );
       } else {
         paragraphs.push(
-          `The federal 30% Residential Clean Energy Credit applies to battery storage systems paired with solar, bringing a $12,000 battery system down to about $8,400 out of pocket. While ${stateName} does not currently offer state-level battery incentives, the combination of federal credits, TOU savings or solar self-consumption, and backup power value can still make the investment worthwhile over a 10\u201315 year horizon. Enter your details above to see your estimated ROI.`
+          `The federal 30% Residential Clean Energy Credit for battery storage ended December 31, 2025, and ${stateName} does not currently offer state-level battery incentives, so the investment case rests on the economics themselves: TOU rate arbitrage or solar self-consumption savings, plus backup power value. Some utilities also pay battery owners through virtual power plant programs. Enter your details above to see your estimated ROI at full price.`
         );
       }
     }

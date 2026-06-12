@@ -45,7 +45,7 @@ export default function EvTaxCreditPage() {
     schema: evTaxCreditSchema,
     defaults: evTaxCreditDefaults,
     calculate: calculateEvTaxCredit,
-    storageKey: "ev-tax-credit",
+    storageKey: "ev-tax-credit-v2",
   });
 
   const purchaseType = form.watch("purchaseType");
@@ -53,8 +53,8 @@ export default function EvTaxCreditPage() {
   return (
     <CalculatorShell
       title="EV Tax Credit Calculator"
-      description="Check your eligibility for the federal EV tax credit (up to $7,500 for new or $4,000 for used EVs) and estimate your total savings including state incentives."
-      lastUpdated="March 2025"
+      description="The federal EV tax credits (up to $7,500 new / $4,000 used) ended September 30, 2025. Check whether a vehicle you acquired in time still qualifies, and see which state incentives remain available today."
+      lastUpdated="June 2026"
       url="/calculators/ev-tax-credit"
       howToSteps={[
         {
@@ -62,8 +62,8 @@ export default function EvTaxCreditPage() {
           text: "Select your tax filing status and enter your adjusted gross income (AGI).",
         },
         {
-          name: "Choose purchase type",
-          text: "Select whether you are buying a new or used EV, and confirm it is a dealer purchase.",
+          name: "Choose purchase type and date",
+          text: "Select new or used, confirm it is a dealer purchase, and enter when you acquired the vehicle — the federal credit only applies to vehicles acquired by September 30, 2025.",
         },
         {
           name: "Enter vehicle details",
@@ -78,27 +78,27 @@ export default function EvTaxCreditPage() {
           text: "Your eligibility updates instantly as you adjust any input — see your federal credit amount, income and MSRP qualification, and total savings.",
         },
       ]}
-      methodology={`This calculator evaluates eligibility for the federal clean vehicle tax credit under IRC 30D (new vehicles, up to $7,500) and IRC 25E (used vehicles, lesser of $4,000 or 30% of sale price). Income limits vary by filing status. MSRP caps are $55,000 for sedans and $80,000 for SUVs/trucks/vans (new vehicles) or $25,000 (used vehicles). Vehicle classification uses keyword matching on the model name. State credits are simplified estimates based on publicly available incentive programs. Always verify eligibility with the IRS clean vehicle list and your state's incentive program.`}
+      methodology={`The federal clean vehicle credits under IRC 30D (new vehicles, up to $7,500) and IRC 25E (used vehicles, lesser of $4,000 or 30% of sale price) were terminated by the One Big Beautiful Bill Act of July 2025 for vehicles acquired after September 30, 2025. This calculator applies that acquisition deadline first, then the original eligibility rules for vehicles that beat it: income limits by filing status, MSRP caps of $55,000 for sedans and $80,000 for SUVs/trucks/vans (new) or $25,000 (used), and the dealer-purchase requirement. A binding written contract with payment made on or before September 30, 2025 counts as acquiring the vehicle, even if delivery came later. State incentives are governed separately from federal law and many remain active; our state amounts are simplified estimates. Always verify with the IRS and your state's program before relying on any credit.`}
       faqs={[
         {
-          question: "How much is the federal EV tax credit?",
+          question: "Is the federal EV tax credit still available in 2026?",
           answer:
-            "For new EVs, the credit is up to $7,500 — split into $3,750 for critical minerals sourcing and $3,750 for battery component manufacturing. For used EVs, it's the lesser of $4,000 or 30% of the sale price.",
+            "No. The One Big Beautiful Bill Act, signed July 4, 2025, terminated both the new vehicle credit (IRC 30D, up to $7,500) and the used vehicle credit (IRC 25E, up to $4,000) for vehicles acquired after September 30, 2025. If you acquired your EV on or before that date — including via a binding written contract with payment made by then — you can still claim the credit on the tax return for the year you took delivery.",
         },
         {
-          question: "What are the income limits for the EV tax credit?",
+          question: "I bought my EV before September 30, 2025. Can I still claim the credit?",
           answer:
-            "For new EVs: $300,000 (married filing jointly), $225,000 (head of household), or $150,000 (single/married filing separately). For used EVs: $150,000 (married filing jointly), $112,500 (head of household), or $75,000 (single/married filing separately).",
+            "Yes, if you met the original eligibility rules: income under the AGI limits ($300,000 married filing jointly / $150,000 single for new vehicles), the vehicle under its MSRP cap ($55,000 sedans, $80,000 SUVs/trucks/vans, or $25,000 sale price for used), purchased from a licensed dealer, and on the IRS qualifying vehicle list. Use this calculator with your actual acquisition date to check, and consult a tax professional for your specific situation.",
         },
         {
-          question: "What is the MSRP cap for the EV tax credit?",
+          question: "What EV incentives are still available in 2026?",
           answer:
-            "For new vehicles: $55,000 for sedans and $80,000 for SUVs, trucks, and vans. For used EVs: the sale price must be $25,000 or less.",
+            "State and local programs are unaffected by the federal change, and many remain active — for example, Colorado's state tax credit and several state rebate and sales tax exemption programs. Utility rebates for home chargers and discounted EV charging rates also continue. Enter your state in the calculator to see estimated state-level incentives, and verify current details with the program directly.",
         },
         {
-          question: "Can I get the EV tax credit at the point of sale?",
+          question: "Do EVs still make financial sense without the federal credit?",
           answer:
-            "Yes, starting in 2024 you can transfer the credit to the dealer and get it as a discount at the time of purchase, rather than waiting to claim it on your tax return. The vehicle must be purchased from a licensed dealer.",
+            "Often, yes — the credit accelerated the payback but was never the whole story. EVs still save on fuel (electricity per mile typically runs a third to half the cost of gasoline) and maintenance. Without the credit the break-even point comes later, so the math depends more on your annual mileage, local electricity rates, and the price gap between the EV and a comparable gas car. Our EV vs Gas Cost Calculator models it with your numbers.",
         },
       ]}
       relatedCalculators={[
@@ -353,7 +353,18 @@ export default function EvTaxCreditPage() {
               </Select>
             </InputGroup>
 
-            <div className="flex items-center gap-3 pt-6">
+            <InputGroup
+              label="Acquisition Date"
+              tooltip="When you acquired the vehicle (or signed a binding contract with payment). The federal credit ended for vehicles acquired after September 30, 2025."
+            >
+              <Input
+                type="date"
+                value={form.watch("purchaseDate")}
+                onChange={(e) => form.setValue("purchaseDate", e.target.value)}
+              />
+            </InputGroup>
+
+            <div className="flex items-center gap-3 sm:pt-6">
               <Switch
                 checked={form.watch("dealerPurchase")}
                 onCheckedChange={(v) => form.setValue("dealerPurchase", v)}

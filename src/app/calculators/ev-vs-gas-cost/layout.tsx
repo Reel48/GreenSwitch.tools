@@ -7,7 +7,7 @@ import { getPostsByCalculator } from "@/lib/blog";
 export const metadata: Metadata = {
   title: "EV vs Gas Cost Comparison",
   description:
-    "Compare the total cost of owning an electric vehicle vs a gas car. Factor in fuel, maintenance, insurance, depreciation, and federal tax credits over 5–10 years.",
+    "Compare the total cost of owning an electric vehicle vs a gas car. Factor in fuel, maintenance, insurance, depreciation, and available incentives over 5–10 years.",
   keywords: [
     "EV vs gas cost",
     "electric car vs gas car cost",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "EV vs Gas Cost Comparison Calculator | GoGreenCalc",
     description:
-      "Compare total cost of owning an electric vehicle vs gas car including fuel, maintenance, and tax credits.",
+      "Compare total cost of owning an electric vehicle vs gas car including fuel, maintenance, and incentives.",
     url: "/calculators/ev-vs-gas-cost",
   },
   alternates: {
@@ -40,7 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       />
       <SoftwareApplicationSchema
         name="EV vs Gas Cost Comparison Calculator"
-        description="Compare the total cost of owning an electric vehicle vs a gas car including fuel, maintenance, and tax credits."
+        description="Compare the total cost of owning an electric vehicle vs a gas car including fuel, maintenance, and incentives."
         url="/calculators/ev-vs-gas-cost"
       />
       {children}
