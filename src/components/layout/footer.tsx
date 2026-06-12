@@ -13,6 +13,8 @@ const calculatorLinks = [
 const resourceLinks = [
   { label: "Learn", href: "/learn" },
   { label: "Methodology", href: "/methodology" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ] as const;
 
 const legalLinks = [
