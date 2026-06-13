@@ -60,13 +60,23 @@ export function CalculatorShell({
   return (
     <div
       className={cn(
-        "mx-auto max-w-4xl space-y-6 px-4 py-6 sm:space-y-8 md:py-12 lg:max-w-7xl",
+        "relative mx-auto max-w-4xl px-4 py-6 md:py-12 lg:max-w-7xl",
         // clearance for the fixed mobile summary bar (hidden at lg+)
         mobileSummary && "max-lg:pb-24",
       )}
     >
-      {/* HowTo Schema */}
-      {howToSteps && url && (
+      {/* Hero gradient — flush under the navbar. The negative top offset
+          cancels the calculators layout wrapper's top padding (py-6 sm:py-8 in
+          app/calculators/layout.tsx); keep these in sync. Kept out of the
+          space-y flow so it never shifts content. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-72 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--primary)_8%,transparent),transparent_65%)] sm:-top-8"
+      />
+
+      <div className="space-y-6 sm:space-y-8">
+        {/* HowTo Schema */}
+        {howToSteps && url && (
         <HowToSchema
           name={title}
           description={description}
@@ -76,11 +86,7 @@ export function CalculatorShell({
       )}
 
       {/* Hero Section */}
-      <section className="relative space-y-4 text-center">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -inset-x-8 -top-12 -bottom-4 -z-10 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--primary)_8%,transparent),transparent_65%)]"
-        />
+      <section className="space-y-4 text-center">
         <Badge variant="secondary" className="text-xs">
           Updated {lastUpdated}
         </Badge>
@@ -192,6 +198,7 @@ export function CalculatorShell({
           </section>
         </>
       )}
+      </div>
     </div>
   );
 }
