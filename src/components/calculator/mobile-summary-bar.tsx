@@ -29,6 +29,16 @@ export function MobileSummaryBar({
 }: MobileSummaryBarProps) {
   const [resultsVisible, setResultsVisible] = React.useState(true);
   const [footerVisible, setFooterVisible] = React.useState(false);
+  // Keep the real navbar visible at the very top of the page; only let the bar
+  // take over once the user has scrolled past the navbar's height.
+  const [scrolledDown, setScrolledDown] = React.useState(false);
+
+  React.useEffect(() => {
+    const onScroll = () => setScrolledDown(window.scrollY > 64);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   React.useEffect(() => {
     const results = document.getElementById("calc-results");
@@ -64,7 +74,7 @@ export function MobileSummaryBar({
 
   return (
     <AnimatePresence>
-      {!resultsVisible && !footerVisible && (
+      {!resultsVisible && !footerVisible && scrolledDown && (
         <motion.div
           initial={{ y: -80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
