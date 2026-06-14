@@ -20,7 +20,7 @@ export function CalculatorMethodology({ content }: CalculatorMethodologyProps) {
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between px-0 hover:bg-transparent"
       >
-        <h2 className="text-xl font-semibold tracking-tight">
+        <h2 className="text-2xl font-semibold tracking-tight">
           How We Calculate This
         </h2>
         <ChevronDown
