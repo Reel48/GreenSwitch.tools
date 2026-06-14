@@ -58,13 +58,7 @@ export function CalculatorShell({
   url,
 }: CalculatorShellProps) {
   return (
-    <div
-      className={cn(
-        "relative mx-auto max-w-4xl px-4 py-6 md:py-12 lg:max-w-7xl",
-        // clearance for the fixed mobile summary bar (hidden at lg+)
-        mobileSummary && "max-lg:pb-24",
-      )}
-    >
+    <div className="relative mx-auto max-w-4xl px-4 py-6 md:py-12 lg:max-w-7xl">
       {/* Hero gradient — flush under the navbar. The negative top offset
           cancels the calculators layout wrapper's top padding (py-6 sm:py-8 in
           app/calculators/layout.tsx); keep these in sync. Kept out of the

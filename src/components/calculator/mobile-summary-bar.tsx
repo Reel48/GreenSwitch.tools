@@ -14,13 +14,13 @@ interface MobileSummaryBarProps {
 }
 
 /**
- * Mobile-only bar pinned to the bottom of the viewport showing the headline
- * result while the user is scrolled into the input form. Hides itself when
- * the results panel is on screen.
+ * Mobile-only bar that overlays the navbar at the top of the viewport, showing
+ * the headline result while the user is scrolled into the input form. Slides
+ * away to reveal the navbar again when the results panel is back on screen.
  *
- * NOTE: If AdSense anchor ads are enabled later, they also pin to the bottom
- * edge — disable this component (stop passing `mobileSummary` to
- * CalculatorShell) to avoid overlap.
+ * NOTE: If AdSense anchor ads are enabled later, a top anchor ad could overlap
+ * this — disable this component (stop passing `mobileSummary` to
+ * CalculatorShell) if that happens.
  */
 export function MobileSummaryBar({
   label,
@@ -66,33 +66,21 @@ export function MobileSummaryBar({
     <AnimatePresence>
       {!resultsVisible && !footerVisible && (
         <motion.div
-          initial={{ y: 72, opacity: 0 }}
+          initial={{ y: -80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 72, opacity: 0 }}
+          exit={{ y: -80, opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="fixed inset-x-0 z-40 border-t bg-background/90 px-4 py-3 backdrop-blur-md lg:hidden"
-          // Chrome edge-to-edge "fast path": the bar stays glued to the dynamic
-          // bottom inset as the address bar / chin / nav bar retracts on scroll.
-          //   chin shown   → safe-area-inset == max → bottom 0 (content sits
-          //                  above the chin via the padding)
-          //   chin retracts → inset shrinks → bottom goes negative, so the bar
-          //                  and its frosted background slide down with it — no
-          //                  gap, no page content showing through.
-          // Non-Chrome browsers (safe-area-max-inset unsupported → 0px) reduce
-          // to bottom = safe-area-inset-bottom (the home indicator), so Safari
-          // behaves as before. Requires viewport-fit=cover (set in layout).
-          style={{
-            bottom:
-              "calc(env(safe-area-inset-bottom, 0px) - env(safe-area-max-inset-bottom, 0px))",
-            paddingBottom: "calc(0.75rem + env(safe-area-max-inset-bottom, 0px))",
-          }}
+          // Overlays the navbar (mirrors its height + styling) while scrolled
+          // into the form; slides up out of view to reveal the navbar again
+          // once the results panel is back on screen. Mobile only.
+          className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-white/95 backdrop-blur-sm supports-[backdrop-filter]:bg-white/80 lg:hidden"
         >
-          <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
+          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
             <div className="min-w-0">
               <p className="truncate text-xs text-muted-foreground">{label}</p>
               <p
                 className={cn(
-                  "text-lg font-bold tabular-nums",
+                  "truncate text-base font-bold leading-tight tabular-nums",
                   tone === "positive" && "text-green-700 dark:text-green-400",
                   tone === "negative" && "text-amber-700 dark:text-amber-400",
                 )}
