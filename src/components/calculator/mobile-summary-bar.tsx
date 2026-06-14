@@ -29,6 +29,37 @@ export function MobileSummaryBar({
 }: MobileSummaryBarProps) {
   const [resultsVisible, setResultsVisible] = React.useState(true);
   const [footerVisible, setFooterVisible] = React.useState(false);
+  // Distance to lift the bar off `bottom: 0` so it hugs the *visible* bottom.
+  // Chrome anchors fixed elements to the layout viewport, so when its toolbar
+  // (e.g. a bottom URL bar) collapses on scroll, bottom:0 leaves a gap. This
+  // tracks the visual viewport to close it. On Safari the value stays ~0 at
+  // rest, so its already-correct behavior is unaffected.
+  const [bottomOffset, setBottomOffset] = React.useState(0);
+
+  React.useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    let raf = 0;
+    const update = () => {
+      const offset = Math.max(
+        0,
+        document.documentElement.clientHeight - vv.height - vv.offsetTop,
+      );
+      setBottomOffset(offset);
+    };
+    const onChange = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+    update();
+    vv.addEventListener("resize", onChange);
+    vv.addEventListener("scroll", onChange);
+    return () => {
+      cancelAnimationFrame(raf);
+      vv.removeEventListener("resize", onChange);
+      vv.removeEventListener("scroll", onChange);
+    };
+  }, []);
 
   React.useEffect(() => {
     const results = document.getElementById("calc-results");
@@ -71,7 +102,10 @@ export function MobileSummaryBar({
           exit={{ y: 72, opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
           className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/90 px-4 py-3 backdrop-blur-md lg:hidden"
-          style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+          style={{
+            bottom: bottomOffset,
+            paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+          }}
         >
           <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
             <div className="min-w-0">
