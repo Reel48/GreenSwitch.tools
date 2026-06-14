@@ -71,17 +71,20 @@ export function MobileSummaryBar({
           exit={{ y: 72, opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
           className="fixed inset-x-0 z-40 border-t bg-background/90 px-4 py-3 backdrop-blur-md lg:hidden"
-          // The bar's box is pushed 50vh below the bottom edge (negative
-          // `bottom`) and that distance is added back as padding, so the
-          // content stays in the same visible spot while the bar's own
-          // (frosted) background bleeds 50vh past the bottom of the screen.
-          // This covers any gap a browser's collapsing toolbar (e.g. Chrome's
-          // URL bar on scroll) opens beneath the bar, so page content never
-          // shows through.
+          // Chrome edge-to-edge "fast path": the bar stays glued to the dynamic
+          // bottom inset as the address bar / chin / nav bar retracts on scroll.
+          //   chin shown   → safe-area-inset == max → bottom 0 (content sits
+          //                  above the chin via the padding)
+          //   chin retracts → inset shrinks → bottom goes negative, so the bar
+          //                  and its frosted background slide down with it — no
+          //                  gap, no page content showing through.
+          // Non-Chrome browsers (safe-area-max-inset unsupported → 0px) reduce
+          // to bottom = safe-area-inset-bottom (the home indicator), so Safari
+          // behaves as before. Requires viewport-fit=cover (set in layout).
           style={{
-            bottom: "-50vh",
-            paddingBottom:
-              "calc(50vh + max(0.75rem, env(safe-area-inset-bottom)))",
+            bottom:
+              "calc(env(safe-area-inset-bottom, 0px) - env(safe-area-max-inset-bottom, 0px))",
+            paddingBottom: "calc(0.75rem + env(safe-area-max-inset-bottom, 0px))",
           }}
         >
           <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">

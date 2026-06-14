@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCProvider } from "@/lib/trpc/react";
@@ -18,6 +18,12 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  // Required for env(safe-area-*) to return real insets — used by the mobile
+  // summary bar to track Chrome's edge-to-edge dynamic bottom inset.
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: {
