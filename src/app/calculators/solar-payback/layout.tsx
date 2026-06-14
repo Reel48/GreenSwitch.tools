@@ -45,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       />
       {children}
       {articles.length > 0 && (
-        <div className="mx-auto max-w-4xl px-4 pb-12">
+        <div className="px-4 pb-12">
           <RelatedArticles articles={articles} heading="Learn More About Solar" />
         </div>
       )}

@@ -136,7 +136,7 @@ export function CalculatorShell({
 
       {/* Methodology */}
       {methodology && (
-        <div className="mx-auto w-full max-w-4xl space-y-6 sm:space-y-8">
+        <div className="w-full space-y-6 sm:space-y-8">
           <Separator />
           <CalculatorMethodology content={methodology} />
         </div>
@@ -144,7 +144,7 @@ export function CalculatorShell({
 
       {/* FAQ */}
       {faqs && faqs.length > 0 && (
-        <div className="mx-auto w-full max-w-4xl space-y-6 sm:space-y-8">
+        <div className="w-full space-y-6 sm:space-y-8">
           <Separator />
           <CalculatorFaq faqs={faqs} />
         </div>
@@ -152,7 +152,7 @@ export function CalculatorShell({
 
       {/* Related Calculators */}
       {relatedCalculators && relatedCalculators.length > 0 && (
-        <div className="mx-auto w-full max-w-4xl space-y-6 sm:space-y-8">
+        <div className="w-full space-y-6 sm:space-y-8">
           <Separator />
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold tracking-tight">
