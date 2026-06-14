@@ -131,9 +131,6 @@ export function CalculatorShell({
         </div>
       </div>
 
-      {/* Mobile sticky headline (hidden while results are on screen) */}
-      {mobileSummary}
-
       {/* Methodology */}
       {methodology && (
         <div className="w-full space-y-6 sm:space-y-8">
@@ -199,6 +196,11 @@ export function CalculatorShell({
         </div>
       )}
       </div>
+
+      {/* Mobile sticky headline (fixed; kept outside the space-y flow so no
+          sibling margin offsets it from the viewport bottom). Hidden while the
+          results panel is on screen. */}
+      {mobileSummary}
     </div>
   );
 }
