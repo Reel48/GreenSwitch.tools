@@ -2,6 +2,7 @@ export function ArticleSchema({
   title,
   description,
   datePublished,
+  dateModified,
   url,
   keywords,
   wordCount,
@@ -9,6 +10,7 @@ export function ArticleSchema({
   title: string;
   description: string;
   datePublished: string;
+  dateModified?: string;
   url: string;
   keywords?: string[];
   wordCount?: number;
@@ -20,7 +22,7 @@ export function ArticleSchema({
     headline: title,
     description,
     datePublished,
-    dateModified: datePublished,
+    dateModified: dateModified || datePublished,
     ...(keywords && keywords.length > 0 && { keywords: keywords.join(", ") }),
     ...(wordCount && { wordCount }),
     author: {

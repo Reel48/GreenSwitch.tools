@@ -10,19 +10,36 @@ import {
   Sliders,
   TrendingDown,
   Leaf,
-  ShieldCheck,
-  Clock,
   Database,
   RefreshCw,
   Battery,
+  BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn, StaggerGrid, StaggerItem } from "./_components/home-sections";
 import { calculatorInfo } from "@/lib/state-pages";
+import { getAllPosts, type BlogPostMeta } from "@/lib/blog";
 
 // Single source of truth — every calculator is registered in calculatorInfo,
 // so this count stays correct as new ones are added
 const CALCULATOR_COUNT = Object.keys(calculatorInfo).length;
+
+// Curated, hand-picked articles to spotlight on the homepage (order matters).
+// Edit this list to change what's featured; missing slugs are skipped safely.
+const FEATURED_ARTICLE_SLUGS = [
+  "2026-ev-tax-credit-guide",
+  "ev-charger-tax-credit-deadline-2026",
+  "which-evs-still-qualify-tax-credit-2026",
+  "are-evs-still-worth-it-2026",
+] as const;
+
+const ARTICLE_TAG_COLORS: Record<string, string> = {
+  ev: "bg-blue-100 text-blue-800",
+  solar: "bg-amber-100 text-amber-800",
+  "heat-pump": "bg-red-100 text-red-800",
+  battery: "bg-purple-100 text-purple-800",
+  "tax-credit": "bg-green-100 text-green-800",
+};
 
 // The six featured on the homepage; the full list lives at /calculators
 const calculators = [
@@ -108,28 +125,12 @@ const steps = [
   },
 ] as const;
 
-const trustPoints = [
-  {
-    icon: ShieldCheck,
-    title: "Transparent methodology",
-    description:
-      "Every calculator shows its formulas and data sources. No black boxes.",
-  },
-  {
-    icon: Clock,
-    title: "Up-to-date data",
-    description:
-      "We use current electricity rates, fuel prices, and incentive programs.",
-  },
-  {
-    icon: Leaf,
-    title: "100% free, no sign-up",
-    description:
-      "All calculators are free to use with no account required. Ever.",
-  },
-] as const;
-
 export default function Home() {
+  const allPosts = getAllPosts();
+  const featuredArticles = FEATURED_ARTICLE_SLUGS.map((slug) =>
+    allPosts.find((p) => p.slug === slug)
+  ).filter((p): p is BlogPostMeta => Boolean(p));
+
   return (
     <>
       {/* Hero */}
@@ -250,8 +251,76 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Featured Guides */}
+      {featuredArticles.length > 0 && (
+        <section className="border-y border-border/60 bg-muted/30 py-14 sm:py-28">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <FadeIn className="mx-auto max-w-2xl text-center">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
+                <BookOpen className="size-3.5" />
+                From our guides
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                Make sense of the 2026 EV tax credit changes
+              </h2>
+              <p className="mt-4 text-lg text-muted-foreground">
+                Clear, up-to-date explainers on what changed, what&rsquo;s left,
+                and how to make a smart call — backed by the same data as our
+                calculators.
+              </p>
+            </FadeIn>
+
+            <StaggerGrid className="mt-10 grid gap-4 sm:mt-14 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {featuredArticles.map((post) => (
+                <StaggerItem key={post.slug}>
+                  <Link
+                    href={`/learn/${post.slug}`}
+                    className="group relative flex h-full flex-col rounded-2xl border border-border/60 bg-card p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 sm:p-6"
+                  >
+                    <div className="flex flex-wrap gap-1.5">
+                      {post.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className={`rounded-full px-2 py-0.5 text-xs font-medium ${ARTICLE_TAG_COLORS[tag] || "bg-muted text-muted-foreground"}`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <h3 className="mt-3 text-base font-semibold leading-snug text-foreground">
+                      {post.title}
+                    </h3>
+                    <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                      {post.description}
+                    </p>
+                    <div className="mt-auto flex items-center justify-between pt-4">
+                      <span className="text-xs text-muted-foreground">
+                        {post.readingTime}
+                      </span>
+                      <span className="inline-flex items-center text-sm font-medium text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                        Read article
+                        <ArrowRight className="ml-1 size-3.5" />
+                      </span>
+                    </div>
+                  </Link>
+                </StaggerItem>
+              ))}
+            </StaggerGrid>
+
+            <FadeIn className="mt-8 text-center sm:mt-10">
+              <Button asChild variant="outline" size="lg">
+                <Link href="/learn">
+                  Browse all guides
+                  <ArrowRight className="ml-2 size-4" />
+                </Link>
+              </Button>
+            </FadeIn>
+          </div>
+        </section>
+      )}
+
       {/* How It Works */}
-      <section className="border-y border-border/60 bg-muted/30 py-14 sm:py-28">
+      <section className="py-14 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -279,42 +348,6 @@ export default function Home() {
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {step.description}
                   </p>
-                </StaggerItem>
-              );
-            })}
-          </StaggerGrid>
-        </div>
-      </section>
-
-      {/* Trust / Why Us */}
-      <section className="py-14 sm:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <FadeIn className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Built for trust, not clicks
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              No affiliate links, no hidden agendas. Just honest numbers to help
-              you make the right call.
-            </p>
-          </FadeIn>
-
-          <StaggerGrid className="mt-14 grid gap-8 sm:grid-cols-3">
-            {trustPoints.map((point) => {
-              const Icon = point.icon;
-              return (
-                <StaggerItem key={point.title}>
-                  <div className="rounded-2xl border border-border/60 bg-card p-6 text-center">
-                    <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10">
-                      <Icon className="size-5 text-primary" />
-                    </div>
-                    <h3 className="text-base font-semibold text-foreground">
-                      {point.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {point.description}
-                    </p>
-                  </div>
                 </StaggerItem>
               );
             })}
