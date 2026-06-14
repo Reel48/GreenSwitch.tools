@@ -70,7 +70,7 @@ export function MobileSummaryBar({
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 72, opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/90 px-4 py-3 backdrop-blur-md lg:hidden"
+          className="fixed inset-x-0 bottom-0 z-40 border-t bg-background px-4 py-3 lg:hidden"
           style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
         >
           {/* Background extension: an opaque fill that runs from the bar's
