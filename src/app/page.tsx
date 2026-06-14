@@ -10,8 +10,6 @@ import {
   Sliders,
   TrendingDown,
   Leaf,
-  ShieldCheck,
-  Clock,
   Database,
   RefreshCw,
   Battery,
@@ -124,27 +122,6 @@ const steps = [
     title: "Make a smarter switch",
     description:
       "Use real numbers to decide when to go solar, switch to an EV, or upgrade your heating system.",
-  },
-] as const;
-
-const trustPoints = [
-  {
-    icon: ShieldCheck,
-    title: "Transparent methodology",
-    description:
-      "Every calculator shows its formulas and data sources. No black boxes.",
-  },
-  {
-    icon: Clock,
-    title: "Up-to-date data",
-    description:
-      "We use current electricity rates, fuel prices, and incentive programs.",
-  },
-  {
-    icon: Leaf,
-    title: "100% free, no sign-up",
-    description:
-      "All calculators are free to use with no account required. Ever.",
   },
 ] as const;
 
@@ -274,45 +251,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="border-y border-border/60 bg-muted/30 py-14 sm:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <FadeIn className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              How it works
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Get personalized cost comparisons in under a minute.
-            </p>
-          </FadeIn>
-
-          <StaggerGrid className="mt-14 grid gap-8 sm:grid-cols-3">
-            {steps.map((step, i) => {
-              const Icon = step.icon;
-              return (
-                <StaggerItem key={step.title} className="relative text-left sm:text-center">
-                  <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 sm:mx-auto">
-                    <Icon className="size-6 text-primary" />
-                  </div>
-                  <div className="mb-2 text-sm font-semibold text-primary">
-                    Step {i + 1}
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {step.description}
-                  </p>
-                </StaggerItem>
-              );
-            })}
-          </StaggerGrid>
-        </div>
-      </section>
-
       {/* Featured Guides */}
       {featuredArticles.length > 0 && (
-        <section className="border-t border-border/60 bg-muted/30 py-14 sm:py-28">
+        <section className="border-y border-border/60 bg-muted/30 py-14 sm:py-28">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <FadeIn className="mx-auto max-w-2xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
@@ -378,35 +319,35 @@ export default function Home() {
         </section>
       )}
 
-      {/* Trust / Why Us */}
+      {/* How It Works */}
       <section className="py-14 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <FadeIn className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Built for trust, not clicks
+              How it works
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              No affiliate links, no hidden agendas. Just honest numbers to help
-              you make the right call.
+              Get personalized cost comparisons in under a minute.
             </p>
           </FadeIn>
 
           <StaggerGrid className="mt-14 grid gap-8 sm:grid-cols-3">
-            {trustPoints.map((point) => {
-              const Icon = point.icon;
+            {steps.map((step, i) => {
+              const Icon = step.icon;
               return (
-                <StaggerItem key={point.title}>
-                  <div className="rounded-2xl border border-border/60 bg-card p-6 text-center">
-                    <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-xl bg-primary/10">
-                      <Icon className="size-5 text-primary" />
-                    </div>
-                    <h3 className="text-base font-semibold text-foreground">
-                      {point.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {point.description}
-                    </p>
+                <StaggerItem key={step.title} className="relative text-left sm:text-center">
+                  <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 sm:mx-auto">
+                    <Icon className="size-6 text-primary" />
                   </div>
+                  <div className="mb-2 text-sm font-semibold text-primary">
+                    Step {i + 1}
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {step.description}
+                  </p>
                 </StaggerItem>
               );
             })}
