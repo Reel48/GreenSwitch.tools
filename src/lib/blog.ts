@@ -5,13 +5,20 @@ import readingTime from "reading-time";
 
 const CONTENT_DIR = path.join(process.cwd(), "content/learn");
 
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
 export interface BlogPost {
   slug: string;
   title: string;
   description: string;
   date: string;
+  updated?: string;
   tags: string[];
   calculator?: string;
+  faq?: FaqItem[];
   readingTime: string;
   content: string;
 }
@@ -21,6 +28,7 @@ export interface BlogPostMeta {
   title: string;
   description: string;
   date: string;
+  updated?: string;
   tags: string[];
   calculator?: string;
   readingTime: string;
@@ -48,6 +56,7 @@ export function getAllPosts(): BlogPostMeta[] {
       title: data.title || slug,
       description: data.description || "",
       date: data.date || "",
+      updated: data.updated,
       tags: data.tags || [],
       calculator: data.calculator,
       readingTime: stats.text,
@@ -73,8 +82,10 @@ export function getPostBySlug(slug: string): BlogPost | null {
     title: data.title || slug,
     description: data.description || "",
     date: data.date || "",
+    updated: data.updated,
     tags: data.tags || [],
     calculator: data.calculator,
+    faq: Array.isArray(data.faq) ? (data.faq as FaqItem[]) : undefined,
     readingTime: stats.text,
     content,
   };

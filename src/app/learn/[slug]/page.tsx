@@ -7,6 +7,7 @@ import rehypeSlug from "rehype-slug";
 import { getAllSlugs, getPostBySlug, getWordCount, getRelatedPosts } from "@/lib/blog";
 import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema";
 import { ArticleSchema } from "@/components/blog/article-schema";
+import { FaqSchema } from "@/components/seo/faq-schema";
 import { RelatedArticles } from "@/components/blog/related-articles";
 import { mdxComponents } from "@/components/blog/mdx-components";
 
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: `/learn/${slug}`,
       type: "article",
       publishedTime: post.date,
+      modifiedTime: post.updated || post.date,
     },
     alternates: {
       canonical: `/learn/${slug}`,
@@ -100,10 +102,12 @@ export default async function LearnArticlePage({ params }: PageProps) {
         title={post.title}
         description={post.description}
         datePublished={post.date}
+        dateModified={post.updated}
         url={`/learn/${slug}`}
         keywords={post.tags}
         wordCount={getWordCount(post.content)}
       />
+      {post.faq && post.faq.length > 0 && <FaqSchema items={post.faq} />}
 
       <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         {/* Header */}
@@ -118,11 +122,26 @@ export default async function LearnArticlePage({ params }: PageProps) {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
+                timeZone: "UTC",
               })}
             </time>
             <span>·</span>
             <span>{post.readingTime}</span>
           </div>
+
+          {post.updated && post.updated !== post.date && (
+            <p className="mt-2 text-sm text-gray-500">
+              Last updated{" "}
+              <time dateTime={post.updated}>
+                {new Date(post.updated).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  timeZone: "UTC",
+                })}
+              </time>
+            </p>
+          )}
 
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             {post.title}
@@ -175,6 +194,25 @@ export default async function LearnArticlePage({ params }: PageProps) {
               Try the {calculator.name}
             </Link>
           </div>
+        )}
+
+        {/* FAQ */}
+        {post.faq && post.faq.length > 0 && (
+          <section className="mt-16">
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+              Frequently asked questions
+            </h2>
+            <dl className="mt-6 divide-y divide-gray-200 border-t border-gray-200">
+              {post.faq.map((item) => (
+                <div key={item.q} className="py-5">
+                  <dt className="text-lg font-semibold text-gray-900">
+                    {item.q}
+                  </dt>
+                  <dd className="mt-2 text-gray-600">{item.a}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
         )}
 
         {/* Related Articles */}
