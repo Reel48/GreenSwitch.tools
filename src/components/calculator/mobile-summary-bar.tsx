@@ -70,19 +70,20 @@ export function MobileSummaryBar({
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 72, opacity: 0 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="fixed inset-x-0 bottom-0 z-40 border-t bg-background px-4 py-3 lg:hidden"
-          style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+          className="fixed inset-x-0 z-40 border-t bg-background/90 px-4 py-3 backdrop-blur-md lg:hidden"
+          // The bar's box is pushed 50vh below the bottom edge (negative
+          // `bottom`) and that distance is added back as padding, so the
+          // content stays in the same visible spot while the bar's own
+          // (frosted) background bleeds 50vh past the bottom of the screen.
+          // This covers any gap a browser's collapsing toolbar (e.g. Chrome's
+          // URL bar on scroll) opens beneath the bar, so page content never
+          // shows through.
+          style={{
+            bottom: "-50vh",
+            paddingBottom:
+              "calc(50vh + max(0.75rem, env(safe-area-inset-bottom)))",
+          }}
         >
-          {/* Background extension: an opaque fill that runs from the bar's
-              bottom edge down through the bottom of the screen. If a browser's
-              collapsing toolbar (e.g. Chrome's URL bar on scroll) opens a gap
-              beneath the bar, this covers it so page content never shows
-              through. It's simply off-screen when the bar already sits at the
-              true bottom (Safari). */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-full h-screen bg-background"
-          />
           <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="truncate text-xs text-muted-foreground">{label}</p>
