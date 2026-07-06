@@ -102,7 +102,7 @@ export default function EvChargingCostPage() {
         {
           question: "Is Level 2 charging worth the installation cost?",
           answer:
-            "For most EV owners, yes. Level 2 (240V) chargers deliver 25-30 miles of range per hour vs. 3-5 for Level 1. The $800-2,000 installation cost typically pays for itself through convenience and the ability to take advantage of off-peak electricity rates. Note: the federal 30C charger credit (30% up to $1,000, limited to eligible census tracts) expires June 30, 2026 — equipment placed in service after that date won't qualify — and some utilities offer their own charger rebates.",
+            "For most EV owners, yes. Level 2 (240V) chargers deliver 25-30 miles of range per hour vs. 3-5 for Level 1. The $800-2,000 installation cost typically pays for itself through convenience and the ability to take advantage of off-peak electricity rates. Note: the federal 30C charger credit (30% up to $1,000, limited to eligible census tracts) expired June 30, 2026 — equipment placed in service after that date does not qualify — but many utilities offer their own charger rebates.",
         },
         {
           question: "How much more expensive is public charging?",
