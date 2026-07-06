@@ -32,7 +32,10 @@ function rateLabel(pctDiff: number): string {
 }
 
 function formatDollars(n: number, decimals = 2): string {
-  return `$${n.toFixed(decimals)}`;
+  return `$${n.toLocaleString("en-US", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })}`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -86,7 +89,12 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
         );
       }
 
-      // Paragraph 3 — incentives nudge
+      // Paragraph 3 — total cost of ownership beyond fuel
+      paragraphs.push(
+        `Fuel is only part of the story. EVs skip oil changes and spark plugs and wear brakes far more slowly thanks to regenerative braking, typically saving another $0.04–$0.06 per mile in maintenance — roughly $500–$700 a year at 12,000 miles. The EV case is strongest for ${stateName} drivers who can charge at home and keep the vehicle for several years; if you rely mostly on public fast charging or drive very little, the advantage narrows.`
+      );
+
+      // Paragraph 4 — incentives nudge
       const evIncentives = incentives.filter((i) => i.category === "ev");
       if (evIncentives.length > 0) {
         const totalMax = evIncentives.reduce((s, i) => s + i.maxAmount, 0);
@@ -136,6 +144,11 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
           `${stateName} does not currently offer statewide net metering, which means excess solar energy may not be fully credited. However, many utilities have their own buyback programs, and pairing solar with a home battery system can help you store and use more of your own production, improving overall ROI regardless of net metering policy.`
         );
       }
+
+      // Paragraph 4 — who it's best for + rate-hedge framing
+      paragraphs.push(
+        `Solar pays off fastest in ${stateName} for homeowners with high electricity usage, an unshaded south-facing roof, and plans to stay put through at least the payback window. Because retail power prices tend to climb a few percent every year, owning panels also locks in today's rate and hedges against future bill increases — a benefit that grows the longer you own the system. Enter your own bill and roof details in the calculator above for a payback estimate tailored to your home.`
+      );
     }
 
     return paragraphs;
@@ -171,6 +184,11 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
       // Paragraph 3 — Monthly bill impact
       paragraphs.push(
         `${stateName} households currently pay an average of ${formatDollars(elec.avgMonthlyBill, 0)} per month for electricity. Adding an EV to the household typically raises the bill by ${formatDollars(elec.rate * 300, 0)}\u2013${formatDollars(elec.rate * 400, 0)} per month (for 1,000\u20131,300 miles of driving), which is still far less than the ${formatDollars(fuel.gasRegular * 33, 0)}\u2013${formatDollars(fuel.gasRegular * 43, 0)} per month you would spend on gasoline for the same distance. Use the calculator above to enter your exact driving habits and see how much you could save.`
+      );
+
+      // Paragraph 4 — Level 1 vs Level 2 and home-charger payback
+      paragraphs.push(
+        `Choosing a charging setup matters too. A standard 120-volt outlet (Level 1) adds only 3–5 miles of range per hour, which is fine for low-mileage drivers, while a 240-volt Level 2 charger refills most EVs overnight. A home Level 2 charger runs about $500–$1,200 installed and, at ${stateName}'s savings versus gasoline, usually pays for itself within a year or two of everyday driving.`
       );
     }
 
@@ -219,7 +237,12 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
         );
       }
 
-      // Paragraph 3 — Incentives
+      // Paragraph 3 — Summer cooling / dual-function value
+      paragraphs.push(
+        `A heat pump also replaces your air conditioner, and ${stateName}'s ${climate.coolingDegreeDays.toLocaleString()} cooling degree days make that dual-function value real: one system handles both seasons, so you retire a separate AC unit and its maintenance along with the furnace. For homes with an aging furnace-and-AC pair, replacing both at once is usually where a heat pump makes the strongest financial case in ${stateName}.`
+      );
+
+      // Paragraph 4 — Incentives
       const hpIncentives = incentives.filter(
         (i) => i.category === "heat-pump"
       );
@@ -268,7 +291,12 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
         );
       }
 
-      // Paragraph 3 — incentives
+      // Paragraph 3 — placement, lifespan, and payback framing
+      paragraphs.push(
+        `One practical note for ${stateName} homeowners: heat pump water heaters need roughly 700–1,000 cubic feet of surrounding air and run best in a garage, basement, or utility room that stays above about 40°F, since they pull heat from the air around them. With a typical 10–15 year lifespan, the annual savings above usually repay the higher purchase price well within the unit's service life.`
+      );
+
+      // Paragraph 4 — incentives
       const hpIncentives = incentives.filter((i) => i.category === "heat-pump");
       if (hpIncentives.length > 0) {
         const totalMax = hpIncentives.reduce((s, i) => s + i.maxAmount, 0);
@@ -316,6 +344,11 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
       `If you acquired your EV by the September 30, 2025 deadline and are claiming the credit, the original rules apply: income thresholds of $150,000 AGI for single filers and $300,000 for joint filers on new vehicles (lower limits for used), and MSRP caps of $55,000 for sedans and $80,000 for SUVs, vans, and trucks. Enter your details in the calculator above to check a grandfathered purchase, or to see current state-level incentives in ${stateName}.`
     );
 
+    // Paragraph 4 — leasing and used-market paths now that the credit is gone
+    paragraphs.push(
+      `Missed the deadline? Two paths still soften the cost in ${stateName}. Leasing can help because many lessors access the commercial clean-vehicle credit and pass part of it through as lower payments — always confirm the discount in writing before signing. And the used-EV market has softened prices as off-lease inventory grows, which can offset the loss of the purchase credit for budget-focused buyers.`
+    );
+
     return paragraphs;
   },
 
@@ -346,7 +379,12 @@ const editorialGenerators: Record<CalculatorSlug, EditorialGenerator> = {
         );
       }
 
-      // Paragraph 3 — Incentives + payback
+      // Paragraph 3 — Backup value + virtual power plants
+      paragraphs.push(
+        `Bill savings are only half the picture. A battery also keeps essential circuits running during outages — an increasingly valuable hedge in ${stateName} as extreme weather strains the grid. A growing number of utilities also run virtual power plant programs that pay battery owners to share stored energy during peak demand; the calculator above does not assume that income, so treat any such payments as upside on top of your estimated ROI.`
+      );
+
+      // Paragraph 4 — Incentives + payback
       const batteryIncentives = incentives.filter(
         (i) => i.category === "battery-storage"
       );

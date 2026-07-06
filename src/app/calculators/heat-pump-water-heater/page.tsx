@@ -2,6 +2,7 @@
 
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
+import { StateLinksSection } from "@/components/seo/state-links-section";
 import { InputGroup } from "@/components/calculator/input-group";
 import {
   InputSection,
@@ -117,6 +118,7 @@ export default function HeatPumpWaterHeaterPage() {
             "The federal 25C tax credit (30% up to $2,000) ended for units placed in service after December 31, 2025. What remains: state-administered Home Energy Rebates in participating states (income-qualified households can receive up to $1,750 for a heat pump water heater), plus many state and utility programs offering $300–$1,500. Check your utility and state energy office, and enter what you qualify for in the calculator's Rebates field.",
         },
       ]}
+      byState={<StateLinksSection calculator="heat-pump-water-heater" />}
       relatedCalculators={[
         {
           title: "Heat Pump vs Furnace",

@@ -26,15 +26,40 @@ export const calculatorInfo: Record<CalculatorSlug, CalculatorInfo> = {
   "ev-vs-gas-cost": {
     name: "EV vs Gas Cost Comparison",
     shortName: "EV vs Gas Cost",
-    description: (s) =>
-      `Compare the total cost of owning an electric vehicle vs a gas car in ${s}. Uses local electricity rates ($${electricityRates[getStateCode(s)]?.rate ?? "N/A"}/kWh) and gas prices ($${fuelPrices[getStateCode(s)]?.gasRegular ?? "N/A"}/gal) for accurate savings estimates.`,
+    description: (s) => {
+      const code = getStateCode(s);
+      const elec = electricityRates[code];
+      const fuel = fuelPrices[code];
+      const annual =
+        elec && fuel
+          ? Math.round((fuel.gasRegular / 30 - elec.rate * 0.3) * 12000)
+          : null;
+      return `See whether an EV beats gas in ${s} for 2026${
+        annual ? `: about $${annual.toLocaleString()} a year in fuel savings` : ""
+      }${
+        elec && fuel ? ` at $${elec.rate}/kWh vs $${fuel.gasRegular}/gal` : ""
+      }. Compare full 5-year ownership cost, maintenance, and incentives.`;
+    },
     relevantDataKeys: ["electricity", "fuel"],
   },
   "solar-payback": {
     name: "Solar Panel Payback Period",
     shortName: "Solar Payback",
-    description: (s) =>
-      `Calculate your solar panel ROI and payback period in ${s}. Based on ${solarData[getStateCode(s)]?.avgSunHours ?? "N/A"} peak sun hours, $${electricityRates[getStateCode(s)]?.rate ?? "N/A"}/kWh electricity, and available state incentives.`,
+    description: (s) => {
+      const code = getStateCode(s);
+      const solar = solarData[code];
+      const elec = electricityRates[code];
+      const payback =
+        solar && elec
+          ? Math.round(
+              (solar.costPerWatt * solar.avgSystemSizeKw * 1000) /
+                (solar.annualProductionPerKw * solar.avgSystemSizeKw * elec.rate)
+            )
+          : null;
+      return `Solar panels in ${s} pay for themselves in about ${payback ?? "8–12"} years at 2026 prices${
+        solar ? `, based on ${solar.avgSunHours} peak sun hours` : ""
+      }${elec ? ` and $${elec.rate}/kWh electricity` : ""}. Calculate your exact ROI, 25-year savings, and break-even point.`;
+    },
     relevantDataKeys: ["electricity", "solar"],
   },
   "ev-charging-cost": {
@@ -94,7 +119,7 @@ export function generateStatePageMetadata(
   if (!state) return {};
 
   const info = calculatorInfo[calculator];
-  const title = `${info.name} in ${state.name}`;
+  const title = `${info.name} in ${state.name} (2026)`;
   const description = `${info.description(state.name)} Free calculator — no sign-up required.`;
 
   return {

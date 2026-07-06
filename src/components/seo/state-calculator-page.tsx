@@ -9,8 +9,13 @@ import {
   type CalculatorSlug,
 } from "@/lib/state-pages";
 import { getStateEditorial } from "@/lib/state-editorial";
+import { getStateFaq } from "@/lib/state-faq";
+import { FaqSchema } from "@/components/seo/faq-schema";
 import { states } from "@/data/states";
 import { stateIncentives, federalIncentives } from "@/data/incentives";
+
+/** Month the underlying rate / incentive datasets were last reviewed. */
+const DATA_LAST_UPDATED = "July 2026";
 
 interface Props {
   calculator: CalculatorSlug;
@@ -46,6 +51,7 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
     data,
     localIncentives
   );
+  const faqs = getStateFaq(calculator, state.name, data, localIncentives);
 
   return (
     <>
@@ -59,8 +65,9 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
       />
       <SpeakableSchema
         url={`/calculators/${calculator}/${state.slug}`}
-        cssSelectors={["h1", "h1 + p", "h2", "table"]}
+        cssSelectors={["h1", "h1 + p", "h2", "table", "#faq dd"]}
       />
+      {faqs.length > 0 && <FaqSchema items={faqs} />}
 
       <div className="mx-auto max-w-4xl px-4 py-12">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -69,6 +76,16 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
 
         <p className="mt-4 text-lg text-muted-foreground">
           {info.description(state.name)}
+        </p>
+
+        <p className="mt-2 text-sm text-muted-foreground">
+          Data last updated {DATA_LAST_UPDATED}.{" "}
+          <Link
+            href="/methodology"
+            className="underline underline-offset-2 hover:text-foreground"
+          >
+            Sources &amp; methodology
+          </Link>
         </p>
 
         {/* Editorial content — unique per state + calculator */}
@@ -190,13 +207,36 @@ export function StateCalculatorPage({ calculator, stateSlug }: Props) {
                     <tr key={inc.id}>
                       <td className="py-2 pr-4 font-medium">{inc.name}</td>
                       <td className="py-2 pr-4 capitalize">{inc.type.replace("-", " ")}</td>
-                      <td className="py-2 pr-4">${inc.maxAmount.toLocaleString()}</td>
+                      <td className="py-2 pr-4">
+                        {inc.maxAmount > 0
+                          ? `$${inc.maxAmount.toLocaleString()}`
+                          : "Varies"}
+                      </td>
                       <td className="py-2 text-muted-foreground">{inc.description}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+          </section>
+        )}
+
+        {/* FAQ — state-specific, feeds FAQPage schema above */}
+        {faqs.length > 0 && (
+          <section id="faq" className="mt-12">
+            <h2 className="text-2xl font-semibold">
+              {info.shortName} in {state.name}: Frequently Asked Questions
+            </h2>
+            <dl className="mt-4 space-y-6">
+              {faqs.map((item, i) => (
+                <div key={i}>
+                  <dt className="font-medium">{item.q}</dt>
+                  <dd className="mt-1 text-base leading-relaxed text-muted-foreground">
+                    {item.a}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </section>
         )}
 

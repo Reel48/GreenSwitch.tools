@@ -2,6 +2,7 @@
 
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
+import { StateLinksSection } from "@/components/seo/state-links-section";
 import { InputGroup } from "@/components/calculator/input-group";
 import {
   InputSection,
@@ -126,6 +127,7 @@ export default function BatteryStoragePage() {
             "Batteries provide the most savings with TOU rates where there's a large peak/off-peak price difference. With flat rates, savings are smaller and come mainly from solar self-consumption optimization. Consider switching to a TOU plan if your utility offers one.",
         },
       ]}
+      byState={<StateLinksSection calculator="battery-storage" />}
       relatedCalculators={[
         {
           title: "Solar Payback",

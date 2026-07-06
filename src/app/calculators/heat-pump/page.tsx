@@ -2,6 +2,7 @@
 
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
+import { StateLinksSection } from "@/components/seo/state-links-section";
 import { InputGroup } from "@/components/calculator/input-group";
 import {
   InputSection,
@@ -113,6 +114,7 @@ export default function HeatPumpPage() {
             "Yes. Heat pumps provide both heating and cooling, replacing both a furnace and central AC unit. This dual functionality is one of their biggest advantages.",
         },
       ]}
+      byState={<StateLinksSection calculator="heat-pump" />}
       relatedCalculators={[
         {
           title: "Solar Payback",

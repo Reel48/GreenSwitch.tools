@@ -30,6 +30,8 @@ import {
 import { solarPaybackSchema } from "@/calculators/solar-payback/schema";
 import { solarPaybackDefaults } from "@/calculators/solar-payback/defaults";
 import { calculateSolarPayback } from "@/calculators/solar-payback/calculate";
+import { SolarPaybackContent } from "@/components/calculator/solar-payback-content";
+import { StateLinksSection } from "@/components/seo/state-links-section";
 import {
   Sun,
   DollarSign,
@@ -119,7 +121,24 @@ export default function SolarPaybackPage() {
           answer:
             "Modern solar panels typically last 25-30+ years with a degradation rate of about 0.5% per year. Most manufacturers warranty at least 80% production at 25 years.",
         },
+        {
+          question: "What is a good solar payback period?",
+          answer:
+            "Under 10 years is generally considered strong, 10-14 years is typical at full price in 2026, and much beyond 15 years is where solar becomes a tougher call. High electricity rates, good sun, and available incentives push you toward the low end.",
+        },
+        {
+          question: "What happens after solar panels pay for themselves?",
+          answer:
+            "Everything after the payback point is essentially free electricity. A system that breaks even at year 9 and keeps producing through year 25 delivers roughly 16 more years of savings, which is what drives solar's long-term ROI well above 100%.",
+        },
+        {
+          question: "Does solar increase home value?",
+          answer:
+            "Studies consistently find owned solar systems raise home resale value, and many states exempt that added value from property tax. Leased systems are different — the lease must usually be transferred or bought out at sale.",
+        },
       ]}
+      article={<SolarPaybackContent />}
+      byState={<StateLinksSection calculator="solar-payback" />}
       relatedCalculators={[
         {
           title: "EV Charging Cost",

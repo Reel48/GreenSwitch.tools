@@ -2,6 +2,7 @@
 
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
+import { StateLinksSection } from "@/components/seo/state-links-section";
 import { InputGroup } from "@/components/calculator/input-group";
 import {
   InputSection,
@@ -114,6 +115,7 @@ export default function EvChargingCostPage() {
             "TOU rates vary by time of day. Off-peak hours (usually overnight) can be 50-70% cheaper than peak rates. Since EVs can charge overnight, TOU plans are ideal for EV owners and can cut charging costs significantly.",
         },
       ]}
+      byState={<StateLinksSection calculator="ev-charging-cost" />}
       relatedCalculators={[
         {
           title: "EV vs Gas Cost",

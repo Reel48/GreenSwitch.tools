@@ -5,12 +5,15 @@ import { RelatedArticles } from "@/components/blog/related-articles";
 import { getPostsByCalculator } from "@/lib/blog";
 
 export const metadata: Metadata = {
-  title: "Solar Panel Payback Period",
+  title: "Solar Panel Payback Period Calculator (2026)",
   description:
-    "Calculate your solar panel ROI and payback period. See 25-year savings projections based on system size, electricity rates, incentives, and net metering.",
+    "Calculate your solar panel payback period, break-even point, and 25-year ROI for 2026. Free calculator using your electricity rate, sun hours, system cost, net metering, and state incentives.",
   keywords: [
     "solar payback period",
+    "solar panel payback calculator",
     "solar panel ROI",
+    "how to calculate solar payback",
+    "solar break-even",
     "solar savings calculator",
     "is solar worth it",
     "solar panel cost calculator",

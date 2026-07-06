@@ -2,6 +2,7 @@
 
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
+import { StateLinksSection } from "@/components/seo/state-links-section";
 import { InputGroup } from "@/components/calculator/input-group";
 import {
   InputSection,
@@ -106,6 +107,7 @@ export default function EvVsGasCostPage() {
             "Early EVs depreciated faster due to battery concerns, but modern EVs with longer-range batteries hold value well. Tesla and other popular models often match or outpace gas car resale values. This calculator lets you customize depreciation rates for each vehicle.",
         },
       ]}
+      byState={<StateLinksSection calculator="ev-vs-gas-cost" />}
       relatedCalculators={[
         {
           title: "EV Charging Cost",

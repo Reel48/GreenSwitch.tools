@@ -42,6 +42,10 @@ interface CalculatorShellProps {
   relatedCalculators?: RelatedCalculator[];
   howToSteps?: HowToStep[];
   url?: string;
+  /** Long-form, crawlable explainer content shown below the calculator. */
+  article?: React.ReactNode;
+  /** "Browse by state" internal-linking section shown near the bottom. */
+  byState?: React.ReactNode;
 }
 
 export function CalculatorShell({
@@ -56,6 +60,8 @@ export function CalculatorShell({
   relatedCalculators,
   howToSteps,
   url,
+  article,
+  byState,
 }: CalculatorShellProps) {
   return (
     <div className="relative mx-auto max-w-4xl px-4 py-6 md:py-12 lg:max-w-7xl">
@@ -125,6 +131,14 @@ export function CalculatorShell({
         </div>
       </div>
 
+      {/* Long-form explainer / SEO article */}
+      {article && (
+        <div className="w-full space-y-6 sm:space-y-8">
+          <Separator />
+          {article}
+        </div>
+      )}
+
       {/* Methodology */}
       {methodology && (
         <div className="w-full space-y-6 sm:space-y-8">
@@ -187,6 +201,14 @@ export function CalculatorShell({
               })}
             </div>
           </section>
+        </div>
+      )}
+
+      {/* Browse by state — internal linking to state-specific pages */}
+      {byState && (
+        <div className="w-full space-y-6 sm:space-y-8">
+          <Separator />
+          {byState}
         </div>
       )}
       </div>

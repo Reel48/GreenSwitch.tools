@@ -2,6 +2,7 @@
 
 import { useCalculator } from "@/hooks/use-calculator";
 import { CalculatorShell } from "@/components/calculator/calculator-shell";
+import { StateLinksSection } from "@/components/seo/state-links-section";
 import { InputGroup } from "@/components/calculator/input-group";
 import { InputSection } from "@/components/calculator/input-section";
 import { RangeInput } from "@/components/calculator/range-input";
@@ -101,6 +102,7 @@ export default function EvTaxCreditPage() {
             "Often, yes — the credit accelerated the payback but was never the whole story. EVs still save on fuel (electricity per mile typically runs a third to half the cost of gasoline) and maintenance. Without the credit the break-even point comes later, so the math depends more on your annual mileage, local electricity rates, and the price gap between the EV and a comparable gas car. Our EV vs Gas Cost Calculator models it with your numbers.",
         },
       ]}
+      byState={<StateLinksSection calculator="ev-tax-credit" />}
       relatedCalculators={[
         {
           title: "EV vs Gas Cost",
